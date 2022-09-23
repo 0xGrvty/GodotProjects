@@ -1,0 +1,9 @@
+[gd_scene format=2]
+
+[node name="StateManager" type="Node2D"]
+
+[node name="Idle" type="Node2D" parent="."]
+
+[node name="Run" type="Node2D" parent="."]
+
+[node name="Attack" type="Node2D" parent="."]

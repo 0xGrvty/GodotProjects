@@ -1,7 +1,9 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public class PlayerIdleState : IStateMachine {
+    
     private bool takenDamage = false;
     public IStateMachine EnterState(Player player) {
         player.GetAnimatedSprite().Animation = "PlayerIdle";

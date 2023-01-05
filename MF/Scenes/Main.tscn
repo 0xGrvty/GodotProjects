@@ -1,14 +1,22 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Interface.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Scripts/Core/Main.cs" type="Script" id=3]
+[ext_resource path="res://Scenes/Enemy/RockMan.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Scripts/Core/EnemyCurveTween.cs" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12.5, 13.5 )
 
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1923, 0, 0, 0, 0, 0, 1921, 1083, 0, 0, 0, 0, 4, 1085, 0, 0, 0, 0, 3, 0 )
+}
+
 [node name="Game" type="Node"]
 script = ExtResource( 3 )
+RockManScene = ExtResource( 4 )
 
 [node name="Ground" type="ColorRect" parent="."]
 margin_right = 1920.0
@@ -53,6 +61,15 @@ __meta__ = {
 }
 
 [node name="Interface" parent="." instance=ExtResource( 2 )]
+
+[node name="EnemyPath" type="Path2D" parent="."]
+curve = SubResource( 2 )
+
+[node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath"]
+position = Vector2( 3, 0 )
+
+[node name="EnemyCurveTween" type="Tween" parent="EnemyPath"]
+script = ExtResource( 5 )
 
 [connection signal="HealthChanged" from="Player/Health" to="Interface" method="OnHealthChanged"]
 

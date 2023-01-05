@@ -142,7 +142,7 @@ hammerScene = ExtResource( 28 )
 position = Vector2( -7, 8.5 )
 frames = SubResource( 2 )
 animation = "PlayerRun"
-frame = 7
+frame = 1
 playing = true
 offset = Vector2( 7, -8.5 )
 

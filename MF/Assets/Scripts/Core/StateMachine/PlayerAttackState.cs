@@ -13,7 +13,7 @@ public class PlayerAttackState : IStateMachine
             // To control if we are attacking, don't want to spawn infinity hammers
             player.IsAttacking = true;
             Hammer h = (Hammer)player.hammerScene.Instance();
-            h.Init(player.Position, player.GetAbility());
+            h.Init(player.Position);
             player.GetParent().AddChild(h);
         }
 

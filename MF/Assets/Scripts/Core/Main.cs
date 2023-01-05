@@ -3,19 +3,23 @@ using System;
 
 public class Main : Node
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
+    [Export]
+    public PackedScene RockManScene;
+
     private Camera2D mainCamera;
     private Node2D follow;
     private Vector2 cameraBounds;
+    private float enemySpawnTimer = 0;
+    private Player player;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         mainCamera = GetNode<Camera2D>("Camera2D");
-        follow = GetNode<Player>("Player");
         cameraBounds = new Vector2(50, 50);
+        enemySpawnTimer = 3f;
+        player = GetNode<Player>("Player");
+        follow = player;
     }
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -27,5 +31,19 @@ public class Main : Node
     public override void _PhysicsProcess(float delta) {
         mainCamera.Align();
         mainCamera.Position = follow.Position;
+        enemySpawnTimer -= delta;
+        if (enemySpawnTimer <= 0) {
+            enemySpawnTimer = 3f;
+            var rockMan = (RockMan)RockManScene.Instance();
+            var enemySpawnLocation = GetNode<PathFollow2D>("EnemyPath/EnemySpawnLocation");
+            enemySpawnLocation.Offset = GD.Randi();
+            rockMan.Position = enemySpawnLocation.Position;
+            rockMan.Spawn(player.Position);
+            AddChild(rockMan);
+        }
+    }
+
+    public Vector2 GetPlayerPosition() {
+        return player.Position;
     }
 }

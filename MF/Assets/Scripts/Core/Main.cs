@@ -33,17 +33,14 @@ public class Main : Node
         mainCamera.Position = follow.Position;
         enemySpawnTimer -= delta;
         if (enemySpawnTimer <= 0) {
-            enemySpawnTimer = 3f;
+            enemySpawnTimer = 30000f;
             var rockMan = (RockMan)RockManScene.Instance();
             var enemySpawnLocation = GetNode<PathFollow2D>("EnemyPath/EnemySpawnLocation");
             enemySpawnLocation.Offset = GD.Randi();
             rockMan.Position = enemySpawnLocation.Position;
-            rockMan.Spawn(player.Position);
+            rockMan.Spawn(player);
             AddChild(rockMan);
         }
     }
 
-    public Vector2 GetPlayerPosition() {
-        return player.Position;
-    }
 }

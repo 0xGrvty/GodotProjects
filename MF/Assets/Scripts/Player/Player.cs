@@ -77,6 +77,11 @@ public class Player : KinematicBody2D {
         velocity = Vector2.Zero;
         isMoving = GetMovementInput() != Vector2.Zero;
         currentState = currentState.EnterState(this);
+        Update();
+    }
+
+    public override void _Draw() {
+        DrawLine(new Vector2().Rotated(-Rotation), velocity, Color.ColorN("blue"), 5.0f);
     }
 
     private Vector2 GetMovementInput() {

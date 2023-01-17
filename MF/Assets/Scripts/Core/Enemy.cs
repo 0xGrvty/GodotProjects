@@ -9,7 +9,7 @@ public abstract class  Enemy : KinematicBody2D
     private int health;
     
     private Vector2 velocity;
-    private Player target;
+    private Node2D target;
     private EnemyBehavior behavior;
     private const float PATROL_DISTANCE = 500.0f;
     private const float AGGRO_DISTANCE = 750.0f;
@@ -85,7 +85,7 @@ public abstract class  Enemy : KinematicBody2D
         //DrawLine(new Vector2(), (new Vector2((Position * velocity.Normalized() * moveSpeed) - Position)).Rotated(-Rotation), Color.ColorN("blue"), 5.0f);
     }
 
-    public void Spawn(Player target) {
+    public void Spawn(Node2D target) {
         this.target = target;
         health = 100;
         moveSpeed = 20;

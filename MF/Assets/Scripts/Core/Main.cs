@@ -10,7 +10,7 @@ public class Main : Node
     private Node2D follow;
     private Vector2 cameraBounds;
     private float enemySpawnTimer = 0;
-    private Player player;
+    private Node2D player;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -18,7 +18,7 @@ public class Main : Node
         mainCamera = GetNode<Camera2D>("Camera2D");
         cameraBounds = new Vector2(50, 50);
         enemySpawnTimer = 3f;
-        player = GetNode<Player>("Player/Player");
+        player = GetNode<Node2D>("Player/PlayerBody");
         follow = player;
     }
 

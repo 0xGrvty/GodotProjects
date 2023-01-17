@@ -5,22 +5,22 @@ using System;
 public class PlayerIdleState : IStateMachine {
     
     private bool takenDamage = false;
-    public IStateMachine EnterState(Player player) {
+    public IStateMachine EnterState(PlayerBody player) {
         switch (player.GetFacing()) {
-            case Player.FaceDir.UP:
-            case Player.FaceDir.UP_LEFT:
-            case Player.FaceDir.UP_RIGHT:
+            case PlayerBody.FaceDir.UP:
+            case PlayerBody.FaceDir.UP_LEFT:
+            case PlayerBody.FaceDir.UP_RIGHT:
                 player.GetAnimatedSprite().Animation = "PlayerIdleUp";
                 break;
-            case Player.FaceDir.DOWN:
+            case PlayerBody.FaceDir.DOWN:
                 player.GetAnimatedSprite().Animation = "PlayerIdleDown";
                 break;
-            case Player.FaceDir.RIGHT:
-            case Player.FaceDir.LEFT:
+            case PlayerBody.FaceDir.RIGHT:
+            case PlayerBody.FaceDir.LEFT:
                 player.GetAnimatedSprite().Animation = "PlayerIdleRight";
                 break;
-            case Player.FaceDir.DOWN_RIGHT:
-            case Player.FaceDir.DOWN_LEFT:
+            case PlayerBody.FaceDir.DOWN_RIGHT:
+            case PlayerBody.FaceDir.DOWN_LEFT:
                 player.GetAnimatedSprite().Animation = "PlayerIdleDownRight";
                 break;
         }
@@ -55,7 +55,7 @@ public class PlayerIdleState : IStateMachine {
 
         return player.playerIdleState;
     }
-    public void EmitChangeStateSignal(Player player, IStateMachine state) {
+    public void EmitChangeStateSignal(PlayerBody player, IStateMachine state) {
         player.EmitSignal("StateChanged", state.GetType().ToString());
     }
 

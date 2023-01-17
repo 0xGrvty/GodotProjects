@@ -2,7 +2,7 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public class Player : KinematicBody2D {
+public class PlayerBody : KinematicBody2D {
 
 #pragma warning disable 649
     [Export]
@@ -54,7 +54,7 @@ public class Player : KinematicBody2D {
     private Dictionary playerStats = new Dictionary();
     private bool facingRight = true;
     public bool FacingRight { get => facingRight; set => facingRight = value; }
-
+    //private KinematicBody2D kinematicBody2D;
 
     // State Machine
     private IStateMachine currentState;
@@ -76,7 +76,8 @@ public class Player : KinematicBody2D {
         baseAttackCooldown = (14f / 12);
         attackCooldown = baseAttackCooldown;
         Connect("StateChanged", this, "OnStateChanged");
-        health = (Health)GetNode<Node>("Health");
+        health = (Health)GetParent().GetNode<Node>("Health");
+        //kinematicBody2D = GetNode<KinematicBody2D>("KinematicBody2D");
     }
 
     public override void _UnhandledInput(InputEvent @event) {
@@ -129,6 +130,7 @@ public class Player : KinematicBody2D {
         velocity = GetMovementInput().Normalized() * maxSpeed; // GetMovementInput() returns velocity
         isMoving = velocity != Vector2.Zero; // Check to see if velocity is not zero
         MoveAndSlide(velocity);
+        
         //Position += velocity * GetPhysicsProcessDeltaTime();
         //Velocity * GetPhysicsProcessDeltaTime();
         //Velocity = Vector2.Zero;

@@ -3,7 +3,7 @@ using System;
 
 public class PlayerAttackState : IStateMachine
 {
-    public IStateMachine EnterState(Player player) {
+    public IStateMachine EnterState(PlayerBody player) {
         player.GetAnimatedSprite().Animation = "PlayerAttack";
         player.GetAnimatedSprite().SpeedScale = 2;
         player.GetAnimatedSprite().Play();
@@ -14,7 +14,7 @@ public class PlayerAttackState : IStateMachine
             player.IsAttacking = true;
             Hammer h = (Hammer)player.hammerScene.Instance();
             h.Init(player);
-            player.AddChild(h);
+            player.GetParent().AddChild(h);
         }
 
         // Have the player update the attack cooldown, then check if it's less than or equal to 0
@@ -42,7 +42,7 @@ public class PlayerAttackState : IStateMachine
         return player.playerAttackState;
         
     }
-    public void EmitChangeStateSignal(Player player, IStateMachine state) {
+    public void EmitChangeStateSignal(PlayerBody player, IStateMachine state) {
         player.EmitSignal("StateChanged", state.GetType().ToString());
     }
 }

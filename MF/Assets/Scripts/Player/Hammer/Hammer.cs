@@ -10,7 +10,7 @@ public class Hammer : Area2D {
     private const float MAX_SPEED = 12f;
     private const float BASE_TIME_ALIVE = 3f;
 
-    private Player source;
+    private Node2D source;
     private float positionAngle;
     private float frequency;
     private float radius;
@@ -23,21 +23,22 @@ public class Hammer : Area2D {
     private float amplitudeX;
     private float amplitudeY;
 
-    public void Init(Player source) {
+    public void Init(Node2D source) {
         this.source = source;
-        Position = Vector2.Zero;
+        Position = source.Position;
         positionAngle = 0f;
         frequency = 15f;
-        radius = 50f;
+        radius = 2f;
         maxTimeAlive = 3f;
         rotationAngle = 0f;
         xOffset = 0f;
         yOffset = 0f;
         //xDirection = source.GetAnimatedSprite().FlipH ? -1 : 1;
-        xDirection = source.FacingRight ? 1 : -1;
+        xDirection = 1;
         yDirection = 1;
         amplitudeX = 1f;
         amplitudeY = 1f;
+
     }
 
     public override void _PhysicsProcess(float delta) {

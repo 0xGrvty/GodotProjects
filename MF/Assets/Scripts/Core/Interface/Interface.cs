@@ -11,7 +11,7 @@ public class Interface : Control
         Health healthNode = null;
         foreach (Node n in GetTree().GetNodesInGroup("actors")) {
             if (n.Name == "Player") {
-                healthNode = (Health)n.GetNode<Node>("Player/Health");
+                healthNode = (Health)n.GetNode<Node>("Health");
                 break;
             }
         }

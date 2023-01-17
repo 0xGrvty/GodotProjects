@@ -23,12 +23,24 @@ public class Player : KinematicBody2D {
 
     // Private variables
     public enum FaceDir {
-        UP = 0,
-        DOWN = 1,
-        LEFT = 2,
-        RIGHT = 3,
-        UP_LEFT = 4,
-        UP_RIGHT = 5
+        RIGHT = 0,
+        UP_RIGHT = 1,
+        UP = 2,
+        UP_LEFT = 3,
+        LEFT = 4,
+        DOWN_LEFT = 5,
+        DOWN_RIGHT = 6,
+        DOWN = 7,
+
+
+        //UP = 0,
+        //DOWN = 1,
+        //LEFT = 2,
+        //RIGHT = 3,
+        //UP_LEFT = 4,
+        //UP_RIGHT = 5,
+        //DOWN_LEFT = 6,
+        //DOWN_RIGHT = 7
     };
     private int maxSpeed;
     private FaceDir facing = FaceDir.RIGHT;
@@ -40,6 +52,9 @@ public class Player : KinematicBody2D {
     private bool isAttacking = false;
     private Health health;
     private Dictionary playerStats = new Dictionary();
+    private bool facingRight = true;
+    public bool FacingRight { get => facingRight; set => facingRight = value; }
+
 
     // State Machine
     private IStateMachine currentState;
@@ -52,7 +67,7 @@ public class Player : KinematicBody2D {
     public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
 
     public override void _Ready() {
-        Position = GetNode<Position2D>("../StartPosition").Position;
+        Position = GetParent().GetNode<Position2D>("../StartPosition").Position;
         screenSize = GetViewportRect().Size;
 
         currentState = playerIdleState;
@@ -74,14 +89,14 @@ public class Player : KinematicBody2D {
 
     public override void _PhysicsProcess(float delta) {
         //DoMovement();
-        velocity = Vector2.Zero;
+        //velocity = Vector2.Zero;
         isMoving = GetMovementInput() != Vector2.Zero;
         currentState = currentState.EnterState(this);
         Update();
     }
 
     public override void _Draw() {
-        DrawLine(new Vector2().Rotated(-Rotation), velocity, Color.ColorN("blue"), 5.0f);
+        DrawLine(Vector2.Zero, velocity, Color.ColorN("blue"), 5.0f);
     }
 
     private Vector2 GetMovementInput() {
@@ -95,12 +110,17 @@ public class Player : KinematicBody2D {
         }
         if (Input.IsActionPressed("Left")) {
             velocity += Vector2.Left;
-            facing = (velocity.y < 0) ? FaceDir.UP_LEFT : FaceDir.LEFT;
+            facing = FaceDir.LEFT;
+            if (Mathf.Sign(velocity.y) > 0) { facing = FaceDir.DOWN_LEFT; }
+            else if (Mathf.Sign(velocity.y) < 0) { facing = FaceDir.UP_LEFT; }
         }
         if (Input.IsActionPressed("Right")) {
             velocity += Vector2.Right;
-            facing = (velocity.y < 0) ? FaceDir.UP_RIGHT : FaceDir.RIGHT;
+            facing = FaceDir.RIGHT;
+            if (Mathf.Sign(velocity.y) > 0) { facing = FaceDir.DOWN_RIGHT; }
+            else if (Mathf.Sign(velocity.y) < 0) { facing = FaceDir.UP_RIGHT; }
         }
+
         return velocity;
     }
 

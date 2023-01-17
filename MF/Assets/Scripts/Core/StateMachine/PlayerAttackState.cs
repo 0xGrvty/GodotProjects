@@ -13,8 +13,8 @@ public class PlayerAttackState : IStateMachine
             // To control if we are attacking, don't want to spawn infinity hammers
             player.IsAttacking = true;
             Hammer h = (Hammer)player.hammerScene.Instance();
-            h.Init(player.Position);
-            player.GetParent().AddChild(h);
+            h.Init(player);
+            player.AddChild(h);
         }
 
         // Have the player update the attack cooldown, then check if it's less than or equal to 0

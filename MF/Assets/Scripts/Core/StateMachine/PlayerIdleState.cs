@@ -6,7 +6,25 @@ public class PlayerIdleState : IStateMachine {
     
     private bool takenDamage = false;
     public IStateMachine EnterState(Player player) {
-        player.GetAnimatedSprite().Animation = "PlayerIdle";
+        switch (player.GetFacing()) {
+            case Player.FaceDir.UP:
+            case Player.FaceDir.UP_LEFT:
+            case Player.FaceDir.UP_RIGHT:
+                player.GetAnimatedSprite().Animation = "PlayerIdleUp";
+                break;
+            case Player.FaceDir.DOWN:
+                player.GetAnimatedSprite().Animation = "PlayerIdleDown";
+                break;
+            case Player.FaceDir.RIGHT:
+            case Player.FaceDir.LEFT:
+                player.GetAnimatedSprite().Animation = "PlayerIdleRight";
+                break;
+            case Player.FaceDir.DOWN_RIGHT:
+            case Player.FaceDir.DOWN_LEFT:
+                player.GetAnimatedSprite().Animation = "PlayerIdleDownRight";
+                break;
+        }
+        //player.GetAnimatedSprite().Animation = "PlayerIdle";
         player.GetAnimatedSprite().SpeedScale = 1;
         player.GetAnimatedSprite().Play();
         // We can check to see if the player is running

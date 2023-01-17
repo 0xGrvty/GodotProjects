@@ -18,7 +18,7 @@ public class Main : Node
         mainCamera = GetNode<Camera2D>("Camera2D");
         cameraBounds = new Vector2(50, 50);
         enemySpawnTimer = 3f;
-        player = GetNode<Player>("Player");
+        player = GetNode<Player>("Player/Player");
         follow = player;
     }
 

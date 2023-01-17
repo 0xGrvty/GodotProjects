@@ -10,7 +10,7 @@ public class Hammer : Area2D {
     private const float MAX_SPEED = 12f;
     private const float BASE_TIME_ALIVE = 3f;
 
-    private Vector2 spawnPosition;
+    private Player source;
     private float positionAngle;
     private float frequency;
     private float radius;
@@ -23,10 +23,9 @@ public class Hammer : Area2D {
     private float amplitudeX;
     private float amplitudeY;
 
-    public void Init(Vector2 SpawnPosition) {
-        this.spawnPosition = SpawnPosition;
-        Position = SpawnPosition;
-        GD.Print("Starting Position: " + Position);
+    public void Init(Player source) {
+        this.source = source;
+        Position = Vector2.Zero;
         positionAngle = 0f;
         frequency = 15f;
         radius = 50f;
@@ -34,7 +33,8 @@ public class Hammer : Area2D {
         rotationAngle = 0f;
         xOffset = 0f;
         yOffset = 0f;
-        xDirection = 1;
+        //xDirection = source.GetAnimatedSprite().FlipH ? -1 : 1;
+        xDirection = source.FacingRight ? 1 : -1;
         yDirection = 1;
         amplitudeX = 1f;
         amplitudeY = 1f;
@@ -60,8 +60,8 @@ public class Hammer : Area2D {
         // rotationAngle = the rotation angle of the object itself
         // These are related by frequency so it looks like the hammer is consistently spinning around the head of the hammer no matter where it is on the circle
         // however the rotation angle should spin faster than the position angle so that it looks like it's spinning and not riding a line
-        Position = new Vector2(xOffset + xDirection * Mathf.Cos(positionAngle * frequency) * radius * amplitudeX,
-            yOffset + yDirection * Mathf.Sin(positionAngle * frequency) * radius * amplitudeY) + spawnPosition;
+        Position = new Vector2((xDirection * xOffset) + Mathf.Cos(positionAngle * frequency) * radius * amplitudeX,
+            (yDirection * yOffset) + Mathf.Sin(positionAngle * frequency) * radius * amplitudeY) + Position;
         Rotation = rotationAngle * frequency;
         maxTimeAlive -= delta;
         if (maxTimeAlive <= 0) {

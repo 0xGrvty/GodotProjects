@@ -5,6 +5,8 @@ using System.Diagnostics;
 
 public abstract class  Enemy : KinematicBody2D
 {
+    [Signal]
+    public delegate void Hit(int damage);
 
     private int health;
     
@@ -44,6 +46,7 @@ public abstract class  Enemy : KinematicBody2D
             var angle = i * 2 * Mathf.Pi / numRays;
             rayDirections[i] = Vector2.Right.Rotated(angle);
         }
+        Connect(nameof(Hit), this, nameof(TakeDamage));
     }
 
     public override void _PhysicsProcess(float delta) {
@@ -188,5 +191,13 @@ public abstract class  Enemy : KinematicBody2D
                 return Position.DirectionTo(target.Position) * moveSpeed;
         }
         return Vector2.Zero;
+    }
+
+    private void TakeDamage(int damage) {
+        health -= damage;
+        GD.Print("Oh shit I'm dying");
+        if (health <= 0) {
+            QueueFree();
+        }
     }
 }

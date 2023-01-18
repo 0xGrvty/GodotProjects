@@ -45,6 +45,7 @@ public class PlayerBody : KinematicBody2D {
     private int maxSpeed;
     private FaceDir facing = FaceDir.RIGHT;
     private Vector2 velocity = Vector2.Zero;
+    public Vector2 Velocity { get => velocity; }
     public Vector2 screenSize = Vector2.Zero;
     private bool isMoving = false;
     private float attackCooldown;
@@ -91,7 +92,7 @@ public class PlayerBody : KinematicBody2D {
     public override void _PhysicsProcess(float delta) {
         //DoMovement();
         //velocity = Vector2.Zero;
-        isMoving = GetMovementInput() != Vector2.Zero;
+        //isMoving = velocity != Vector2.Zero;
         currentState = currentState.EnterState(this);
         Update();
     }
@@ -202,4 +203,5 @@ public class PlayerBody : KinematicBody2D {
     public Health GetHealth() {
         return health;
     }
+
 }

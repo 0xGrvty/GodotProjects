@@ -2,14 +2,18 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Hammer : Area2D {
+
     private const float BASE_RADIUS = 50;
-    private const float RADIUS_GROWTH_SPEED = 70f;
+    private const float RADIUS_GROWTH_SPEED = 8f;
     private const float PI_6 = Mathf.Pi / 6;
     private const float MAX_SPEED = 12f;
     private const float BASE_TIME_ALIVE = 3f;
+    private const float BASE_DAMAGE = 50.0f;
 
+    private float damage;
     private Node2D source;
     private float positionAngle;
     private float frequency;
@@ -22,6 +26,7 @@ public class Hammer : Area2D {
     private int yDirection;
     private float amplitudeX;
     private float amplitudeY;
+    private List<Node2D> hitList;
 
     public void Init(Node2D source) {
         this.source = source;
@@ -38,7 +43,8 @@ public class Hammer : Area2D {
         yDirection = 1;
         amplitudeX = 1f;
         amplitudeY = 1f;
-
+        damage = BASE_DAMAGE;
+        hitList = new List<Node2D>();
     }
 
     public override void _PhysicsProcess(float delta) {
@@ -69,6 +75,15 @@ public class Hammer : Area2D {
             GD.Print("Queue Free Position: " + Position);
             QueueFree();
         }
+    }
+
+    public void OnHammerBodyEntered(Node2D body) {
+        //body.CallDeferred("TakeDamage", damage);
+        if (hitList.Contains(body)) {
+            return;
+        }
+        hitList.Add(body);
+        body.EmitSignal("Hit", damage);
     }
 
 }

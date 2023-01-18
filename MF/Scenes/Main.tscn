@@ -77,6 +77,9 @@ color = Color( 0.545098, 0.545098, 0.545098, 1 )
 
 [node name="Player" parent="." groups=["actors"] instance=ExtResource( 1 )]
 
+[node name="AnimatedSprite" parent="Player/PlayerBody" index="0"]
+frame = 1
+
 [node name="StartPosition" type="Position2D" parent="."]
 position = Vector2( 960, 540 )
 

@@ -4,8 +4,9 @@ using System;
 public class PlayerRunState : IStateMachine {
     public IStateMachine EnterState(PlayerBody player) {
         // Tell the player to do their movement whenever they are in the Run state
+        // This will also set the player's facing
         player.DoMovement();
-        var tempScale = player.Scale;
+        //var tempScale = player.Scale;
         switch (player.GetFacing()) {
             case PlayerBody.FaceDir.UP:
             case PlayerBody.FaceDir.UP_LEFT:
@@ -25,10 +26,10 @@ public class PlayerRunState : IStateMachine {
                 break;
         }
         if (Mathf.Sign(player.GetVelocity().x) > 0 && player.GetAnimatedSprite().FlipH || Mathf.Sign(player.GetVelocity().x) < 0 && !player.GetAnimatedSprite().FlipH) {
+            player.GetAnimatedSprite().FlipH = !player.GetAnimatedSprite().FlipH; //<-- Super simple way to flip the graphics, but need to find a way to flip or rotate the whole KinematicBody2D so that things that spawn under it as a child use its local coordinates
+            //player.Scale = new Vector2(tempScale.x * -1, 3); // <-- Some other methods of flipping
             //player.Scale = new Vector2(tempScale.x, 3);
             //player.Rotation = 0;
-            player.GetAnimatedSprite().FlipH = !player.GetAnimatedSprite().FlipH; //<-- Super simple way to flip the graphics, but need to find a way to flip or rotate the whole KinematicBody2D so that things that spawn under it as a child use its local coordinates
-            //player.Scale = new Vector2(tempScale.x * -1, 3);
         }
         //else if (Mathf.Sign(player.GetVelocity().x) < 0) {
         //    //player.Scale = new Vector2(-tempScale.x, 3);

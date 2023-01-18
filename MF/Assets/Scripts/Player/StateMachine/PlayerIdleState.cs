@@ -6,6 +6,8 @@ public class PlayerIdleState : IStateMachine {
     
     private bool takenDamage = false;
     public IStateMachine EnterState(PlayerBody player) {
+        
+        
         switch (player.GetFacing()) {
             case PlayerBody.FaceDir.UP:
             case PlayerBody.FaceDir.UP_LEFT:
@@ -27,7 +29,9 @@ public class PlayerIdleState : IStateMachine {
         //player.GetAnimatedSprite().Animation = "PlayerIdle";
         player.GetAnimatedSprite().SpeedScale = 1;
         player.GetAnimatedSprite().Play();
-        // We can check to see if the player is running
+        // Tell the player to do their movement while in idle state.
+        // If they move, then we are no longer idle.
+        player.DoMovement();
         if (player.IsMoving) {
             EmitChangeStateSignal(player, player.playerRunState);
             return player.playerRunState;
@@ -39,6 +43,7 @@ public class PlayerIdleState : IStateMachine {
             return player.playerAttackState;
         }
 
+        // Some testing stuff to take damage, ignore for now.
         if (Input.IsActionPressed("DamageTest")) {
             //player.GetNode<Node>("Health").CallDeferred("TakeDamage", -5);
             if (!takenDamage) {

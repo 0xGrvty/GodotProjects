@@ -18,9 +18,9 @@ public class PlayerBody : KinematicBody2D {
     private delegate void HealDamage(int health);
 
     [Export]
-    private int health = 100;
+    public int health = 100;
     [Export]
-    private int maxHealth = 500;
+    public int maxHealth = 500;
 
     // Constants
     private float BASE_ATTACK_SPEED = 1f;
@@ -49,8 +49,8 @@ public class PlayerBody : KinematicBody2D {
     private HealthListener healthListener;
     private Dictionary playerStats = new Dictionary();
     private Vector2 lastPos = Vector2.Zero;
-    private bool takenDamage = false;
-    private bool healedDamage = false;
+    public bool takenDamage = false;
+    public bool healedDamage = false;
     //private KinematicBody2D kinematicBody2D;
 
     // State Machine
@@ -96,34 +96,25 @@ public class PlayerBody : KinematicBody2D {
         var transform = Transform;
         transform.origin = lastPos.LinearInterpolate(GlobalTransform.origin, fraction);
 
-        // Some testing stuff to take damage, ignore for now.
-        if (Input.IsActionPressed("DamageTest")) {
-            takenDamage = true;
+        if (Input.IsActionJustPressed("DamageTest")) {
+            health -= 5;
+            health = Math.Max(0, health);
+            //GD.Print(String.Format("We took {0} damage and we are now at {1}", 5, health));
+            EmitSignal("TakeDamage", health);
         }
 
-        if (Input.IsActionPressed("HealTest")) {
-            healedDamage = true;
+        // Since the player should keep track of their own health, we will have the healthListener emit it's own signal
+        if (Input.IsActionJustPressed("HealTest")) {
+            health += 10;
+            health = Math.Min(health, maxHealth);
+            //GD.Print(String.Format("We healed {0} damage and we are now at {1}", 10, health));
+            EmitSignal("HealDamage", health);
         }
     }
 
     public override void _PhysicsProcess(float delta) {
         lastPos = velocity;
         currentState = currentState.EnterState(this);
-        if (takenDamage) {
-            takenDamage = !takenDamage;
-            health -= 5;
-            health = Math.Max(0, health);
-            GD.Print(String.Format("We took {0} damage and we are now at ", 5, health));
-            EmitSignal("TakeDamage");
-        }
-
-        if (healedDamage) {
-            healedDamage = !healedDamage;
-            health += 10;
-            health = Math.Min(health, maxHealth);
-            GD.Print(String.Format("We healed {0} damage and we are now at ", 10, health));
-            EmitSignal("HealDamage");
-        }
         // Redraw debug visuals
         //Update();
     }

@@ -26,6 +26,7 @@ align = 1
 margin_top = 18.0
 margin_right = 67.0
 margin_bottom = 85.0
+max_value = 500.0
 value = 20.0
 texture_over = ExtResource( 1 )
 texture_progress = ExtResource( 2 )

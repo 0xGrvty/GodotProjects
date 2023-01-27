@@ -5,21 +5,20 @@ public class Main : Node
 {
     [Export]
     public PackedScene RockManScene;
-
-    private Camera2D mainCamera;
     private Node2D follow;
     private Vector2 cameraBounds;
     private float enemySpawnTimer = 0;
     private Node2D player;
+    private Camera2D mainCamera;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        mainCamera = GetNode<Camera2D>("Camera2D");
         cameraBounds = new Vector2(50, 50);
         enemySpawnTimer = 3f;
-        player = GetNode<Node2D>("Player/PlayerBody");
+        player = GetNode<KinematicBody2D>("Player");
         follow = player;
+        mainCamera = player.GetNode<Camera2D>("Camera2D");
     }
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,8 +28,6 @@ public class Main : Node
     //  }
 
     public override void _PhysicsProcess(float delta) {
-        mainCamera.Align();
-        mainCamera.Position = follow.Position;
         enemySpawnTimer -= delta;
         if (enemySpawnTimer <= 0) {
             enemySpawnTimer = 3f;

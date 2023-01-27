@@ -3,8 +3,6 @@ using Godot.Collections;
 using System;
 
 public class PlayerIdleState : IStateMachine {
-    
-    private bool takenDamage = false;
     public IStateMachine EnterState(PlayerBody player) {
         
         
@@ -41,19 +39,6 @@ public class PlayerIdleState : IStateMachine {
         if (Input.IsActionPressed("BlessedHammer")) {
             EmitChangeStateSignal(player, player.playerAttackState);
             return player.playerAttackState;
-        }
-
-        // Some testing stuff to take damage, ignore for now.
-        if (Input.IsActionPressed("DamageTest")) {
-            //player.GetNode<Node>("Health").CallDeferred("TakeDamage", -5);
-            if (!takenDamage) {
-                takenDamage = true;
-                player.GetHealth().TakeDamage(5);
-            }
-        }
-
-        if (Input.IsActionJustReleased("DamageTest")) {
-            takenDamage = false;
         }
 
         // Otherwise, we can assume the player is standing still

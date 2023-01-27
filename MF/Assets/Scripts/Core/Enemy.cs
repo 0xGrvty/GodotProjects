@@ -195,7 +195,7 @@ public abstract class  Enemy : KinematicBody2D
 
     private void TakeDamage(int damage) {
         health -= damage;
-        GD.Print("Oh shit I'm dying");
+        //GD.Print("Oh shit I'm dying");
         if (health <= 0) {
             QueueFree();
         }

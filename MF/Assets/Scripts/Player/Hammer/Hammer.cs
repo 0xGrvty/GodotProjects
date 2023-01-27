@@ -27,6 +27,7 @@ public class Hammer : Area2D {
     private float amplitudeX;
     private float amplitudeY;
     private List<Node2D> hitList;
+    private AudioStreamPlayer2D audio;
 
     public void Init(Node2D source) {
         this.source = source;
@@ -45,6 +46,8 @@ public class Hammer : Area2D {
         amplitudeY = 1f;
         damage = BASE_DAMAGE;
         hitList = new List<Node2D>();
+        audio = GetNode<AudioStreamPlayer2D>("BlessedHammerSound");
+        audio.Play();
     }
 
     public override void _PhysicsProcess(float delta) {
@@ -72,7 +75,6 @@ public class Hammer : Area2D {
         Rotation = rotationAngle * frequency;
         maxTimeAlive -= delta;
         if (maxTimeAlive <= 0) {
-            GD.Print("Queue Free Position: " + Position);
             QueueFree();
         }
     }

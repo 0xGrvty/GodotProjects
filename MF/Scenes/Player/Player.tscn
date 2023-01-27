@@ -3,7 +3,7 @@
 [ext_resource path="res://Assets/Scripts/Player/PlayerBody.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Player/PlayerRun/PlayerRun_Temp.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Player/PlayerAttack/PlayerAttack_Temp.png" type="Texture" id=3]
-[ext_resource path="res://Assets/Scripts/Player/Health.cs" type="Script" id=4]
+[ext_resource path="res://Assets/Scripts/Player/HealthListener.cs" type="Script" id=4]
 [ext_resource path="res://Assets/Player/PlayerIdle/PlayerIdle_Temp.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Player/PlayerIdle/PlayerIdle_Temp2.png" type="Texture" id=6]
 [ext_resource path="res://Scenes/Player/Hammer.tscn" type="PackedScene" id=28]
@@ -419,26 +419,24 @@ animations = [ {
 radius = 6.0
 height = 0.0
 
-[node name="Player" type="Node2D"]
-
-[node name="PlayerBody" type="KinematicBody2D" parent="."]
+[node name="PlayerBody" type="KinematicBody2D"]
 scale = Vector2( 3, 3 )
 script = ExtResource( 1 )
 hammerScene = ExtResource( 28 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="PlayerBody"]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "PlayerIdleDown"
-frame = 29
+frame = 4
 playing = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBody"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="Position2D" type="Position2D" parent="PlayerBody"]
+[node name="Position2D" type="Position2D" parent="."]
 __meta__ = {
 "_gizmo_extents_": 16.0
 }
 
-[node name="Health" type="Node" parent="."]
+[node name="HealthListener" type="Node" parent="."]
 script = ExtResource( 4 )

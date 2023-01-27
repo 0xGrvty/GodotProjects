@@ -13,9 +13,14 @@ public class PlayerBody : KinematicBody2D {
     [Signal]
     private delegate void StateChanged();
     [Signal]
-    private delegate void HealthChanged(int health);
+    private delegate void TakeDamage(int health);
     [Signal]
-    private delegate void InitStats(int initMaxHealth);
+    private delegate void HealDamage(int health);
+
+    [Export]
+    private int health = 100;
+    [Export]
+    private int maxHealth = 500;
 
     // Constants
     private float BASE_ATTACK_SPEED = 1f;
@@ -31,16 +36,6 @@ public class PlayerBody : KinematicBody2D {
         DOWN_LEFT = 5,
         DOWN_RIGHT = 6,
         DOWN = 7,
-
-
-        //UP = 0,
-        //DOWN = 1,
-        //LEFT = 2,
-        //RIGHT = 3,
-        //UP_LEFT = 4,
-        //UP_RIGHT = 5,
-        //DOWN_LEFT = 6,
-        //DOWN_RIGHT = 7
     };
     private int maxSpeed;
     private FaceDir facing = FaceDir.RIGHT;
@@ -51,10 +46,11 @@ public class PlayerBody : KinematicBody2D {
     private float attackCooldown;
     private float baseAttackCooldown;
     private bool isAttacking = false;
-    private Health health;
+    private HealthListener healthListener;
     private Dictionary playerStats = new Dictionary();
-    private bool facingRight = true;
-    public bool FacingRight { get => facingRight; set => facingRight = value; }
+    private Vector2 lastPos = Vector2.Zero;
+    private bool takenDamage = false;
+    private bool healedDamage = false;
     //private KinematicBody2D kinematicBody2D;
 
     // State Machine
@@ -68,7 +64,7 @@ public class PlayerBody : KinematicBody2D {
     public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
 
     public override void _Ready() {
-        Position = GetParent().GetNode<Position2D>("../StartPosition").Position;
+        Position = GetParent().GetNode<Position2D>("StartPosition").Position;
         screenSize = GetViewportRect().Size;
 
         currentState = playerIdleState;
@@ -77,7 +73,10 @@ public class PlayerBody : KinematicBody2D {
         baseAttackCooldown = (14f / 12);
         attackCooldown = baseAttackCooldown;
         Connect("StateChanged", this, "OnStateChanged");
-        health = (Health)GetParent().GetNode<Node>("Health");
+        healthListener = (HealthListener)GetNode<Node>("HealthListener");
+        Connect("TakeDamage", healthListener, "OnTakeDamage");
+        Connect("HealDamage", healthListener, "OnHealDamage");
+        healthListener.Init(health, maxHealth);
         //kinematicBody2D = GetNode<KinematicBody2D>("KinematicBody2D");
     }
 
@@ -89,12 +88,44 @@ public class PlayerBody : KinematicBody2D {
         }
     }
 
+    public override void _Process(float delta) {
+        // This fixes the jitter.  It gets a fraction  through the current physics tick
+        // and uses that fraction as the weight to linearly interpolate the transform of the object (in this case the enemy)
+        // from the previous position
+        var fraction = Engine.GetPhysicsInterpolationFraction();
+        var transform = Transform;
+        transform.origin = lastPos.LinearInterpolate(GlobalTransform.origin, fraction);
+
+        // Some testing stuff to take damage, ignore for now.
+        if (Input.IsActionPressed("DamageTest")) {
+            takenDamage = true;
+        }
+
+        if (Input.IsActionPressed("HealTest")) {
+            healedDamage = true;
+        }
+    }
+
     public override void _PhysicsProcess(float delta) {
-        //DoMovement();
-        //velocity = Vector2.Zero;
-        //isMoving = velocity != Vector2.Zero;
+        lastPos = velocity;
         currentState = currentState.EnterState(this);
-        Update();
+        if (takenDamage) {
+            takenDamage = !takenDamage;
+            health -= 5;
+            health = Math.Max(0, health);
+            GD.Print(String.Format("We took {0} damage and we are now at ", 5, health));
+            EmitSignal("TakeDamage");
+        }
+
+        if (healedDamage) {
+            healedDamage = !healedDamage;
+            health += 10;
+            health = Math.Min(health, maxHealth);
+            GD.Print(String.Format("We healed {0} damage and we are now at ", 10, health));
+            EmitSignal("HealDamage");
+        }
+        // Redraw debug visuals
+        //Update();
     }
 
     public override void _Draw() {
@@ -113,14 +144,12 @@ public class PlayerBody : KinematicBody2D {
         if (Input.IsActionPressed("Left")) {
             velocity += Vector2.Left;
             facing = FaceDir.LEFT;
-            if (Mathf.Sign(velocity.y) > 0) { facing = FaceDir.DOWN_LEFT; }
-            else if (Mathf.Sign(velocity.y) < 0) { facing = FaceDir.UP_LEFT; }
+            if (Mathf.Sign(velocity.y) > 0) { facing = FaceDir.DOWN_LEFT; } else if (Mathf.Sign(velocity.y) < 0) { facing = FaceDir.UP_LEFT; }
         }
         if (Input.IsActionPressed("Right")) {
             velocity += Vector2.Right;
             facing = FaceDir.RIGHT;
-            if (Mathf.Sign(velocity.y) > 0) { facing = FaceDir.DOWN_RIGHT; }
-            else if (Mathf.Sign(velocity.y) < 0) { facing = FaceDir.UP_RIGHT; }
+            if (Mathf.Sign(velocity.y) > 0) { facing = FaceDir.DOWN_RIGHT; } else if (Mathf.Sign(velocity.y) < 0) { facing = FaceDir.UP_RIGHT; }
         }
 
         return velocity;
@@ -131,7 +160,7 @@ public class PlayerBody : KinematicBody2D {
         velocity = GetMovementInput().Normalized() * maxSpeed; // GetMovementInput() returns velocity
         isMoving = velocity != Vector2.Zero; // Check to see if velocity is not zero
         MoveAndSlide(velocity);
-        
+
         //Position += velocity * GetPhysicsProcessDeltaTime();
         //Velocity * GetPhysicsProcessDeltaTime();
         //Velocity = Vector2.Zero;
@@ -200,8 +229,8 @@ public class PlayerBody : KinematicBody2D {
         maxSpeed = speed;
     }
 
-    public Health GetHealth() {
-        return health;
+    public HealthListener GetHealth() {
+        return healthListener;
     }
 
 }

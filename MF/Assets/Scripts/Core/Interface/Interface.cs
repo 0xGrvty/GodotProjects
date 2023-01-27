@@ -8,10 +8,10 @@ public class Interface : Control
     [Signal]
     public delegate void InitStats(int initHealth);
     public override void _Ready() {
-        Health healthNode = null;
+        HealthListener healthNode = null;
         foreach (Node n in GetTree().GetNodesInGroup("actors")) {
             if (n.Name == "Player") {
-                healthNode = (Health)n.GetNode<Node>("Health");
+                healthNode = (HealthListener)n.GetNode<Node>("HealthListener");
                 break;
             }
         }

@@ -30,8 +30,7 @@ public class UI : Control
         }
         GD.Print("Health Listener found.  Max health: " + healthListener.GetMaxHealth());
 
-        // Programmatically connect this signal since our enemy is added programmatically and not packed as a scene
-        Connect("Died", this, "OnEnemyDied");
+        
     }
 
     // On HealthListener Changed
@@ -41,6 +40,7 @@ public class UI : Control
 
     // On Enemy Died
     public void OnEnemyDied() {
+        GD.Print("We fucking died");
         EmitSignal(nameof(EnemyDied));
     }
 }

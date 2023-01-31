@@ -7,15 +7,20 @@ public class Stats : Control
     private Label speedLabel;
     private Label damageLabel;
     private Label killsLabel;
+
+    private int killCounter;
     public override void _Ready()
     {
         vbox = GetNode<VBoxContainer>("VBoxContainer");
         speedLabel = vbox.GetNode<Label>("Speed");
         damageLabel = vbox.GetNode<Label>("Damage");
         killsLabel = vbox.GetNode<Label>("Kills");
+        killCounter = 0;
+        killsLabel.Text = String.Format("Kills: {0}", killCounter);
     }
 
     private void OnStatsContainerEnemyDied() {
-        killsLabel.Text = 100.ToString();
+        killCounter++;
+        killsLabel.Text = String.Format("Kills: {0}", killCounter);
     }
 }

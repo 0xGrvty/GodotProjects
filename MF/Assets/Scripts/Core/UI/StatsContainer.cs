@@ -13,7 +13,7 @@ public class StatsContainer : Control
         stats = GetNode<Control>("Stats");
     }
 
-    public void OnEnemyDied() {
+    public void OnUIEnemyDied() {
         EmitSignal(nameof(EnemyDied));
     }
 

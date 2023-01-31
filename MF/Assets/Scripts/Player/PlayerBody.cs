@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Runtime.CompilerServices;
 
 public class PlayerBody : KinematicBody2D {
 
@@ -16,6 +17,8 @@ public class PlayerBody : KinematicBody2D {
     private delegate void TakeDamage(int health);
     [Signal]
     private delegate void HealDamage(int health);
+    [Signal]
+    public delegate void VelocityChanged(Vector2 velocity);
 
     [Export]
     public int health = 100;
@@ -115,6 +118,8 @@ public class PlayerBody : KinematicBody2D {
     public override void _PhysicsProcess(float delta) {
         lastPos = velocity;
         currentState = currentState.EnterState(this);
+        // This may be a bad idea to send a signal every single frame.  Let's think of another way to propogate the signal to the UI
+        // EmitSignal(nameof(VelocityChanged()));
         // Redraw debug visuals
         //Update();
     }

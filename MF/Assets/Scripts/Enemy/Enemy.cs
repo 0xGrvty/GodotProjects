@@ -198,8 +198,9 @@ public abstract class Enemy : KinematicBody2D {
         if (health <= 0) {
             if (source.GetType() == typeof(PlayerBody) || source.GetParent().GetType() == typeof(PlayerBody)) {
                 // add to kill counter if the source was the player or if the source was created by the player
-                EmitSignal("Died");
+                EmitSignal(nameof(Died));
             }
+            EmitSignal(nameof(Died));
             QueueFree();
         }
     }

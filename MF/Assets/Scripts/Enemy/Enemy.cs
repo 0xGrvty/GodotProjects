@@ -3,13 +3,14 @@ using Godot.Collections;
 using System;
 using System.Diagnostics;
 
-public abstract class  Enemy : KinematicBody2D
-{
+public abstract class Enemy : KinematicBody2D {
     [Signal]
-    public delegate void Hit(int damage);
+    public delegate void Hit(int damage, Node2D source);
+    [Signal]
+    public delegate void Died();
 
     private int health;
-    
+
     private Vector2 velocity;
     private Node2D target;
     private EnemyBehavior behavior;
@@ -121,7 +122,7 @@ public abstract class  Enemy : KinematicBody2D
             var result = spaceState.IntersectRay(Position,
                 Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array(this));
             if (result.Count != 0) {
-                Vector2 d = (Vector2) result["position"];
+                Vector2 d = (Vector2)result["position"];
                 interest[i] = Mathf.Max(0, d.Normalized().Length());
             }
         }
@@ -169,11 +170,9 @@ public abstract class  Enemy : KinematicBody2D
         var distanceToPlayer = Position.DistanceTo(target.Position);
         if (distanceToPlayer <= PATROL_DISTANCE) {
             behavior = EnemyBehavior.PATROL;
-        }
-        else if (distanceToPlayer > PATROL_DISTANCE && distanceToPlayer <= AGGRO_DISTANCE) {
+        } else if (distanceToPlayer > PATROL_DISTANCE && distanceToPlayer <= AGGRO_DISTANCE) {
             behavior = EnemyBehavior.MOVE_TOWARDS;
-        }
-        else {
+        } else {
             behavior = EnemyBehavior.IDLE;
         }
     }
@@ -193,10 +192,14 @@ public abstract class  Enemy : KinematicBody2D
         return Vector2.Zero;
     }
 
-    private void TakeDamage(int damage) {
+    private void TakeDamage(int damage, Node2D source) {
         health -= damage;
         //GD.Print("Oh shit I'm dying");
         if (health <= 0) {
+            if (source.GetType() == typeof(PlayerBody) || source.GetParent().GetType() == typeof(PlayerBody)) {
+                // add to kill counter if the source was the player or if the source was created by the player
+                EmitSignal("Died");
+            }
             QueueFree();
         }
     }

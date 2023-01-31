@@ -427,7 +427,7 @@ hammerScene = ExtResource( 28 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "PlayerIdleDown"
-frame = 4
+frame = 15
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

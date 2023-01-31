@@ -85,7 +85,7 @@ public class Hammer : Area2D {
             return;
         }
         hitList.Add(body);
-        body.EmitSignal("Hit", damage);
+        body.EmitSignal("Hit", damage, this);
     }
 
 }

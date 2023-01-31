@@ -16,6 +16,8 @@ public class UI : Control
 {
     [Signal]
     public delegate void HealthChanged(int health);
+    [Signal]
+    public delegate void EnemyDied();
 
     public override void _Ready()
     {
@@ -27,11 +29,18 @@ public class UI : Control
             }
         }
         GD.Print("Health Listener found.  Max health: " + healthListener.GetMaxHealth());
+
+        // Programmatically connect this signal since our enemy is added programmatically and not packed as a scene
+        Connect("Died", this, "OnEnemyDied");
     }
 
     // On HealthListener Changed
     public void OnHealthListenerChanged(int health, int maxHealth) {
-        EmitSignal("HealthChanged", health, maxHealth);
+        EmitSignal(nameof(HealthChanged), health, maxHealth);
     }
 
+    // On Enemy Died
+    public void OnEnemyDied() {
+        EmitSignal(nameof(EnemyDied));
+    }
 }

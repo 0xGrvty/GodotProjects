@@ -4,7 +4,7 @@
 [ext_resource path="res://Scenes/UI/UI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Scripts/Core/Main.cs" type="Script" id=3]
 [ext_resource path="res://Scenes/Enemy/RockMan.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Assets/Scripts/Core/EnemyCurveTween.cs" type="Script" id=5]
+[ext_resource path="res://Assets/Scripts/Enemy/EnemyCurveTween.cs" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12.5, 13.5 )
@@ -78,7 +78,7 @@ color = Color( 0.545098, 0.545098, 0.545098, 1 )
 [node name="Player" parent="." groups=["actors"] instance=ExtResource( 1 )]
 
 [node name="AnimatedSprite" parent="Player" index="0"]
-frame = 13
+frame = 71
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 scale = Vector2( 0.333333, 0.333333 )

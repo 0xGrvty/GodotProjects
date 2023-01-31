@@ -3,6 +3,8 @@ using System;
 
 public class Main : Node
 {
+    [Signal]
+    private delegate void EnemyDied();
     [Export]
     public PackedScene RockManScene;
     private Node2D follow;
@@ -37,6 +39,7 @@ public class Main : Node
             rockMan.Position = enemySpawnLocation.Position;
             rockMan.Spawn(player);
             AddChild(rockMan);
+            //rockMan.Connect(rockMan.GetSignalList()[0]["name"], GetNode<Control>("/CanvasLayer/UI"), "OnEnemyDied");
         }
     }
 

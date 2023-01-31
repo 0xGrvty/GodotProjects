@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/Scripts/Core/RockMan.cs" type="Script" id=1]
+[ext_resource path="res://Assets/Scripts/Enemy/RockMan/RockMan.cs" type="Script" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 20, 20 )
 
-[node name="RockMan" type="KinematicBody2D"]
+[node name="RockMan" type="KinematicBody2D" groups=["enemy"]]
 collision_layer = 2
 script = ExtResource( 1 )
 

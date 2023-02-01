@@ -5,26 +5,23 @@ using System;
 // a scene is able to receive signals from other scenes and divide tasks amongst 
 // its own child scenes.  Take this UI node for example.
 // The UI node has the following children:
-// - Stats (to be completed)
-// - DebugStats (to be completed)
-// - Visual Stats
-// - - Health Orb
-// The UI class takes a signal from the player's HealthListener node
+// - StatsContainer (to be completed)
+// - Stats
+// - DebugStatsContainer (to be completed)
+// - VisualStatsContainer
+// - - HealthBar
+// The UI class takes a signal from the player
 // and the UI class then propogates that signal down to the Health Orb.
 // Pretty cool stuff.  I should learn how to really utilize this more.
-public class UI : Control
-{
-    [Signal]
-    public delegate void PlayerHealthChanged(int health);
-    [Signal]
-    public delegate void EnemyDied();
+public class UI : Control {
 
+    [Signal]
+    public delegate void PlayerHealthChanged();
     private Stats stats;
-    private HealthBar visualStats;
+    private HealthBar healthBar;
     //private DebugContainer debugContainer;
 
-    public override void _Ready()
-    {
+    public override void _Ready() {
         // Let's try to decouple this even more.  We have a main root scene we can utilize
         //HealthListener healthListener = null;
         //PlayerBody player = null;
@@ -37,25 +34,25 @@ public class UI : Control
         //}
         //GD.Print("Health Listener found.  Max health: " + healthListener.GetMaxHealth());
         stats = (Stats)GetNode<Control>("StatsContainer/Stats");
-        visualStats = (HealthBar)GetNode<Control>("VisualStatsContainer/HealthBar");
-        Connect(nameof(EnemyDied), stats, "OnUIEnemyDied");
-        Connect(nameof(PlayerHealthChanged), visualStats, "OnUIChanged");
+        healthBar = (HealthBar)GetNode<Control>("VisualStatsContainer/HealthBar");
+        //Connect(nameof(PlayerHealthChanged), this, nameof(OnPlayerHealthChanged));
     }
 
     // On HealthListener Changed
     public void OnHealthListenerChanged(int health, int maxHealth) {
-        EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+        EmitSignal(nameof(HealthBar.UIPlayerHealthChanged), health, maxHealth);
     }
 
     public void OnPlayerHealthChanged(int health, int maxHealth) {
-        EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+        healthBar.EmitSignal(nameof(HealthBar.UIPlayerHealthChanged), health, maxHealth);
     }
 
     // On Enemy Died
     public void OnEnemyDied() {
-        EmitSignal(nameof(EnemyDied));
+        stats.EmitSignal(nameof(Stats.EnemyDied));
     }
 
     public void OnPlayerVelocityChanged(int speed) {
+        stats.EmitSignal(nameof(Stats.PlayerMoveSpeedChanged), speed);
     }
 }

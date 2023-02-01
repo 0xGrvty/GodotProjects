@@ -3,6 +3,8 @@ using System;
 
 public class HealthBar : Control
 {
+    [Signal]
+    public delegate void UIPlayerHealthChanged();
     private VBoxContainer vContainer;
     private Label lifeValue;
     private TextureProgress healthOrb;
@@ -10,6 +12,7 @@ public class HealthBar : Control
         vContainer = GetNode<VBoxContainer>("VContainer");
         lifeValue = vContainer.GetNode<Label>("LifeValue");
         healthOrb = vContainer.GetNode<TextureProgress>("HealthOrb");
+        Connect(nameof(UIPlayerHealthChanged), this, nameof(OnUIHealthChanged));
     }
 
     private void OnUIHealthChanged(int health, int maxHealth) {

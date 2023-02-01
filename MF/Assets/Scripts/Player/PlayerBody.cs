@@ -83,8 +83,7 @@ public class PlayerBody : KinematicBody2D {
         //Connect("HealDamage", healthListener, "OnHealDamage");
         //healthListener.Init(health, maxHealth);
         //kinematicBody2D = GetNode<KinematicBody2D>("KinematicBody2D");
-        EmitSignal(nameof(VelocityChanged), maxSpeed);
-        EmitSignal(nameof(HealthChanged), health, maxHealth);
+        
     }
 
     public override void _UnhandledInput(InputEvent @event) {
@@ -93,6 +92,11 @@ public class PlayerBody : KinematicBody2D {
             //    currentState = playerAttackState;
             //}
         }
+    }
+
+    public void InitPlayerStats() {
+        EventBus.Instance.EmitSignal(nameof(PlayerVelocityChanged), maxSpeed);
+        EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
     }
 
     public override void _Process(float delta) {
@@ -107,7 +111,7 @@ public class PlayerBody : KinematicBody2D {
             health -= 5;
             health = Math.Max(0, health);
             //GD.Print(String.Format("We took {0} damage and we are now at {1}", 5, health));
-            EmitSignal(nameof(HealthChanged), health, maxHealth);
+            EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
         }
 
         // Since the player should keep track of their own health, we will have the healthListener emit it's own signal
@@ -115,7 +119,7 @@ public class PlayerBody : KinematicBody2D {
             health += 10;
             health = Math.Min(health, maxHealth);
             //GD.Print(String.Format("We healed {0} damage and we are now at {1}", 10, health));
-            EmitSignal(nameof(HealthChanged), health, maxHealth);
+            EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
         }
     }
 

@@ -14,8 +14,9 @@ public class EventBus : Node
 
     // Signals
     [Signal]
-    public delegate void PlayerDamaged(int health);
-
+    public delegate void PlayerHealthChanged();
     [Signal]
-    public delegate void PlayerHealed(int health);
+    public delegate void PlayerVelocityChanged();
+    [Signal]
+    public delegate void InitializePlayer();
 }

@@ -197,7 +197,7 @@ public abstract class Enemy : KinematicBody2D {
         //GD.Print("Oh shit I'm dying");
         if (health <= 0) {
             if (source.GetType() == typeof(PlayerBody)) {
-                // add to kill counter if the source was the player or if the source was created by the player
+                // add to kill counter if the source was the player
                 EmitSignal(nameof(Died));
             }
             QueueFree();

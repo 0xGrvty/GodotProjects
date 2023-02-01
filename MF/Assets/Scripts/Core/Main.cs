@@ -3,18 +3,13 @@ using System;
 
 public class Main : Node
 {
-    [Signal]
-    private delegate void PlayerHealthChanged();
-    [Signal]
-    private delegate void PlayerVelocityChanged();
     [Export]
     public PackedScene RockManScene;
-    private Node2D follow;
     private Vector2 cameraBounds;
     private float enemySpawnTimer = 0;
-    private Node2D player;
+    private PlayerBody player;
     private Camera2D mainCamera;
-    private Control UI;
+    private Control userInterface;
 
     // Called when the node enters the scene tree for the first time.
     // Think of this class as a taskmaster.
@@ -23,19 +18,20 @@ public class Main : Node
     {
         cameraBounds = new Vector2(50, 50);
         enemySpawnTimer = 3f;
-        player = GetNode<KinematicBody2D>("Player");
-        follow = player;
+        player = (PlayerBody)GetNode<KinematicBody2D>("Player");
         mainCamera = player.GetNode<Camera2D>("Camera2D");
-        UI = GetNode<Control>("CanvasLayer/UI");
-        UI.Connect(nameof(PlayerHealthChanged), UI, "OnPlayerHealthChanged");
-        //UI.Connect(nameof(PlayerVelocityChanged), UI, "OnPlayerVelocityChanged");
-    }
+        userInterface = GetNode<Control>("CanvasLayer/UI");
 
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    //  public override void _Process(float delta)
-    //  {
-    //      
-    //  }
+        // Is this a better way of doing things?
+        EventBus.Instance.Connect(nameof(EventBus.PlayerHealthChanged), userInterface, "OnPlayerHealthChanged");
+        EventBus.Instance.Connect(nameof(EventBus.PlayerVelocityChanged), userInterface, "OnPlayerVelocityChanged");
+        EventBus.Instance.Connect(nameof(EventBus.InitializePlayer), player, "InitPlayerStats");
+        EventBus.Instance.EmitSignal(nameof(EventBus.InitializePlayer));
+
+        //player.InitHealth(); // <- is this the right way to do things?
+        
+        
+    }
 
     public override void _PhysicsProcess(float delta) {
         enemySpawnTimer -= delta;
@@ -48,7 +44,7 @@ public class Main : Node
             rockMan.Spawn(player);
             AddChild(rockMan);
             // Programmatically connect this signal since our enemy is added programmatically and not packed as a scene
-            rockMan.Connect(nameof(Enemy.Died), UI, "OnEnemyDied");
+            rockMan.Connect(nameof(Enemy.Died), userInterface, "OnEnemyDied");
         }
     }
 

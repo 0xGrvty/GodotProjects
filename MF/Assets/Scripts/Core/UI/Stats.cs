@@ -19,7 +19,7 @@ public class Stats : Control
         killsLabel.Text = String.Format("Kills: {0}", killCounter);
     }
 
-    private void OnStatsContainerEnemyDied() {
+    private void OnUIEnemyDied() {
         killCounter++;
         killsLabel.Text = String.Format("Kills: {0}", killCounter);
     }

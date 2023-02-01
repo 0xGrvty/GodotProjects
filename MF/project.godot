@@ -14,6 +14,10 @@ config/name="MF"
 run/main_scene="res://Scenes/Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+EventBus="*res://Assets/Scripts/Core/EventBus.cs"
+
 [display]
 
 window/size/width=1920

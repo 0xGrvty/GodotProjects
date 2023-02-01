@@ -14,11 +14,13 @@ public class PlayerBody : KinematicBody2D {
     [Signal]
     private delegate void StateChanged();
     [Signal]
-    private delegate void TakeDamage(int health);
+    public delegate void TakeDamage(int health);
     [Signal]
-    private delegate void HealDamage(int health);
+    public delegate void HealDamage(int health);
     [Signal]
-    public delegate void VelocityChanged(Vector2 velocity);
+    public delegate void PlayerHealthChanged(int health, int maxHealth);
+    [Signal]
+    public delegate void PlayerVelocityChanged(int speed);
 
     [Export]
     public int health = 100;
@@ -77,10 +79,12 @@ public class PlayerBody : KinematicBody2D {
         attackCooldown = baseAttackCooldown;
         Connect("StateChanged", this, "OnStateChanged");
         healthListener = (HealthListener)GetNode<Node>("HealthListener");
-        Connect("TakeDamage", healthListener, "OnTakeDamage");
-        Connect("HealDamage", healthListener, "OnHealDamage");
-        healthListener.Init(health, maxHealth);
+        //Connect("TakeDamage", healthListener, "OnTakeDamage");
+        //Connect("HealDamage", healthListener, "OnHealDamage");
+        //healthListener.Init(health, maxHealth);
         //kinematicBody2D = GetNode<KinematicBody2D>("KinematicBody2D");
+        EmitSignal(nameof(VelocityChanged), maxSpeed);
+        EmitSignal(nameof(HealthChanged), health, maxHealth);
     }
 
     public override void _UnhandledInput(InputEvent @event) {
@@ -103,7 +107,7 @@ public class PlayerBody : KinematicBody2D {
             health -= 5;
             health = Math.Max(0, health);
             //GD.Print(String.Format("We took {0} damage and we are now at {1}", 5, health));
-            EmitSignal("TakeDamage", health);
+            EmitSignal(nameof(HealthChanged), health, maxHealth);
         }
 
         // Since the player should keep track of their own health, we will have the healthListener emit it's own signal
@@ -111,7 +115,7 @@ public class PlayerBody : KinematicBody2D {
             health += 10;
             health = Math.Min(health, maxHealth);
             //GD.Print(String.Format("We healed {0} damage and we are now at {1}", 10, health));
-            EmitSignal("HealDamage", health);
+            EmitSignal(nameof(HealthChanged), health, maxHealth);
         }
     }
 

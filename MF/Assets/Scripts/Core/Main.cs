@@ -4,7 +4,9 @@ using System;
 public class Main : Node
 {
     [Signal]
-    private delegate void EnemyDied();
+    private delegate void PlayerHealthChanged();
+    [Signal]
+    private delegate void PlayerVelocityChanged();
     [Export]
     public PackedScene RockManScene;
     private Node2D follow;
@@ -25,6 +27,8 @@ public class Main : Node
         follow = player;
         mainCamera = player.GetNode<Camera2D>("Camera2D");
         UI = GetNode<Control>("CanvasLayer/UI");
+        UI.Connect(nameof(PlayerHealthChanged), UI, "OnPlayerHealthChanged");
+        //UI.Connect(nameof(PlayerVelocityChanged), UI, "OnPlayerVelocityChanged");
     }
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -14,7 +14,7 @@ public abstract class Enemy : KinematicBody2D {
     private Vector2 velocity;
     private Node2D target;
     private EnemyBehavior behavior;
-    private const float PATROL_DISTANCE = 500.0f;
+    private const float PATROL_DISTANCE = 200.0f;
     private const float AGGRO_DISTANCE = 750.0f;
     private MeshInstance2D mesh;
     private Vector2 lastPos;
@@ -54,7 +54,7 @@ public abstract class Enemy : KinematicBody2D {
         // Before implementing context-based steering behavior
         //lastPos = Position;
         //velocity = Vector2.Zero;
-        CheckBehavior();
+        //CheckBehavior();
         //velocity = CheckDistance(delta);
         //MoveAndSlide(velocity);
 
@@ -65,9 +65,9 @@ public abstract class Enemy : KinematicBody2D {
         ChooseDirection();
         //EmitSignal("draw");
         var desiredVelocity = chosenDir.Rotated(Rotation) * moveSpeed;
-        velocity = velocity.LinearInterpolate(desiredVelocity, steerForce);
-        //velocity = desiredVelocity;
-        Rotation = velocity.Angle();
+        //velocity = velocity.LinearInterpolate(desiredVelocity, steerForce);
+        velocity = desiredVelocity;
+        //Rotation = velocity.Angle();
         MoveAndSlide(velocity);
         Update();
     }
@@ -83,7 +83,7 @@ public abstract class Enemy : KinematicBody2D {
     }
     public override void _Draw() {
         for (int i = 0; i < numRays; i++) {
-            DrawLine(Vector2.Zero, (rayDirections[i] * 10f * velocity * interest[i]).Rotated(-Rotation), Color.ColorN("blue"), 2f);
+            DrawLine(Vector2.Zero, (rayDirections[i] * velocity * interest[i]).Rotated(-Rotation), Color.ColorN("blue"), 2f);
         }
         //DrawLine(Position, chosenDir.Rotated(Rotation) * moveSpeed, Color.ColorN("red"), 2.0f);
         //DrawLine(new Vector2(), (new Vector2((Position * velocity.Normalized() * moveSpeed) - Position)).Rotated(-Rotation), Color.ColorN("blue"), 5.0f);
@@ -92,7 +92,7 @@ public abstract class Enemy : KinematicBody2D {
     public void Spawn(Node2D target) {
         this.target = target;
         health = 100;
-        moveSpeed = 20;
+        moveSpeed = 50;
         velocity = Vector2.Zero;
         behavior = EnemyBehavior.IDLE;
         mesh = GetNode<MeshInstance2D>("MeshInstance2D");
@@ -117,14 +117,9 @@ public abstract class Enemy : KinematicBody2D {
         //else {
         //    SetDefaultInterest();
         //}
-        var spaceState = GetWorld2d().DirectSpaceState; // This returns the current and potential collisions in the World that this object is in
         for (int i = 0; i < numRays; i++) {
-            var result = spaceState.IntersectRay(Position,
-                Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array(this));
-            if (result.Count != 0) {
-                Vector2 d = (Vector2)result["position"];
-                interest[i] = Mathf.Max(0, d.Normalized().Length());
-            }
+            var d = rayDirections[i].Rotated(Rotation).Dot(ToLocal(target.Position).Normalized());
+            interest[i] = Mathf.Max(0, d);
         }
     }
 
@@ -142,8 +137,13 @@ public abstract class Enemy : KinematicBody2D {
         var spaceState = GetWorld2d().DirectSpaceState; // This returns the current and potential collisions in the World that this object is in
         for (int i = 0; i < numRays; i++) {
             var result = spaceState.IntersectRay(Position,
-                Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array(this, target));
-            danger[i] = result.Count != 0 ? 1.0f : 0.0f;
+                Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array( this, target));
+            //danger[i] = result.Count != 0 ? 1.0f : 0.0f;
+            if (result.Count > 0) {
+                var d = rayDirections[i].Rotated(Rotation).Dot(ToLocal((Vector2)result["position"]).Normalized());
+                GD.Print(result["collider"]);
+                interest[i] = Mathf.Max(0, d);
+            }
         }
     }
 
@@ -158,7 +158,7 @@ public abstract class Enemy : KinematicBody2D {
         chosenDir = Vector2.Zero;
         for (int i = 0; i < numRays; i++) {
             // This will place a weight on each of the ray directions
-            chosenDir += rayDirections[i] * interest[i];
+            chosenDir += rayDirections[i] * (interest[i] - danger[i]);
         }
         chosenDir = chosenDir.Normalized();
     }

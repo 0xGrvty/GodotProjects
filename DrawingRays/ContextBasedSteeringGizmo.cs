@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ContextBasedSteeringGizmo : Node2D {
     [Export]
@@ -22,7 +23,7 @@ public class ContextBasedSteeringGizmo : Node2D {
     private Vector2 velocity;
     private float moveSpeed = 200f;
     private List<ContextBasedSteeringNode> nodeList;
-    private Dictionary<int, ContextBasedSteeringNode> dangerList;
+    private List<ContextBasedSteeringNode> dangerList;
     private float aggression = 1.25f; // The weight of the interest or danger
     private float passivity = 0.85f; // Used to multiply the aggression in the direction of danger (higher is more unlikely to travel that direction)
 
@@ -40,7 +41,7 @@ public class ContextBasedSteeringGizmo : Node2D {
         Position = startPos;
         velocity = new Vector2(1, 1) * moveSpeed;
         nodeList = new List<ContextBasedSteeringNode>();
-        dangerList = new Dictionary<int, ContextBasedSteeringNode>();
+        dangerList = new List<ContextBasedSteeringNode>();
         target = GetNode<Player>("../Player");
     }
 
@@ -60,7 +61,7 @@ public class ContextBasedSteeringGizmo : Node2D {
         if (Input.IsActionJustPressed("SetDangerNode")) {
             var c = (ContextBasedSteeringNode)cbsn.Instance();
             c.Init(ContextBasedSteeringNode.NodeType.DANGER, GetGlobalMousePosition(), Colors.Red);
-            nodeList.Add(c);
+            dangerList.Add(c);
             GetParent().AddChild(c);
         }
 
@@ -76,6 +77,7 @@ public class ContextBasedSteeringGizmo : Node2D {
         for (int i = 0; i < numRays; i++) {
             DrawLine(Vector2.Zero, rayDirections[i] * interest[i] * radius, Colors.Green, 2.0f);
             DrawLine(Vector2.Zero, rayDirections[i] * danger[i] * radius, Colors.Red, 2.0f);
+            DrawLine(Vector2.Zero, rayDirections[i] * (interest[i] - danger[i]) * radius, Colors.Blue, 2.0f);
         }
         DrawLine(Vector2.Zero, chosenDir * moveSpeed, Colors.Yellow, 2f);
     }
@@ -125,7 +127,8 @@ public class ContextBasedSteeringGizmo : Node2D {
             var result = spaceState.IntersectRay(Position,
                 Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array { target }); 
             if (result.Count != 0) {
-                danger[i] = 1.0f;
+                var d = rayDirections[i].Rotated(Rotation).Dot(ToLocal((Vector2)result["position"]).Normalized());
+                danger[i] = Mathf.Max(0, d * 0.45f);
             } else {
                 danger[i] = 0.0f;
             }
@@ -142,15 +145,20 @@ public class ContextBasedSteeringGizmo : Node2D {
         }
         // Choose direction based on remainin interest
         chosenDir = Vector2.Zero;
+        var prevChosen = Vector2.Zero;
         for (int i = 0; i < numRays; i++) {
+            prevChosen = chosenDir;
             // This will place a weight on each of the ray directions.
             // This will also modify the chosen direction so it will try as much as possible to not go in the path of danger,
             // however this current iteration causes the enemy to run away if there's too much danger.
             // I want the enemy to strafe around danger (rocks and obstacles) and chase the player.
             // This will need a bit more tweaking before it's ready
-            chosenDir += rayDirections[i] * interest[i];
-            chosenDir += rayDirections[i] * -passivity * danger[i];
+            chosenDir += rayDirections[i] * (interest[i] - danger[i]);
+            //chosenDir += rayDirections[i] * -passivity * danger[i];
+
+            
         }
+        
         chosenDir = chosenDir.Normalized();
     }
 }

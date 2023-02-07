@@ -78,7 +78,7 @@ public class PlayerBody : KinematicBody2D {
         baseAttackCooldown = (14f / 12);
         attackCooldown = baseAttackCooldown;
         Connect("StateChanged", this, "OnStateChanged");
-        healthListener = (HealthListener)GetNode<Node>("HealthListener");
+        //healthListener = (HealthListener)GetNode<Node>("HealthListener");
         //Connect("TakeDamage", healthListener, "OnTakeDamage");
         //Connect("HealDamage", healthListener, "OnHealDamage");
         //healthListener.Init(health, maxHealth);

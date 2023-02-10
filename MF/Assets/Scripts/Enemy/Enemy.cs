@@ -60,8 +60,10 @@ public abstract class Enemy : KinematicBody2D {
 
         // Still not quite working... 1/08/2023
         // Context-based steering behavior: https://kidscancode.org/godot_recipes/3.x/ai/context_map/
-        SetInterest();
-        SetDanger();
+        if (IsInstanceValid(target)) {
+            SetInterest();
+            SetDanger();
+        }
         ChooseDirection();
         //EmitSignal("draw");
         var desiredVelocity = chosenDir.Rotated(Rotation) * moveSpeed;
@@ -141,7 +143,7 @@ public abstract class Enemy : KinematicBody2D {
             //danger[i] = result.Count != 0 ? 1.0f : 0.0f;
             if (result.Count > 0) {
                 var d = rayDirections[i].Rotated(Rotation).Dot(ToLocal((Vector2)result["position"]).Normalized());
-                GD.Print(result["collider"]);
+                //GD.Print(result["collider"]);
                 interest[i] = Mathf.Max(0, d);
             }
         }

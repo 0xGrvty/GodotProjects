@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=2]
+[gd_scene load_steps=97 format=2]
 
 [ext_resource path="res://Assets/Scripts/Player/PlayerBody.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Player/PlayerRun/PlayerRun_Temp.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Assets/Scripts/Player/HealthListener.cs" type="Script" id=4]
 [ext_resource path="res://Assets/Player/PlayerIdle/PlayerIdle_Temp.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Player/PlayerIdle/PlayerIdle_Temp2.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Player/PlayerDeath/Test commit lol.jpg" type="Texture" id=7]
 [ext_resource path="res://Scenes/Player/Hammer.tscn" type="PackedScene" id=28]
 
 [sub_resource type="AtlasTexture" id=77]
@@ -374,6 +375,11 @@ animations = [ {
 "name": "PlayerAttackUp",
 "speed": 15.0
 }, {
+"frames": [ ExtResource( 7 ), null, null, null, ExtResource( 7 ), ExtResource( 7 ), null, null, null, ExtResource( 7 ) ],
+"loop": false,
+"name": "PlayerDeath",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 55 ), SubResource( 56 ), SubResource( 57 ), SubResource( 58 ), SubResource( 59 ), SubResource( 60 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 61 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ), SubResource( 55 ) ],
 "loop": true,
 "name": "PlayerIdleDown",
@@ -427,7 +433,7 @@ hammerScene = ExtResource( 28 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "PlayerIdleDown"
-frame = 15
+frame = 35
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

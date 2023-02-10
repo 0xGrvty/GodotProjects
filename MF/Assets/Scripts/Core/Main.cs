@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-public class Main : Node
-{
+public class Main : Node {
     [Export]
     public PackedScene RockManScene;
     private Vector2 cameraBounds;
@@ -14,8 +13,7 @@ public class Main : Node
     // Called when the node enters the scene tree for the first time.
     // Think of this class as a taskmaster.
     // Main will divvy up all the tasks, such as connecting instanced enemy signals, to whatever might need to observe those signals.
-    public override void _Ready()
-    {
+    public override void _Ready() {
         cameraBounds = new Vector2(50, 50);
         enemySpawnTimer = 3f;
         player = (PlayerBody)GetNode<KinematicBody2D>("Player");
@@ -26,11 +24,13 @@ public class Main : Node
         EventBus.Instance.Connect(nameof(EventBus.PlayerHealthChanged), userInterface, "OnPlayerHealthChanged");
         EventBus.Instance.Connect(nameof(EventBus.PlayerVelocityChanged), userInterface, "OnPlayerVelocityChanged");
         EventBus.Instance.Connect(nameof(EventBus.InitializePlayer), player, "InitPlayerStats");
+        EventBus.Instance.Connect(nameof(EventBus.PlayerDied), this, nameof(OnPlayerDied));
+        //EventBus.Instance.Connect(nameof(EventBus.PlayerDied), this, nameof(OnPlayerDied));
         EventBus.Instance.EmitSignal(nameof(EventBus.InitializePlayer));
 
         //player.InitHealth(); // <- is this the right way to do things?
-        
-        
+
+
     }
 
     public override void _PhysicsProcess(float delta) {
@@ -48,4 +48,8 @@ public class Main : Node
         }
     }
 
+    private async void OnPlayerDied() {
+        await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
+        GetTree().ChangeScene(Singleton.Instance.mainMenuPath);
+    }
 }

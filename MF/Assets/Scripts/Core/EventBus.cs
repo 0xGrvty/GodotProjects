@@ -19,4 +19,6 @@ public class EventBus : Node
     public delegate void PlayerVelocityChanged();
     [Signal]
     public delegate void InitializePlayer();
+    [Signal]
+    public delegate void PlayerDied();
 }

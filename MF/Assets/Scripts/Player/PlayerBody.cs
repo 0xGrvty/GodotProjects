@@ -14,9 +14,9 @@ public class PlayerBody : KinematicBody2D {
     [Signal]
     private delegate void StateChanged();
     [Signal]
-    public delegate void TakeDamage(int health);
+    public delegate void PlayerDamaged(int health);
     [Signal]
-    public delegate void HealDamage(int health);
+    public delegate void PlayerHealed(int health);
     [Signal]
     public delegate void PlayerHealthChanged(int health, int maxHealth);
     [Signal]
@@ -51,7 +51,6 @@ public class PlayerBody : KinematicBody2D {
     private float attackCooldown;
     private float baseAttackCooldown;
     private bool isAttacking = false;
-    private HealthListener healthListener;
     private Dictionary playerStats = new Dictionary();
     private Vector2 lastPos = Vector2.Zero;
     public bool takenDamage = false;
@@ -63,6 +62,7 @@ public class PlayerBody : KinematicBody2D {
     public PlayerIdleState playerIdleState = new PlayerIdleState();
     public PlayerRunState playerRunState = new PlayerRunState();
     public PlayerAttackState playerAttackState = new PlayerAttackState();
+    public PlayerDeathState playerDeathState = new PlayerDeathState();
 
     // Getters/Setters
     public bool IsMoving { get => isMoving; set => isMoving = value; }
@@ -77,7 +77,8 @@ public class PlayerBody : KinematicBody2D {
         animations = GetNode<AnimatedSprite>("AnimatedSprite");
         baseAttackCooldown = (14f / 12);
         attackCooldown = baseAttackCooldown;
-        Connect("StateChanged", this, "OnStateChanged");
+        Connect(nameof(StateChanged), this, nameof(OnStateChanged));
+        Connect(nameof(PlayerDamaged), this, nameof(OnPlayerDamaged));
         //healthListener = (HealthListener)GetNode<Node>("HealthListener");
         //Connect("TakeDamage", healthListener, "OnTakeDamage");
         //Connect("HealDamage", healthListener, "OnHealDamage");
@@ -108,18 +109,14 @@ public class PlayerBody : KinematicBody2D {
         transform.origin = lastPos.LinearInterpolate(GlobalTransform.origin, fraction);
 
         if (Input.IsActionJustPressed("DamageTest")) {
-            health -= 5;
-            health = Math.Max(0, health);
-            //GD.Print(String.Format("We took {0} damage and we are now at {1}", 5, health));
-            EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+            // other things will damage the player, so we can propogate the signal to the player
+            EmitSignal(nameof(PlayerDamaged));
         }
 
         // Since the player should keep track of their own health, we will have the healthListener emit it's own signal
         if (Input.IsActionJustPressed("HealTest")) {
-            health += 10;
-            health = Math.Min(health, maxHealth);
-            //GD.Print(String.Format("We healed {0} damage and we are now at {1}", 10, health));
-            EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+            
+
         }
     }
 
@@ -185,6 +182,8 @@ public class PlayerBody : KinematicBody2D {
     // A ton of getters/setters, we might not use all of them
     // But they seem relevant for a rougelike game
     // Where your stats could be altered with
+
+    // Can probably get rid of attackCooldown.  There's an easier way to implement this using Animation.speedScale and we can have frame breakpoints just like in D2
     public float GetAttackCooldown() {
         return attackCooldown;
     }
@@ -233,8 +232,22 @@ public class PlayerBody : KinematicBody2D {
         maxSpeed = speed;
     }
 
-    public HealthListener GetHealth() {
-        return healthListener;
+    private void OnPlayerDamaged() {
+        health -= 5;
+        health = Math.Max(0, health);
+        //GD.Print(String.Format("We took {0} damage and we are now at {1}", 5, health));
+        EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+
+        if (health <= 0) {
+            currentState = playerDeathState;
+        }
+    }
+
+    private void OnPlayerHealed() {
+        health += 10;
+        health = Math.Min(health, maxHealth);
+        //GD.Print(String.Format("We healed {0} damage and we are now at {1}", 10, health));
+        EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
     }
 
 }

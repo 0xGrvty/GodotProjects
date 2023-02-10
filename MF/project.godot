@@ -96,6 +96,10 @@ Pause={
  ]
 }
 
+[mono]
+
+project/assembly_name="MF"
+
 [physics]
 
 common/enable_pause_aware_picking=true

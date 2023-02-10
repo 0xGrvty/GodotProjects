@@ -8,4 +8,4 @@ I'll open this up to the public.
 
 Not all of these are solo projects, and I will credit everyone I work with accordingly.  Not sure if that will be in the game folder or
 here in the root, haven't decided yet.  Without further ado, thank you for checking out my passions.  I hope they prove to be inspirational
-for other aspiring game devs in the future! 
+for other aspiring game devs in the future!

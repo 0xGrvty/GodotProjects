@@ -3,14 +3,14 @@ using System;
 using System.Collections;
 
 public class PlayerDeathState : IStateMachine {
-    private bool deathSignalEmitted = false;
+    private bool isDead= false;
     public IStateMachine EnterState(PlayerBody player) {
         player.GetAnimatedSprite().Animation = "PlayerDeath";
         player.GetAnimatedSprite().SpeedScale = 1;
         player.GetAnimatedSprite().Play();
 
-        if (player.GetAnimatedSprite().Frame >= player.GetAnimatedSprite().Frames.GetFrameCount(player.GetAnimatedSprite().Animation) - 1 && !deathSignalEmitted) {
-            deathSignalEmitted = true;
+        if (player.GetAnimatedSprite().Frame >= player.GetAnimatedSprite().Frames.GetFrameCount(player.GetAnimatedSprite().Animation) - 1 && !isDead) {
+            isDead = true;
             EventBus.Instance.EmitSignal(nameof(EventBus.PlayerDied));
         }
 

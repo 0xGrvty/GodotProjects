@@ -5,6 +5,7 @@ public class PlayerAttackState : IStateMachine {
     public IStateMachine EnterState(PlayerBody player) {
         // Check to see if we are attacking, then choose the correct attack direction animation to play
         // if we aren't
+        var numHams = 2;
         if (!player.IsAttacking) {
             switch (player.GetFacing()) {
                 case PlayerBody.FaceDir.UP:
@@ -32,9 +33,13 @@ public class PlayerAttackState : IStateMachine {
             // until he is done attacking.
             if (player.GetAnimatedSprite().Frame == 2) {
                 player.IsAttacking = true;
-                Hammer h = (Hammer)player.hammerScene.Instance();
-                h.Init(player);
-                player.GetParent().AddChild(h);
+                // Change the starting phase shift (starting angle on the circle) depending on which hammer is being thrown.  Increase numHams to change how many hammers are thrown
+                // (multishot might be a little overpowered as it currently stands.)
+                for (int i = 0; i < numHams; i++) {
+                    Hammer h = (Hammer)player.hammerScene.Instance();
+                    h.Init(player, i * 2 * Mathf.Pi / numHams, numHams);
+                    player.GetParent().AddChild(h);
+                }
             }
         }
 

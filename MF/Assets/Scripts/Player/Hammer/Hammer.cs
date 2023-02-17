@@ -54,32 +54,32 @@ public class Hammer : Area2D {
 
         // Create a timer to kill the hammer so it doesn't spin forever
         await ToSignal(source.GetTree().CreateTimer(maxTimeAlive, false), "timeout");
-        
         QueueFree();
     }
 
+    
     public override void _PhysicsProcess(float delta) {
         prevPos = Position;
         // Mathematics of a circle:
-        // x = r * B * cos(frequency)
-        // y = r * B * sin(frequency)
+        // x = r * B * cos(phaseShift * frequency)
+        // y = r * B * sin(phaseShift * frequency)
         // where B is some constant
         // where frequency is how fast the object is rotating
         // where r is the radius
         // for a growing radius, we can do: (r + growth) * B * cos(frequency)
         // and expanding further, we can do: (r + (growth * delta)) * B * cos(frequency)
+        // to get some growth in respects to time
 
-        // Change Theta in respects to time
+        // Change the phaseShift in respects to time
 
-        //Position = new Vector2(Mathf.Cos(theta * frequency) * radius, Mathf.Sin(theta * frequency) * radius) + spawnPosition;
+        // phaseShift = the position at which the hammer is orbiting in a circle
+        // rotationAngle = the rotation of the object itself
 
-        // positionAngle * frequency = speed at which the hammer is spinning in a circle
-        // rotationAngle = the rotation angle of the object itself
-        // These are related by frequency so it looks like the hammer is consistently spinning around the head of the hammer no matter where it is on the circle
-        // however the rotation angle should spin faster than the position angle so that it looks like it's spinning and not riding a line
-        //Position += new Vector2((xDirection * xOffset) + Mathf.Sin(phaseShift * frequency) * radius * amplitudeX,
-        //    (yDirection * yOffset) + Mathf.Cos(phaseShift * frequency) * radius * amplitudeY);
+        // This is fine since this is an Area2D and is not directly interfacing with physics.
+        // If this was a kinematic object, then this is not acceptable
         Position += new Vector2(Mathf.Sin(phaseShift) * radius, Mathf.Cos(phaseShift) * radius);
+
+        // This was the reason why the hammers weren't spawning as I expected before.  Needed to modify the phaseShift after calculating the new position, not before it.
         phaseShift += PI_6 * frequency * delta;
         radius += RADIUS_GROWTH_SPEED * delta;
         rotationAngle -= ROTATION_COEFFICIENT * delta;

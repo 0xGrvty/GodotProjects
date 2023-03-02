@@ -1,7 +1,6 @@
 using Godot;
 using Godot.Collections;
 using System;
-using System.Runtime.CompilerServices;
 
 public class PlayerBody : KinematicBody2D {
 
@@ -51,7 +50,7 @@ public class PlayerBody : KinematicBody2D {
 	private float attackCooldown;
 	private float baseAttackCooldown;
 	private bool isAttacking = false;
-	private Dictionary playerStats = new Dictionary();
+	private Dictionary upgrades = new Dictionary();
 	private Vector2 lastPos = Vector2.Zero;
 	public bool takenDamage = false;
 	public bool healedDamage = false;
@@ -84,7 +83,15 @@ public class PlayerBody : KinematicBody2D {
 		//Connect("HealDamage", healthListener, "OnHealDamage");
 		//healthListener.Init(health, maxHealth);
 		//kinematicBody2D = GetNode<KinematicBody2D>("KinematicBody2D");
-		
+		//upgrades.Add("numHams", 1);
+		//upgrades.Add("explodeOnKill", 1);
+
+		upgrades.Add("playerUpgrades", new Dictionary { });
+		upgrades.Add("hammerUpgrades", new Dictionary {
+			{ "numHams", 1 },
+			{ "explodeOnKill", 1 }
+		});
+
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
@@ -248,6 +255,14 @@ public class PlayerBody : KinematicBody2D {
 		health = Math.Min(health, maxHealth);
 		//GD.Print(String.Format("We healed {0} damage and we are now at {1}", 10, health));
 		EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+	}
+
+	public Dictionary GetHammerUpgrades(){
+		return (Dictionary)upgrades["hammerUpgrades"];
+	}
+
+	public Dictionary GetPlayerUpgrades() {
+		return (Dictionary)upgrades["playerUpgrades"];
 	}
 
 }

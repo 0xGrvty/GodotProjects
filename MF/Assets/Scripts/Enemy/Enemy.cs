@@ -4,6 +4,10 @@ using System;
 using System.Diagnostics;
 
 public abstract class Enemy : KinematicBody2D {
+#pragma warning disable 649
+    [Export]
+    public PackedScene enemyExplosion;
+#pragma warning restore 649
     [Signal]
     public delegate void Hit(int damage, Node2D source);
     [Signal]
@@ -14,7 +18,7 @@ public abstract class Enemy : KinematicBody2D {
     private Vector2 velocity;
     private Node2D target;
     private EnemyBehavior behavior;
-    private const float PATROL_DISTANCE = 200.0f;
+    private const float PATROL_DISTANCE = 150.0f;
     private const float AGGRO_DISTANCE = 750.0f;
     private MeshInstance2D mesh;
     private Vector2 lastPos;
@@ -48,6 +52,7 @@ public abstract class Enemy : KinematicBody2D {
             rayDirections[i] = Vector2.Right.Rotated(angle);
         }
         Connect(nameof(Hit), this, nameof(TakeDamage));
+        steerForce = 200f;
     }
 
     public override void _PhysicsProcess(float delta) {
@@ -67,7 +72,7 @@ public abstract class Enemy : KinematicBody2D {
         ChooseDirection();
         //EmitSignal("draw");
         var desiredVelocity = chosenDir.Rotated(Rotation) * moveSpeed;
-        //velocity = velocity.LinearInterpolate(desiredVelocity, steerForce);
+        velocity = velocity.LinearInterpolate(desiredVelocity, steerForce);
         velocity = desiredVelocity;
         //Rotation = velocity.Angle();
         MoveAndSlide(velocity);
@@ -87,7 +92,7 @@ public abstract class Enemy : KinematicBody2D {
         for (int i = 0; i < numRays; i++) {
             DrawLine(Vector2.Zero, (rayDirections[i] * velocity * interest[i]).Rotated(-Rotation), Color.ColorN("blue"), 2f);
         }
-        //DrawLine(Position, chosenDir.Rotated(Rotation) * moveSpeed, Color.ColorN("red"), 2.0f);
+        DrawLine(Vector2.Zero, chosenDir.Rotated(Rotation) * moveSpeed, Color.ColorN("red"), 2.0f);
         //DrawLine(new Vector2(), (new Vector2((Position * velocity.Normalized() * moveSpeed) - Position)).Rotated(-Rotation), Color.ColorN("blue"), 5.0f);
     }
 
@@ -139,23 +144,24 @@ public abstract class Enemy : KinematicBody2D {
         var spaceState = GetWorld2d().DirectSpaceState; // This returns the current and potential collisions in the World that this object is in
         for (int i = 0; i < numRays; i++) {
             var result = spaceState.IntersectRay(Position,
-                Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array( this, target));
+                Position + rayDirections[i].Rotated(Rotation) * lookAhead, new Godot.Collections.Array( this, target), this.CollisionMask);
             //danger[i] = result.Count != 0 ? 1.0f : 0.0f;
             if (result.Count > 0) {
-                var d = rayDirections[i].Rotated(Rotation).Dot(ToLocal((Vector2)result["position"]).Normalized());
+                //var d = 1.25f * rayDirections[i].Rotated(Rotation).Dot(ToLocal((Vector2)result["position"]).Normalized());
+                var d = 2.5f;
                 //GD.Print(result["collider"]);
-                interest[i] = Mathf.Max(0, d);
+                danger[i] = d;
             }
         }
     }
 
     private void ChooseDirection() {
         // Don't choose to go into the way of danger
-        for (int i = 0; i < numRays; i++) {
-            if (danger[i] > 0.0f) {
-                interest[i] = 0.0f;
-            }
-        }
+        //for (int i = 0; i < numRays; i++) {
+        //    if (danger[i] > 0.0f) {
+        //        interest[i] = 0.0f;
+        //    }
+        //}
         // Choose direction based on remainin interest
         chosenDir = Vector2.Zero;
         for (int i = 0; i < numRays; i++) {
@@ -194,10 +200,13 @@ public abstract class Enemy : KinematicBody2D {
         return Vector2.Zero;
     }
 
-    private void TakeDamage(int damage, Node2D source) {
+    private void TakeDamage(int damage, Node2D source, Dictionary hammerUpgrades) {
         health -= damage;
         //GD.Print("Oh shit I'm dying");
+        var effects = hammerUpgrades;
         if (health <= 0) {
+            if ((int)effects?["explodeOnKill"] >= 1) {
+            }
             if (source.GetType() == typeof(PlayerBody)) {
                 // add to kill counter if the source was the player
                 EmitSignal(nameof(Died));

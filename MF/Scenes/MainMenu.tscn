@@ -96,6 +96,8 @@ custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 4 )
 custom_styles/normal = SubResource( 5 )
 text = "NEW GAME"
+icon_align = 1
+expand_icon = true
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 margin_top = 162.0

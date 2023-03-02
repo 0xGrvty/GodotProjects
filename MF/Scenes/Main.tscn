@@ -38,7 +38,7 @@ __meta__ = {
 [node name="Player" parent="." groups=["actors"] instance=ExtResource( 1 )]
 
 [node name="AnimatedSprite" parent="Player" index="0"]
-frame = 65
+frame = 20
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 scale = Vector2( 0.333333, 0.333333 )
@@ -67,6 +67,7 @@ rect_pivot_offset = Vector2( -1158, -359 )
 color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="Rock2"]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rock2/KinematicBody2D"]
 position = Vector2( 12.5, 13.5 )
@@ -81,6 +82,7 @@ rect_pivot_offset = Vector2( -1158, -359 )
 color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="Rock3"]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rock3/KinematicBody2D"]
 position = Vector2( 12.5, 13.5 )
@@ -95,6 +97,7 @@ rect_pivot_offset = Vector2( -1158, -359 )
 color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="Rock5"]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rock5/KinematicBody2D"]
 position = Vector2( 12.5, 13.5 )
@@ -109,6 +112,7 @@ rect_pivot_offset = Vector2( -1158, -359 )
 color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="Rock6"]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rock6/KinematicBody2D"]
 position = Vector2( 12.5, 13.5 )
@@ -123,6 +127,7 @@ rect_pivot_offset = Vector2( -1158, -359 )
 color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="Rock7"]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rock7/KinematicBody2D"]
 position = Vector2( 12.5, 13.5 )
@@ -137,6 +142,7 @@ rect_pivot_offset = Vector2( -1158, -359 )
 color = Color( 0.682353, 0.682353, 0.682353, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="Rock4"]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rock4/KinematicBody2D"]
 position = Vector2( 12.5, 13.5 )

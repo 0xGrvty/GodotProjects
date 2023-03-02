@@ -3,9 +3,11 @@ using System;
 
 public class PlayerAttackState : IStateMachine {
     public IStateMachine EnterState(PlayerBody player) {
+        // Retrieve how many hammers we need to throw.
+        // Player could have an item that says +1 hammers
+        var numHams = (int)player.GetHammerUpgrades()["numHams"];
         // Check to see if we are attacking, then choose the correct attack direction animation to play
         // if we aren't
-        var numHams = 2;
         if (!player.IsAttacking) {
             switch (player.GetFacing()) {
                 case PlayerBody.FaceDir.UP:
@@ -37,7 +39,7 @@ public class PlayerAttackState : IStateMachine {
                 // (multishot might be a little overpowered as it currently stands.)
                 for (int i = 0; i < numHams; i++) {
                     Hammer h = (Hammer)player.hammerScene.Instance();
-                    h.Init(player, i * 2 * Mathf.Pi / numHams, numHams);
+                    h.Init(player, i * 2 * Mathf.Pi / numHams, player.GetHammerUpgrades());
                     player.GetParent().AddChild(h);
                 }
             }

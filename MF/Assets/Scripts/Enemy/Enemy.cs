@@ -69,7 +69,7 @@ public abstract class Enemy : KinematicBody2D {
         //CheckDistance();
         //DoMovement();
         currentState = currentState.EnterState(this);
-        Update();
+        //Update();
     }
 
 

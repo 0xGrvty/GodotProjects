@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=2]
+[gd_scene load_steps=87 format=2]
 
 [ext_resource path="res://Assets/Scripts/Enemy/RockMan/RockMan.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Enemy/EnemyIdle/EnemyIdle.png" type="Texture" id=2]
@@ -237,6 +237,10 @@ region = Rect2( 80, 16, 16, 16 )
 atlas = ExtResource( 2 )
 region = Rect2( 96, 16, 16, 16 )
 
+[sub_resource type="AtlasTexture" id=81]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 0, 16, 16 )
+
 [sub_resource type="AtlasTexture" id=41]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 16, 16, 16 )
@@ -354,6 +358,11 @@ animations = [ {
 "name": "EnemyIdleRight",
 "speed": 24.0
 }, {
+"frames": [ SubResource( 81 ) ],
+"loop": true,
+"name": "EnemyIdleUp",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ), SubResource( 44 ), SubResource( 45 ) ],
 "loop": true,
 "name": "EnemyRunDown",
@@ -391,7 +400,7 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 61 )
-animation = "EnemyIdleDownRight"
+animation = "EnemyIdleUp"
 
 [node name="Hitbox" type="Area2D" parent="."]
 

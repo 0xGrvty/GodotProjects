@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Numerics;
 
 public class EnemyRunState : IStateMachine
 {
@@ -8,9 +7,7 @@ public class EnemyRunState : IStateMachine
         var enemy = (Enemy)e;
         enemy.CheckDistance();
         enemy.DoMovement();
-        if (enemy.GetHealth() <= 0) {
-            return enemy.enemyDeathState;
-        }
+
 
         switch (enemy.GetFacing()) {
             case FaceDir.UP:
@@ -32,8 +29,17 @@ public class EnemyRunState : IStateMachine
         }
         enemy.GetAnimatedSprite().SpeedScale = 1;
         enemy.GetAnimatedSprite().Play();
+
         if (Mathf.Sign(enemy.GetVelocity().x) > 0 && enemy.GetAnimatedSprite().FlipH || Mathf.Sign(enemy.GetVelocity().x) < 0 && !enemy.GetAnimatedSprite().FlipH) {
             enemy.GetAnimatedSprite().FlipH = !enemy.GetAnimatedSprite().FlipH;
+        }
+
+        if (enemy.GetVelocity() == Vector2.Zero) {
+            return enemy.enemyIdleState;
+        }
+
+        if (enemy.GetHealth() <= 0) {
+            return enemy.enemyDeathState;
         }
 
         return enemy.enemyRunState;

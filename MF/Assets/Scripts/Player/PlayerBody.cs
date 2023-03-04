@@ -22,9 +22,9 @@ public class PlayerBody : KinematicBody2D {
 	public delegate void PlayerVelocityChanged(int speed);
 
 	[Export]
-	public int health = 100;
+	public int health = 50;
 	[Export]
-	public int maxHealth = 500;
+	public int maxHealth = 50;
 
 	// Constants
 	private float BASE_ATTACK_SPEED = 1f;

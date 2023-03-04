@@ -21,7 +21,7 @@ public class Stats : Control
         damageLabel = vbox.GetNode<Label>("Damage");
         killsLabel = vbox.GetNode<Label>("Kills");
         killCounter = 0;
-        killsLabel.Text = String.Format("Kills: {0}", killCounter);
+        killsLabel.Text = String.Format("SCORE = {0}", killCounter);
         Connect(nameof(EnemyDied), this, nameof(OnEnemyDied));
         Connect(nameof(PlayerMoveSpeedChanged), this, nameof(OnPlayerMoveSpeedChanged));
     }

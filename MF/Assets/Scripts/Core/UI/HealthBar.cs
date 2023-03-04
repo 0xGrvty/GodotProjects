@@ -16,7 +16,7 @@ public class HealthBar : Control
 	}
 
 	private void OnUIHealthChanged(int health, int maxHealth) {
-		lifeValue.Text = String.Format("{0}/{1}", health, maxHealth);
+		lifeValue.Text = String.Format("{0}={1}", health, maxHealth);
 		healthOrb.Value = health;
 	}
 }

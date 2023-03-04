@@ -21,4 +21,6 @@ public class EventBus : Node
 	public delegate void InitializePlayer();
 	[Signal]
 	public delegate void PlayerDied();
+	[Signal]
+	public delegate void EnemySpawned();
 }

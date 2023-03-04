@@ -165,6 +165,10 @@ rotation = -0.074884
 [node name="EnemyCurveTween" type="Tween" parent="EnemyPath"]
 script = ExtResource( 5 )
 
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
 [connection signal="HealthListenerChanged" from="Player/HealthListener" to="CanvasLayer/UI" method="OnHealthListenerChanged"]
 
 [editable path="Player"]

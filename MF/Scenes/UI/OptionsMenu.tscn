@@ -4,7 +4,7 @@
 [ext_resource path="res://Assets/Scripts/Core/UI/OptionsMenu.cs" type="Script" id=2]
 
 [sub_resource type="DynamicFont" id=1]
-size = 72
+size = 28
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=2]
@@ -38,15 +38,20 @@ color = Color( 0.137255, 0.188235, 0.431373, 0.392157 )
 margin_right = 1920.0
 margin_bottom = 1080.0
 
-[node name="BallsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Credits" type="Label" parent="MarginContainer/VBoxContainer"]
 margin_right = 1920.0
 margin_bottom = 538.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
-text = "BALLS
-HAHA"
-align = 1
+text = "THANKS  FOR  TRYING  OUT  OUR  FIRST  GAME.
+WE  STILL  HAVE  A  LOT  TO  LEARN,
+BUT  EVERY  JOURNEY  STARTS  WITH  HUMBLE
+BEGINNINGS.
+
+ASSETS  AND  ART  =  VAGABOND
+PROGRAMMING  AND  GAME  DESIGN  =  VANT
+FONT  =  IMAGEX=FONTS"
 valign = 1
 
 [node name="GoBackButton" type="Button" parent="MarginContainer/VBoxContainer"]

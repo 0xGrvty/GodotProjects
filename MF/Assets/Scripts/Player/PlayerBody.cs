@@ -28,7 +28,7 @@ public class PlayerBody : KinematicBody2D {
 
 	// Constants
 	private float BASE_ATTACK_SPEED = 1f;
-	private int BASE_MOVE_SPEED = 200;
+	private int BASE_MOVE_SPEED = 115;
 
 	// Private variables
 

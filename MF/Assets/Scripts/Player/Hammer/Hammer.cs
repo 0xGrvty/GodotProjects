@@ -8,7 +8,7 @@ public class Hammer : Area2D {
 	private const float PI_6 = Mathf.Pi / 6f;
 	private const float MAX_SPEED = 12f;
 	private const float BASE_TIME_ALIVE = 3f;
-	private const float BASE_DAMAGE = 50.0f;
+	private const float BASE_DAMAGE = 25.0f;
 	private const float ROTATION_COEFFICIENT = Mathf.Pi / 2.75f;
 
 	private float damage;

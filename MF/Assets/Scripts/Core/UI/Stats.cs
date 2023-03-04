@@ -28,7 +28,7 @@ public class Stats : Control
 
     private void OnEnemyDied() {
         killCounter++;
-        killsLabel.Text = String.Format("Kills: {0}", killCounter);
+        killsLabel.Text = String.Format("SCORE = {0}", killCounter);
     }
 
     private void OnPlayerMoveSpeedChanged(int speed) {

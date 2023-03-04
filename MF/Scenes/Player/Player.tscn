@@ -520,22 +520,22 @@ animations = [ {
 "speed": 15.0
 }, {
 "frames": [ SubResource( 121 ), SubResource( 122 ), SubResource( 123 ), SubResource( 124 ), SubResource( 125 ), SubResource( 126 ), SubResource( 127 ), SubResource( 128 ), SubResource( 129 ), null ],
-"loop": true,
+"loop": false,
 "name": "PlayerDeathDown",
 "speed": 9.0
 }, {
 "frames": [ SubResource( 130 ), SubResource( 131 ), SubResource( 132 ), SubResource( 133 ), SubResource( 134 ), SubResource( 135 ), SubResource( 136 ), SubResource( 137 ), SubResource( 138 ), null ],
-"loop": true,
+"loop": false,
 "name": "PlayerDeathDownRight",
 "speed": 9.0
 }, {
 "frames": [ SubResource( 139 ), SubResource( 140 ), SubResource( 141 ), SubResource( 142 ), SubResource( 143 ), SubResource( 144 ), SubResource( 145 ), SubResource( 146 ), SubResource( 147 ), null ],
-"loop": true,
+"loop": false,
 "name": "PlayerDeathRight",
 "speed": 9.0
 }, {
 "frames": [ SubResource( 148 ), SubResource( 149 ), SubResource( 150 ), SubResource( 151 ), SubResource( 152 ), SubResource( 153 ), SubResource( 154 ), SubResource( 155 ), SubResource( 156 ), null ],
-"loop": true,
+"loop": false,
 "name": "PlayerDeathUp",
 "speed": 9.0
 }, {
@@ -591,9 +591,7 @@ hammerScene = ExtResource( 28 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "PlayerDeathDownRight"
-frame = 9
-playing = true
+animation = "PlayerIdleDown"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

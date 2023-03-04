@@ -37,9 +37,6 @@ __meta__ = {
 
 [node name="Player" parent="." groups=["actors"] instance=ExtResource( 1 )]
 
-[node name="AnimatedSprite" parent="Player" index="0"]
-frame = 9
-
 [node name="Camera2D" type="Camera2D" parent="Player"]
 scale = Vector2( 0.333333, 0.333333 )
 current = true

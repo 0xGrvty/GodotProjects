@@ -1,9 +1,10 @@
-[gd_scene load_steps=84 format=2]
+[gd_scene load_steps=86 format=2]
 
 [ext_resource path="res://Assets/Scripts/Enemy/RockMan/RockMan.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Enemy/EnemyIdle/EnemyIdle.png" type="Texture" id=2]
-[ext_resource path="res://Assets/Enemy/EnemyWalk/EnemyWalk.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Enemy/EnemyRun/EnemyRun.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Enemy/EnemyDeath/EnemyDeath.png" type="Texture" id=4]
+[ext_resource path="res://Scenes/Enemy/EnemyExplode.tscn" type="PackedScene" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 6 )
@@ -152,34 +153,6 @@ region = Rect2( 140, 0, 20, 16 )
 atlas = ExtResource( 4 )
 region = Rect2( 160, 0, 20, 16 )
 
-[sub_resource type="AtlasTexture" id=20]
-atlas = ExtResource( 2 )
-region = Rect2( 0, 32, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=21]
-atlas = ExtResource( 2 )
-region = Rect2( 16, 32, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=22]
-atlas = ExtResource( 2 )
-region = Rect2( 32, 32, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=23]
-atlas = ExtResource( 2 )
-region = Rect2( 48, 32, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=24]
-atlas = ExtResource( 2 )
-region = Rect2( 64, 32, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=25]
-atlas = ExtResource( 2 )
-region = Rect2( 80, 32, 16, 16 )
-
-[sub_resource type="AtlasTexture" id=26]
-atlas = ExtResource( 2 )
-region = Rect2( 96, 32, 16, 16 )
-
 [sub_resource type="AtlasTexture" id=27]
 atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 16, 16 )
@@ -207,6 +180,34 @@ region = Rect2( 80, 0, 16, 16 )
 [sub_resource type="AtlasTexture" id=33]
 atlas = ExtResource( 2 )
 region = Rect2( 96, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 2 )
+region = Rect2( 16, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 2 )
+region = Rect2( 32, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 2 )
+region = Rect2( 48, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=25]
+atlas = ExtResource( 2 )
+region = Rect2( 80, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=26]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 32, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=34]
 atlas = ExtResource( 2 )
@@ -338,14 +339,14 @@ animations = [ {
 "name": "EnemyDeathTop",
 "speed": 12.0
 }, {
-"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ) ],
-"loop": true,
-"name": "EnemyIdelDownRight",
-"speed": 24.0
-}, {
 "frames": [ SubResource( 27 ), SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ), SubResource( 32 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ), SubResource( 33 ) ],
 "loop": true,
 "name": "EnemyIdleDown",
+"speed": 24.0
+}, {
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ), SubResource( 26 ) ],
+"loop": true,
+"name": "EnemyIdleDownRight",
 "speed": 24.0
 }, {
 "frames": [ SubResource( 34 ), SubResource( 35 ), SubResource( 36 ), SubResource( 37 ), SubResource( 38 ), SubResource( 39 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ), SubResource( 40 ) ],
@@ -355,31 +356,34 @@ animations = [ {
 }, {
 "frames": [ SubResource( 41 ), SubResource( 42 ), SubResource( 43 ), SubResource( 44 ), SubResource( 45 ) ],
 "loop": true,
-"name": "EnemyWalkDown",
+"name": "EnemyRunDown",
 "speed": 6.0
 }, {
 "frames": [ SubResource( 46 ), SubResource( 47 ), SubResource( 48 ), SubResource( 49 ), SubResource( 50 ) ],
 "loop": true,
-"name": "EnemyWalkDownRight",
+"name": "EnemyRunDownRight",
 "speed": 6.0
 }, {
 "frames": [ SubResource( 51 ), SubResource( 52 ), SubResource( 53 ), SubResource( 54 ), SubResource( 55 ) ],
 "loop": true,
-"name": "EnemyWalkRight",
+"name": "EnemyRunRight",
 "speed": 6.0
 }, {
 "frames": [ SubResource( 56 ), SubResource( 57 ), SubResource( 58 ), SubResource( 59 ), SubResource( 60 ) ],
 "loop": true,
-"name": "EnemyWalkUp",
+"name": "EnemyRunUp",
 "speed": 6.0
 } ]
+
+[sub_resource type="CircleShape2D" id=80]
+radius = 10.0885
 
 [node name="RockMan" type="KinematicBody2D" groups=["enemy"]]
 scale = Vector2( 3, 3 )
 collision_layer = 2
 collision_mask = 3
 script = ExtResource( 1 )
-enemyExplosion = ExtResource( 2 )
+enemyExplosionScene = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( -7.94729e-08, 1 )
@@ -387,5 +391,12 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 61 )
-animation = "EnemyDeathDownRight"
-playing = true
+animation = "EnemyIdleDownRight"
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( 0, 1 )
+shape = SubResource( 80 )
+
+[connection signal="body_entered" from="Hitbox" to="." method="OnHitboxBodyEntered"]

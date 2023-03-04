@@ -2,6 +2,6 @@ using Godot;
 using System;
 
 public interface IStateMachine {
-	IStateMachine EnterState(PlayerBody player);
-	void EmitChangeStateSignal(PlayerBody player, IStateMachine state);
+	IStateMachine EnterState(Node2D player);
+	void EmitChangeStateSignal(Node2D player, IStateMachine state);
 }

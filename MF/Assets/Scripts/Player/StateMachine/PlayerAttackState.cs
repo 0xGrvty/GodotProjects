@@ -2,28 +2,29 @@ using Godot;
 using System;
 
 public class PlayerAttackState : IStateMachine {
-    public IStateMachine EnterState(PlayerBody player) {
+    public IStateMachine EnterState(Node2D p) {
+        var player = (PlayerBody)p;
         // Retrieve how many hammers we need to throw.
         // Player could have an item that says +1 hammers
-        var numHams = (int)player.GetHammerUpgrades()["numHams"];
+        var numHams = Math.Min(4, (int)player.GetHammerUpgrades()["numHams"]);
         // Check to see if we are attacking, then choose the correct attack direction animation to play
         // if we aren't
         if (!player.IsAttacking) {
             switch (player.GetFacing()) {
-                case PlayerBody.FaceDir.UP:
-                case PlayerBody.FaceDir.UP_LEFT:
-                case PlayerBody.FaceDir.UP_RIGHT:
+                case FaceDir.UP:
+                case FaceDir.UP_LEFT:
+                case FaceDir.UP_RIGHT:
                     player.GetAnimatedSprite().Animation = "PlayerAttackUp";
                     break;
-                case PlayerBody.FaceDir.DOWN:
+                case FaceDir.DOWN:
                     player.GetAnimatedSprite().Animation = "PlayerAttackDown";
                     break;
-                case PlayerBody.FaceDir.RIGHT:
-                case PlayerBody.FaceDir.LEFT:
+                case FaceDir.RIGHT:
+                case FaceDir.LEFT:
                     player.GetAnimatedSprite().Animation = "PlayerAttackRight";
                     break;
-                case PlayerBody.FaceDir.DOWN_RIGHT:
-                case PlayerBody.FaceDir.DOWN_LEFT:
+                case FaceDir.DOWN_RIGHT:
+                case FaceDir.DOWN_LEFT:
                     player.GetAnimatedSprite().Animation = "PlayerAttackDownRight";
                     break;
             }
@@ -70,7 +71,8 @@ public class PlayerAttackState : IStateMachine {
         return player.playerAttackState;
 
     }
-    public void EmitChangeStateSignal(PlayerBody player, IStateMachine state) {
+    public void EmitChangeStateSignal(Node2D p, IStateMachine state) {
+        var player = (PlayerBody)p;
         player.EmitSignal("StateChanged", state.GetType().ToString());
     }
 }

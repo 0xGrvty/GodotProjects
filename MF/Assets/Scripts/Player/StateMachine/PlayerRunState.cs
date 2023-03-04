@@ -2,26 +2,27 @@ using Godot;
 using System;
 
 public class PlayerRunState : IStateMachine {
-    public IStateMachine EnterState(PlayerBody player) {
+    public IStateMachine EnterState(Node2D p) {
+        var player = (PlayerBody)p;
         // Tell the player to do their movement whenever they are in the Run state
         // This will also set the player's facing
         player.DoMovement();
         //var tempScale = player.Scale;
         switch (player.GetFacing()) {
-            case PlayerBody.FaceDir.UP:
-            case PlayerBody.FaceDir.UP_LEFT:
-            case PlayerBody.FaceDir.UP_RIGHT:
+            case FaceDir.UP:
+            case FaceDir.UP_LEFT:
+            case FaceDir.UP_RIGHT:
                 player.GetAnimatedSprite().Animation = "PlayerRunUp";
                 break;
-            case PlayerBody.FaceDir.DOWN:
+            case FaceDir.DOWN:
                 player.GetAnimatedSprite().Animation = "PlayerRunDown";
                 break;
-            case PlayerBody.FaceDir.RIGHT:
-            case PlayerBody.FaceDir.LEFT:
+            case FaceDir.RIGHT:
+            case FaceDir.LEFT:
                 player.GetAnimatedSprite().Animation = "PlayerRunRight";
                 break;
-            case PlayerBody.FaceDir.DOWN_RIGHT:
-            case PlayerBody.FaceDir.DOWN_LEFT:
+            case FaceDir.DOWN_RIGHT:
+            case FaceDir.DOWN_LEFT:
                 player.GetAnimatedSprite().Animation = "PlayerRunDownRight";
                 break;
         }
@@ -55,7 +56,8 @@ public class PlayerRunState : IStateMachine {
         return player.playerRunState;
     }
 
-    public void EmitChangeStateSignal(PlayerBody player, IStateMachine state) {
+    public void EmitChangeStateSignal(Node2D p, IStateMachine state) {
+        var player = (PlayerBody)p;
         player.EmitSignal("StateChanged", state.GetType().ToString());
     }
 

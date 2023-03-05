@@ -51,7 +51,7 @@ BEGINNINGS.
 
 ASSETS  AND  ART  =  VAGABOND
 PROGRAMMING  AND  GAME  DESIGN  =  VANT
-FONT  =  IMAGEX=FONTS"
+THIS  FONT  =  IMAGEX=FONTS"
 valign = 1
 
 [node name="GoBackButton" type="Button" parent="MarginContainer/VBoxContainer"]

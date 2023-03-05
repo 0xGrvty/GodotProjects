@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Interface/Theme/font/Pixelmania.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Assets/Scripts/Core/UI/PauseMenu.cs" type="Script" id=2]
+[ext_resource path="res://Assets/Interface/UI/Menu/BackToMenu.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Interface/UI/Menu/Resume.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 72
@@ -53,7 +55,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
 custom_styles/normal = SubResource( 2 )
-text = "RESUME"
+icon = ExtResource( 4 )
+expand_icon = true
 
 [node name="BackToMenuButton" type="Button" parent="MarginContainer/VBoxContainer"]
 margin_top = 350.0
@@ -63,7 +66,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 3 )
 custom_styles/normal = SubResource( 4 )
-text = "BACK TO MENU"
+icon = ExtResource( 3 )
+expand_icon = true
 
 [connection signal="button_up" from="MarginContainer/VBoxContainer/ResumeButton" to="." method="OnResumeButtonButtonUp"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/BackToMenuButton" to="." method="OnBackToMenuButtonButtonUp"]

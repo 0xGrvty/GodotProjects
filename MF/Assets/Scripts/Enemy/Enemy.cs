@@ -232,19 +232,6 @@ public abstract class Enemy : KinematicBody2D {
 	private void TakeDamage(int damage, Node2D source, Dictionary hammerUpgrades) {
 		health -= damage;
 		var effects = hammerUpgrades.Duplicate(true);
-		if (health <= 0) {
-			//currentState = enemyDeathState;
-			//if ((int)effects?["explodeOnKill"] >= 1) {
-			//    var e = (EnemyExplode)enemyExplosionScene.Instance();
-			//    e.Init(this, effects);
-			//    GetParent().CallDeferred("add_child", e);
-			//}
-			//if (source?.GetType() == typeof(PlayerBody)) {
-			//    // add to kill counter if the source was the player
-			//    EmitSignal(nameof(Died));
-			//}
-			//QueueFree();
-		}
 	}
 
 	public int GetHealth() {

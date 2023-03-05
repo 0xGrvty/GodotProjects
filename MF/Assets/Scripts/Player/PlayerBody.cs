@@ -106,16 +106,16 @@ public class PlayerBody : KinematicBody2D {
 		var transform = Transform;
 		transform.origin = lastPos.LinearInterpolate(GlobalTransform.origin, fraction);
 
-		if (Input.IsActionJustPressed("DamageTest")) {
-			// other things will damage the player, so we can propogate the signal to the player
-			EmitSignal(nameof(PlayerDamaged));
-		}
+		//if (Input.IsActionJustPressed("DamageTest")) {
+		//	// other things will damage the player, so we can propogate the signal to the player
+		//	//EmitSignal(nameof(PlayerDamaged));
+		//}
 
-		// Since the player should keep track of their own health, we will have the healthListener emit it's own signal
-		if (Input.IsActionJustPressed("HealTest")) {
+		//// Since the player should keep track of their own health, we will have the healthListener emit it's own signal
+		//if (Input.IsActionJustPressed("HealTest")) {
 			
 
-		}
+		//}
 	}
 
 	public override void _PhysicsProcess(float delta) {

@@ -22,5 +22,5 @@ public class EventBus : Node
 	[Signal]
 	public delegate void PlayerDied();
 	[Signal]
-	public delegate void EnemySpawned();
+	public delegate void EnemyDied();
 }

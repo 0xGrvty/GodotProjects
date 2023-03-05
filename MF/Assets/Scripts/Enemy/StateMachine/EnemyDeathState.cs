@@ -12,6 +12,7 @@ public class EnemyDeathState : IStateMachine
 
         if (enemy.GetAnimatedSprite().Frame >= enemy.GetAnimatedSprite().Frames.GetFrameCount(enemy.GetAnimatedSprite().Animation) - 1 && !isDead) {
             isDead = true;
+            enemy.EmitSignal("Died");
             enemy.QueueFree();
         }
 

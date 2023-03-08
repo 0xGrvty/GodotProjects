@@ -55,10 +55,8 @@ margin_bottom = 1080.0
 texture = ExtResource( 8 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_left = 300.0
-margin_top = 525.0
-margin_right = 1620.0
-margin_bottom = 1080.0
+margin_right = 1024.0
+margin_bottom = 686.0
 custom_constants/margin_right = 100
 custom_constants/margin_top = 100
 custom_constants/margin_left = 100
@@ -67,7 +65,7 @@ custom_constants/margin_bottom = 150
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 100.0
 margin_top = 100.0
-margin_right = 1220.0
+margin_right = 924.0
 margin_bottom = 536.0
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
@@ -82,14 +80,14 @@ align = 1
 valign = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_right = 1120.0
+margin_right = 824.0
 margin_bottom = 436.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
-margin_right = 1120.0
+margin_right = 824.0
 margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -98,7 +96,7 @@ custom_constants/margin_left = 50
 
 [node name="NewGameButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer"]
 margin_left = 50.0
-margin_right = 1070.0
+margin_right = 774.0
 margin_bottom = 142.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -113,7 +111,7 @@ expand_icon = true
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 margin_top = 147.0
-margin_right = 1120.0
+margin_right = 824.0
 margin_bottom = 289.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -122,7 +120,7 @@ custom_constants/margin_left = 50
 
 [node name="OptionsButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer2"]
 margin_left = 50.0
-margin_right = 1070.0
+margin_right = 774.0
 margin_bottom = 142.0
 focus_mode = 0
 size_flags_horizontal = 3
@@ -137,7 +135,7 @@ expand_icon = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 margin_top = 294.0
-margin_right = 1120.0
+margin_right = 824.0
 margin_bottom = 436.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -146,7 +144,7 @@ custom_constants/margin_left = 50
 
 [node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer/MarginContainer3"]
 margin_left = 50.0
-margin_right = 1070.0
+margin_right = 774.0
 margin_bottom = 142.0
 focus_mode = 0
 size_flags_horizontal = 3

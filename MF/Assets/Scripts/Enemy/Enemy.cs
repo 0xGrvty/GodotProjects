@@ -99,13 +99,13 @@ public abstract class Enemy : KinematicBody2D {
 		MoveAndSlide(velocity);
 	}
 
-	public override void _Draw() {
-		for (int i = 0; i < numRays; i++) {
-			DrawLine(Vector2.Zero, (rayDirections[i] * velocity * interest[i]).Rotated(-Rotation), Color.ColorN("blue"), 2f);
-		}
-		DrawLine(Vector2.Zero, chosenDir.Rotated(Rotation) * moveSpeed, Color.ColorN("red"), 2.0f);
-		//DrawLine(new Vector2(), (new Vector2((Position * velocity.Normalized() * moveSpeed) - Position)).Rotated(-Rotation), Color.ColorN("blue"), 5.0f);
-	}
+	//public override void _Draw() {
+	//	for (int i = 0; i < numRays; i++) {
+	//		DrawLine(Vector2.Zero, (rayDirections[i] * velocity * interest[i]).Rotated(-Rotation), Color.ColorN("blue"), 2f);
+	//	}
+	//	DrawLine(Vector2.Zero, chosenDir.Rotated(Rotation) * moveSpeed, Color.ColorN("red"), 2.0f);
+	//	//DrawLine(new Vector2(), (new Vector2((Position * velocity.Normalized() * moveSpeed) - Position)).Rotated(-Rotation), Color.ColorN("blue"), 5.0f);
+	//}
 
 	public void Spawn(Node2D target) {
 		this.target = target;

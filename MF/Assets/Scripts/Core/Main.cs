@@ -55,7 +55,7 @@ public class Main : Node {
 			AddChild(rockMan);
 			enemies++;
 		}
-		GD.Print(enemies);
+		//GD.Print(enemies);
 	}
 
 	private async void OnPlayerDied() {
@@ -63,7 +63,7 @@ public class Main : Node {
 		GetTree().ChangeScene(Singleton.Instance.mainMenuPath);
 	}
 	private void OnEnemyDied() {
-		GD.Print("died");
+		//GD.Print("died");
 		enemies--;
 	}
 

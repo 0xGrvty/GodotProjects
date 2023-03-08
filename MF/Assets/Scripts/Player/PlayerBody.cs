@@ -127,9 +127,9 @@ public class PlayerBody : KinematicBody2D {
 		//Update();
 	}
 
-	public override void _Draw() {
-		DrawLine(Vector2.Zero, velocity, Color.ColorN("blue"), 5.0f);
-	}
+	// public override void _Draw() {
+	// 	DrawLine(Vector2.Zero, velocity, Color.ColorN("blue"), 5.0f);
+	// }
 
 	private Vector2 GetMovementInput() {
 		if (Input.IsActionPressed("Up")) {

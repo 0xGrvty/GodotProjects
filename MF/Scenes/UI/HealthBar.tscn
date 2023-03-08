@@ -12,15 +12,14 @@ font_data = ExtResource( 4 )
 [node name="HealthBar" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -960.0
-margin_bottom = -540.0
-rect_scale = Vector2( 2, 2 )
 script = ExtResource( 3 )
 
 [node name="VContainer" type="VBoxContainer" parent="."]
+margin_right = 80.0
+margin_bottom = 87.0
 
 [node name="LifeValue" type="Label" parent="VContainer"]
-margin_right = 74.0
+margin_right = 80.0
 margin_bottom = 16.0
 custom_fonts/font = SubResource( 1 )
 text = "100=100"
@@ -28,7 +27,7 @@ align = 1
 
 [node name="HealthOrb" type="TextureProgress" parent="VContainer"]
 margin_top = 20.0
-margin_right = 74.0
+margin_right = 80.0
 margin_bottom = 87.0
 max_value = 50.0
 value = 20.0

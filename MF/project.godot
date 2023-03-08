@@ -23,6 +23,7 @@ Singleton="*res://Assets/Scripts/Core/Singleton.cs"
 
 window/size/width=1920
 window/size/height=1080
+window/stretch/mode="viewport"
 
 [importer_defaults]
 

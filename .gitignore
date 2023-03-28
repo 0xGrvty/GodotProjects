@@ -12,3 +12,6 @@
 # Visual studio ignores
 **/.vs/
 **/.vscode/
+# Release and Debug binaries
+**/Debug/
+**/Releases

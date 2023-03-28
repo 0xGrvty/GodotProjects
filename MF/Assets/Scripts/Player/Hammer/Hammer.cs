@@ -54,7 +54,6 @@ public class Hammer : Area2D {
 		audio.Play();
 		//GD.Print(this.positionAngle);
 		//GD.Print(Position);
-
 		// Create a timer to kill the hammer so it doesn't spin forever
 		KillHammer();
 	}
@@ -97,6 +96,7 @@ public class Hammer : Area2D {
 		}
 		hitList.Add(body);
 		body.EmitSignal("Hit", damage, source, upgrades);
+		EventBus.Instance.EmitSignal(nameof(EventBus.EnemyHit));
 	}
 
 	private async void KillHammer() {

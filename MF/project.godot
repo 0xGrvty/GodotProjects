@@ -11,8 +11,10 @@ config_version=4
 [application]
 
 config/name="MF"
+config/description="Wow this is our first game holy crap"
 run/main_scene="res://Scenes/MainMenu.tscn"
-config/icon="res://icon.png"
+config/icon="res://MF Prototype.png"
+config/windows_native_icon="res://MF-Prototype.ico"
 
 [autoload]
 

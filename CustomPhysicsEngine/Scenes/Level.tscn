@@ -1,0 +1,163 @@
+[gd_scene load_steps=5 format=3 uid="uid://r2l5gtmxmf51"]
+
+[ext_resource type="PackedScene" uid="uid://ducl65u4sx0gm" path="res://Scenes/Player.tscn" id="1_t57bm"]
+[ext_resource type="PackedScene" uid="uid://dh56k2g0n40ud" path="res://Scenes/Wall.tscn" id="2_uh6qd"]
+[ext_resource type="PackedScene" uid="uid://dq65meiknqbdp" path="res://Scenes/MovingPlatform.tscn" id="3_xsmw4"]
+[ext_resource type="PackedScene" uid="uid://gr1tnb21guad" path="res://Scenes/FadingPlatform.tscn" id="4_yggoq"]
+
+[node name="Level" type="Node2D"]
+
+[node name="Walls" type="Node" parent="."]
+
+[node name="Wall" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(0, 160)
+
+[node name="Wall2" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(80, 160)
+
+[node name="Wall7" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(160, 160)
+
+[node name="Wall12" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(224, 160)
+
+[node name="Wall16" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(320, 160)
+
+[node name="Wall22" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(352, 160)
+
+[node name="Wall25" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(384, 160)
+
+[node name="Wall26" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(128, 144)
+
+[node name="Wall27" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(144, 128)
+
+[node name="Wall28" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(160, 112)
+
+[node name="Wall29" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(176, 112)
+
+[node name="Wall30" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(192, 112)
+
+[node name="Wall31" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(208, 112)
+
+[node name="Wall32" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(160, 128)
+
+[node name="Wall33" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(144, 144)
+
+[node name="Wall34" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(160, 144)
+
+[node name="Wall35" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(176, 128)
+
+[node name="Wall36" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(176, 144)
+
+[node name="Wall37" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(224, 112)
+
+[node name="Wall38" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(240, 112)
+
+[node name="Wall43" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(256, 120)
+
+[node name="Wall39" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(384, 144)
+
+[node name="Wall40" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(384, 128)
+
+[node name="Wall41" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(384, 112)
+
+[node name="Wall42" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(384, 96)
+
+[node name="Wall24" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(368, 160)
+
+[node name="Wall23" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(336, 160)
+
+[node name="Wall17" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(304, 160)
+
+[node name="Wall18" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(288, 160)
+
+[node name="Wall19" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(272, 160)
+
+[node name="Wall20" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(256, 160)
+
+[node name="Wall21" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(240, 160)
+
+[node name="Wall13" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(208, 160)
+
+[node name="Wall14" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(192, 160)
+
+[node name="Wall15" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(176, 160)
+
+[node name="Wall8" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(144, 160)
+
+[node name="Wall9" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(128, 160)
+
+[node name="Wall10" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(112, 160)
+
+[node name="Wall11" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(96, 160)
+
+[node name="Wall3" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(64, 160)
+
+[node name="Wall4" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(48, 160)
+
+[node name="Wall5" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(32, 160)
+
+[node name="Wall6" parent="Walls" instance=ExtResource("2_uh6qd")]
+position = Vector2(16, 160)
+
+[node name="Player" parent="." instance=ExtResource("1_t57bm")]
+position = Vector2(88, 8)
+
+[node name="MovingPlatform" parent="." instance=ExtResource("3_xsmw4")]
+position = Vector2(296, 136)
+offset = Vector2(0, -48)
+jumpThru = true
+
+[node name="MovingPlatform3" parent="." instance=ExtResource("3_xsmw4")]
+position = Vector2(208, 72)
+offset = Vector2(0, -60)
+time = 1.0
+delay = 0.0
+
+[node name="MovingPlatform2" parent="." instance=ExtResource("3_xsmw4")]
+position = Vector2(0, 120)
+offset = Vector2(48, 0)
+
+[node name="FadingPlatform" parent="." instance=ExtResource("4_yggoq")]
+position = Vector2(80, 104)
+onTime = 4.0
+offTime = 2.0
+jumpThru = true

@@ -4,6 +4,8 @@ using System;
 public class Main : Node {
 	[Export]
 	public PackedScene RockManScene;
+	[Export]
+	public PackedScene HammerScene;
 
 	private const int MAX_ENEMIES = 25;
 	private Vector2 cameraBounds;
@@ -12,6 +14,7 @@ public class Main : Node {
 	private Camera2D mainCamera;
 	private Control userInterface;
 	private Timer enemyTimer;
+	private AudioStreamPlayer2D hammerSmack;
 
 	// Called when the node enters the scene tree for the first time.
 	// Think of this class as a taskmaster.
@@ -30,9 +33,10 @@ public class Main : Node {
 		EventBus.Instance.Connect(nameof(EventBus.InitializePlayer), player, "InitPlayerStats");
 		EventBus.Instance.Connect(nameof(EventBus.PlayerDied), this, nameof(OnPlayerDied));
 		EventBus.Instance.Connect(nameof(EventBus.EnemyDied), this, nameof(OnEnemyDied));
+		EventBus.Instance.Connect(nameof(EventBus.EnemyHit), this, nameof(OnHammerHitsEnemy));
 		//EventBus.Instance.Connect(nameof(EventBus.PlayerDied), this, nameof(OnPlayerDied));
 		EventBus.Instance.EmitSignal(nameof(EventBus.InitializePlayer));
-
+		hammerSmack = GetNode<AudioStreamPlayer2D>("HammerSmack");
 		//player.InitHealth(); // <- is this the right way to do things?
 
 
@@ -58,6 +62,12 @@ public class Main : Node {
 		//GD.Print(enemies);
 	}
 
+	public void OnHammerHitsEnemy() {
+		if (!hammerSmack.Playing) {
+			hammerSmack.Play();
+		}
+	}
+
 	private async void OnPlayerDied() {
 		await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
 		GetTree().ChangeScene(Singleton.Instance.mainMenuPath);
@@ -66,5 +76,7 @@ public class Main : Node {
 		//GD.Print("died");
 		enemies--;
 	}
+
+
 
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=2]
+[gd_scene load_steps=135 format=2]
 
 [ext_resource path="res://Assets/Scripts/Player/PlayerBody.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Player/PlayerRun/PlayerRun_Temp.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Assets/Player/PlayerIdle/PlayerIdle_Temp.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Player/PlayerIdle/PlayerIdle_Temp2.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Player/PlayerDeath/PlayerDeath.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Player/Sound Effects/SoundEffect_PlayerDies.wav" type="AudioStream" id=8]
+[ext_resource path="res://Assets/Player/Sound Effects/SoundEffect_PlayerHit.wav" type="AudioStream" id=9]
 [ext_resource path="res://Scenes/Player/Hammer.tscn" type="PackedScene" id=28]
 
 [sub_resource type="AtlasTexture" id=77]
@@ -603,3 +605,9 @@ __meta__ = {
 
 [node name="HealthListener" type="Node" parent="."]
 script = ExtResource( 4 )
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )

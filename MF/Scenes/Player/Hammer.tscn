@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/Scripts/Player/Hammer/Hammer.cs" type="Script" id=1]
-[ext_resource path="res://Assets/Player/Sound Effects/SoundEffect_BlessedHammer_TempLong.wav" type="AudioStream" id=2]
+[ext_resource path="res://Assets/Player/Sound Effects/SoundEffect_HammerSound.wav" type="AudioStream" id=2]
 [ext_resource path="res://Assets/Player/PlayerAttack/Objects/Hammer.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -42,6 +42,5 @@ color = Color( 0.611765, 0.611765, 0.611765, 1 )
 
 [node name="BlessedHammerSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 2 )
-volume_db = -12.0
 
 [connection signal="body_entered" from="." to="." method="OnHammerBodyEntered"]

@@ -23,4 +23,8 @@ public class EventBus : Node
 	public delegate void PlayerDied();
 	[Signal]
 	public delegate void EnemyDied();
+	[Signal]
+	public delegate void HammerSmackSoundPlaying();
+	[Signal]
+	public delegate void EnemyHit();
 }

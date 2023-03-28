@@ -25,6 +25,7 @@ public abstract class Enemy : KinematicBody2D {
 	private Vector2 lastPos;
 	private Vector2 spawnLoc;
 	private FaceDir facing;
+	private AudioStreamPlayer2D deathSound;
 
 	// Context-based Steering
 	private float moveSpeed;
@@ -63,6 +64,7 @@ public abstract class Enemy : KinematicBody2D {
 		facing = FaceDir.RIGHT;
 		currentState = enemyIdleState;
 		//steerForce = 200f;
+		deathSound = GetNode<AudioStreamPlayer2D>("DeathSound");
 	}
 
 	public override void _PhysicsProcess(float delta) {
@@ -229,9 +231,12 @@ public abstract class Enemy : KinematicBody2D {
 
 	}
 
-	private void TakeDamage(int damage, Node2D source, Dictionary hammerUpgrades) {
+	private async void TakeDamage(int damage, Node2D source, Dictionary hammerUpgrades) {
 		health -= damage;
-		var effects = hammerUpgrades.Duplicate(true);
+		var tempModulate = Modulate;
+        Modulate = new Color(96, 96, 96, 255);
+        await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+		Modulate = tempModulate;
 	}
 
 	public int GetHealth() {
@@ -248,5 +253,9 @@ public abstract class Enemy : KinematicBody2D {
 
 	public FaceDir GetFacing() {
 		return facing;
+	}
+
+	public AudioStreamPlayer2D GetDeathSound() {
+		return deathSound;
 	}
 }

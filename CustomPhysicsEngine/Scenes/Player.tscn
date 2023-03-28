@@ -1,0 +1,73 @@
+[gd_scene load_steps=14 format=3 uid="uid://ducl65u4sx0gm"]
+
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_7blok"]
+[ext_resource type="Texture2D" uid="uid://cgxc0pre71jcn" path="res://Sprites/adventurer-idle-00.png" id="1_g6pk8"]
+[ext_resource type="Texture2D" uid="uid://chtop0jlip0ls" path="res://Sprites/adventurer-idle-01.png" id="2_muvw1"]
+[ext_resource type="Texture2D" uid="uid://bx42jtea2xoli" path="res://Sprites/adventurer-idle-02.png" id="3_4t8e6"]
+[ext_resource type="Texture2D" uid="uid://c3ye07qu1yskd" path="res://Sprites/adventurer-idle-03.png" id="4_0odjc"]
+[ext_resource type="Texture2D" uid="uid://b2102eowyp2xp" path="res://Sprites/adventurer-run-00.png" id="6_3hmco"]
+[ext_resource type="Texture2D" uid="uid://f8awbnuc6daw" path="res://Sprites/adventurer-run-01.png" id="7_sg850"]
+[ext_resource type="Texture2D" uid="uid://iegd1hhg4xmn" path="res://Sprites/adventurer-run-02.png" id="8_7x3ct"]
+[ext_resource type="Texture2D" uid="uid://cdx3mvpupv5v5" path="res://Sprites/adventurer-run-03.png" id="9_jdk2k"]
+[ext_resource type="Texture2D" uid="uid://chir3o1w07kwf" path="res://Sprites/adventurer-run-04.png" id="10_ix6mg"]
+[ext_resource type="Texture2D" uid="uid://4p0sek03lys6" path="res://Sprites/adventurer-run-05.png" id="11_848lv"]
+[ext_resource type="PackedScene" uid="uid://b3jp1payjqbpa" path="res://Scenes/Hitbox.tscn" id="12_i6oac"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i1q3r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_g6pk8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_muvw1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4t8e6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_0odjc")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_3hmco")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_sg850")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_7x3ct")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_jdk2k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ix6mg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_848lv")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 10.0
+}]
+
+[node name="Player" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_7blok")
+
+[node name="Animations" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_i1q3r")
+animation = &"Run"
+autoplay = "Idle"
+frame_progress = 0.522953
+
+[node name="Hitbox" parent="." instance=ExtResource("12_i6oac")]
+x = -4
+y = -7
+width = 8
+height = 24

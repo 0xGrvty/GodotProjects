@@ -4,6 +4,7 @@ using System.Collections;
 
 public class PlayerDeathState : IStateMachine {
     private bool isDead= false;
+    private bool deathSoundPlayed;
     public IStateMachine EnterState(Node2D p) {
         var player = (PlayerBody)p;
         switch (player.GetFacing()) {
@@ -26,6 +27,11 @@ public class PlayerDeathState : IStateMachine {
         }
         player.GetAnimatedSprite().SpeedScale = 1;
         player.GetAnimatedSprite().Play();
+        if (!player.GetDeathSound().Playing && !deathSoundPlayed) {
+            deathSoundPlayed = true;
+            player.GetDeathSound().Play();
+        }
+        
 
         if (player.GetAnimatedSprite().Frame >= player.GetAnimatedSprite().Frames.GetFrameCount(player.GetAnimatedSprite().Animation) - 1 && !isDead) {
             isDead = true;

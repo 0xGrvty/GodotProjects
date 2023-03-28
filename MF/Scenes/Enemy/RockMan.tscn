@@ -1,10 +1,11 @@
-[gd_scene load_steps=87 format=2]
+[gd_scene load_steps=88 format=2]
 
 [ext_resource path="res://Assets/Scripts/Enemy/RockMan/RockMan.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Enemy/EnemyIdle/EnemyIdle.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Enemy/EnemyRun/EnemyRun.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Enemy/EnemyDeath/EnemyDeath.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/Enemy/EnemyExplode.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Enemy/EnemyDeath/Sound Effects/SoundEffect_EnemyDies.wav" type="AudioStream" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 6 )
@@ -407,5 +408,8 @@ animation = "EnemyIdleUp"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2( 0, 1 )
 shape = SubResource( 80 )
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
 
 [connection signal="body_entered" from="Hitbox" to="." method="OnHitboxBodyEntered"]

@@ -3,12 +3,17 @@ using System;
 
 public class EnemyDeathState : IStateMachine
 {
+    private bool deathSoundPlayed = false;
     private bool isDead = false;
     public IStateMachine EnterState(Node2D e) {
         var enemy = (Enemy)e;
         enemy.GetAnimatedSprite().Animation = "EnemyDeathDown";
         enemy.GetAnimatedSprite().SpeedScale = 1;
         enemy.GetAnimatedSprite().Play();
+        if (!enemy.GetDeathSound().Playing && !deathSoundPlayed && enemy.GetAnimatedSprite().Frame >= 3) {
+            deathSoundPlayed = true;
+            enemy.GetDeathSound().Play();
+        }
 
         if (enemy.GetAnimatedSprite().Frame >= enemy.GetAnimatedSprite().Frames.GetFrameCount(enemy.GetAnimatedSprite().Animation) - 1 && !isDead) {
             isDead = true;

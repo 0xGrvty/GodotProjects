@@ -33,6 +33,8 @@ public class PlayerBody : KinematicBody2D {
 	// Private variables
 
 	private int maxSpeed;
+	private AudioStreamPlayer2D deathSound;
+	private AudioStreamPlayer2D hitSound;
 	private FaceDir facing = FaceDir.RIGHT;
 	private Vector2 velocity = Vector2.Zero;
 	public Vector2 Velocity { get => velocity; }
@@ -76,7 +78,8 @@ public class PlayerBody : KinematicBody2D {
 		//kinematicBody2D = GetNode<KinematicBody2D>("KinematicBody2D");
 		//upgrades.Add("numHams", 1);
 		//upgrades.Add("explodeOnKill", 1);
-
+		deathSound = GetNode <AudioStreamPlayer2D>("DeathSound");
+		hitSound = GetNode <AudioStreamPlayer2D>("HitSound");
 		upgrades.Add("playerUpgrades", new Dictionary { });
 		upgrades.Add("hammerUpgrades", new Dictionary {
 			{ "numHams", 1 },
@@ -230,13 +233,21 @@ public class PlayerBody : KinematicBody2D {
 		maxSpeed = speed;
 	}
 
-	private void OnPlayerDamaged() {
+	private async void OnPlayerDamaged() {
+		if (health > 0) {
+            hitSound.Play();
+        }
+		
 		health -= 5;
 		health = Math.Max(0, health);
 		//GD.Print(String.Format("We took {0} damage and we are now at {1}", 5, health));
 		EventBus.Instance.EmitSignal(nameof(PlayerHealthChanged), health, maxHealth);
+		var tempModulate = Modulate;
+		Modulate = new Color(96, 96, 96, 255);
+		await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
+        Modulate = tempModulate;
 
-		if (health <= 0) {
+        if (health <= 0) {
 			currentState = playerDeathState;
 		}
 	}
@@ -254,6 +265,10 @@ public class PlayerBody : KinematicBody2D {
 
 	public Dictionary GetPlayerUpgrades() {
 		return (Dictionary)upgrades["playerUpgrades"];
+	}
+
+	public AudioStreamPlayer2D GetDeathSound() {
+		return deathSound;
 	}
 
 }

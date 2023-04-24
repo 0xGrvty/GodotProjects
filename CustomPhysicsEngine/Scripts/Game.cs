@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public partial class Game : Node {
+    private static float one_frame = 1f / (float)ProjectSettings.GetSetting("application/run/max_fps");
+    public static float ONE_FRAME { get => one_frame; }
     public bool CheckWallsCollision(Actor entity, Vector2 offset) {
 
         var walls = GetTree().GetNodesInGroup("Walls");

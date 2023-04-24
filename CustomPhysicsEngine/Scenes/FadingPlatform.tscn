@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://gr1tnb21guad"]
 
 [ext_resource type="Script" path="res://Scripts/FadingPlatform.cs" id="1_a0kc5"]
-[ext_resource type="PackedScene" uid="uid://b3jp1payjqbpa" path="res://Scenes/Hitbox.tscn" id="2_m0qta"]
+[ext_resource type="PackedScene" uid="uid://co8ri1uxhwjg6" path="res://Scenes/Hitbox.tscn" id="2_m0qta"]
 
 [node name="FadingPlatform" type="Node2D"]
 script = ExtResource("1_a0kc5")

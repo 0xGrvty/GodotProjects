@@ -24,7 +24,7 @@ public partial class MovingPlatform : Solid
     }
 
     public override void _Process(double delta) {
-        // Should there be a way to fire this off
+        // Should there be a way to fire this off via signals
         MoveY(follow.Y - (GlobalPosition.Y + remainder.Y));
         MoveX(follow.X - (GlobalPosition.X + remainder.X));
     }
@@ -40,8 +40,8 @@ public partial class MovingPlatform : Solid
     }
 
     // I couldn't get this to work, from Godot 3.5 -> 4.0, tween_step changed to step_finished,
-    // however step_finished fires when a step of the tween (i.e. at the end of each tweener above) is completed rather than
-    // when the end of a step of the animation happens.
+    // however step_finished fires when the end of a tweener (tween_property) is completed rather than
+    // when the end of a step of the tween happens.
     private void OnTweenStep(int idx) {
         MoveY(follow.Y - (GlobalPosition.Y + remainder.Y));
         MoveX(follow.X - (GlobalPosition.X + remainder.X));

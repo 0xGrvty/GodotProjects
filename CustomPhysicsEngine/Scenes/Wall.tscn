@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dh56k2g0n40ud"]
 
 [ext_resource type="Script" path="res://Scripts/Wall.cs" id="1_c8duu"]
-[ext_resource type="PackedScene" uid="uid://b3jp1payjqbpa" path="res://Scenes/Hitbox.tscn" id="2_jj6fs"]
+[ext_resource type="PackedScene" uid="uid://co8ri1uxhwjg6" path="res://Scenes/Hitbox.tscn" id="2_jj6fs"]
 
 [node name="Wall" type="Node2D"]
 script = ExtResource("1_c8duu")

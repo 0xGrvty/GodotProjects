@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dq65meiknqbdp"]
 
 [ext_resource type="Script" path="res://Scripts/MovingPlatform.cs" id="1_12sif"]
-[ext_resource type="PackedScene" uid="uid://b3jp1payjqbpa" path="res://Scenes/Hitbox.tscn" id="2_4hsh6"]
+[ext_resource type="PackedScene" uid="uid://co8ri1uxhwjg6" path="res://Scenes/Hitbox.tscn" id="2_4hsh6"]
 
 [node name="MovingPlatform" type="Node2D"]
 script = ExtResource("1_12sif")

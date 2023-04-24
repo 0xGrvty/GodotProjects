@@ -12,15 +12,16 @@ public partial class Actor : Node2D {
     private Vector2 remainder = Vector2.Zero;
     private Hitbox hitbox;
     private Game gm;
+    private AnimatedSprite2D animatedSprite;
     public Game GM { get => gm; set => gm = value; }
     public Hitbox Hitbox { get => hitbox; set => hitbox = value; }
+    public AnimatedSprite2D AnimatedSprite { get => animatedSprite; set => animatedSprite = value; }
 
     // Take the amount (velocity.x * delta time)
     // and add it to the remainder.  Round this and this will give us how much we should move.
     public void MoveX(float amount, Callable callback) {
         remainder.X += amount;
         var move = Mathf.Round(remainder.X);
-
         // If the amount we'll move by after rounding is not zero
         // i.e. we hold right and we move 11.245 units over
         // then subtract the move from the current remainder since we are moving by it already

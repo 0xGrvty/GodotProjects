@@ -1,16 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://r2l5gtmxmf51"]
+[gd_scene load_steps=6 format=3 uid="uid://r2l5gtmxmf51"]
 
-[ext_resource type="PackedScene" uid="uid://ducl65u4sx0gm" path="res://Scenes/Player.tscn" id="1_t57bm"]
+[ext_resource type="PackedScene" uid="uid://7a7bdq2ggqbe" path="res://Scenes/Player.tscn" id="1_t57bm"]
 [ext_resource type="PackedScene" uid="uid://dh56k2g0n40ud" path="res://Scenes/Wall.tscn" id="2_uh6qd"]
 [ext_resource type="PackedScene" uid="uid://dq65meiknqbdp" path="res://Scenes/MovingPlatform.tscn" id="3_xsmw4"]
 [ext_resource type="PackedScene" uid="uid://gr1tnb21guad" path="res://Scenes/FadingPlatform.tscn" id="4_yggoq"]
+[ext_resource type="PackedScene" uid="uid://clbkkk6x3p145" path="res://Scenes/Enemy.tscn" id="5_hg4nr"]
 
 [node name="Level" type="Node2D"]
 
 [node name="Walls" type="Node" parent="."]
 
 [node name="Wall" parent="Walls" instance=ExtResource("2_uh6qd")]
-position = Vector2(0, 160)
+position = Vector2(48, 144)
 
 [node name="Wall2" parent="Walls" instance=ExtResource("2_uh6qd")]
 position = Vector2(80, 160)
@@ -139,7 +140,9 @@ position = Vector2(32, 160)
 position = Vector2(16, 160)
 
 [node name="Player" parent="." instance=ExtResource("1_t57bm")]
-position = Vector2(88, 8)
+position = Vector2(91, 8)
+jumpHeight = 21.0
+jumpTimeToPeak = 0.3
 
 [node name="MovingPlatform" parent="." instance=ExtResource("3_xsmw4")]
 position = Vector2(296, 136)
@@ -149,7 +152,7 @@ jumpThru = true
 [node name="MovingPlatform3" parent="." instance=ExtResource("3_xsmw4")]
 position = Vector2(208, 72)
 offset = Vector2(0, -60)
-time = 1.0
+time = 1.5
 delay = 0.0
 
 [node name="MovingPlatform2" parent="." instance=ExtResource("3_xsmw4")]
@@ -157,7 +160,10 @@ position = Vector2(0, 120)
 offset = Vector2(48, 0)
 
 [node name="FadingPlatform" parent="." instance=ExtResource("4_yggoq")]
-position = Vector2(80, 104)
+position = Vector2(80, 80)
 onTime = 4.0
 offTime = 2.0
 jumpThru = true
+
+[node name="Enemy" parent="." instance=ExtResource("5_hg4nr")]
+position = Vector2(360, 112)

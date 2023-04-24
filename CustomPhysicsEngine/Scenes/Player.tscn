@@ -1,20 +1,119 @@
-[gd_scene load_steps=14 format=3 uid="uid://ducl65u4sx0gm"]
+[gd_scene load_steps=36 format=3 uid="uid://7a7bdq2ggqbe"]
 
-[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_7blok"]
 [ext_resource type="Texture2D" uid="uid://cgxc0pre71jcn" path="res://Sprites/adventurer-idle-00.png" id="1_g6pk8"]
+[ext_resource type="Script" path="res://Scripts/Player/Player.cs" id="1_gqpoo"]
+[ext_resource type="Texture2D" uid="uid://cs17g132sk77w" path="res://Sprites/adventurer-fall-00.png" id="2_8rcdo"]
 [ext_resource type="Texture2D" uid="uid://chtop0jlip0ls" path="res://Sprites/adventurer-idle-01.png" id="2_muvw1"]
+[ext_resource type="Texture2D" uid="uid://lpu8ht3ovnex" path="res://Sprites/adventurer-attack1-00.png" id="2_qfev4"]
 [ext_resource type="Texture2D" uid="uid://bx42jtea2xoli" path="res://Sprites/adventurer-idle-02.png" id="3_4t8e6"]
+[ext_resource type="Texture2D" uid="uid://bq75llbwajxmu" path="res://Sprites/adventurer-fall-01.png" id="3_5nvs5"]
+[ext_resource type="Texture2D" uid="uid://be4vwm0a63vh6" path="res://Sprites/adventurer-attack1-01.png" id="3_qknif"]
 [ext_resource type="Texture2D" uid="uid://c3ye07qu1yskd" path="res://Sprites/adventurer-idle-03.png" id="4_0odjc"]
+[ext_resource type="Texture2D" uid="uid://b66s8grnv2sk0" path="res://Sprites/adventurer-attack1-02.png" id="4_370ma"]
+[ext_resource type="Texture2D" uid="uid://csv681h88pskn" path="res://Sprites/adventurer-attack1-03.png" id="5_c6ltn"]
 [ext_resource type="Texture2D" uid="uid://b2102eowyp2xp" path="res://Sprites/adventurer-run-00.png" id="6_3hmco"]
+[ext_resource type="Texture2D" uid="uid://84q86ecpxoe8" path="res://Sprites/adventurer-attack1-04.png" id="6_feq8k"]
+[ext_resource type="Texture2D" uid="uid://dlaufk2bboyr3" path="res://Sprites/adventurer-attack2-00.png" id="7_ln0y5"]
 [ext_resource type="Texture2D" uid="uid://f8awbnuc6daw" path="res://Sprites/adventurer-run-01.png" id="7_sg850"]
+[ext_resource type="Texture2D" uid="uid://dagrjxdr3mrxi" path="res://Sprites/adventurer-jump-02.png" id="8_6d3ra"]
 [ext_resource type="Texture2D" uid="uid://iegd1hhg4xmn" path="res://Sprites/adventurer-run-02.png" id="8_7x3ct"]
+[ext_resource type="Texture2D" uid="uid://cpnfrmx3sc18k" path="res://Sprites/adventurer-attack2-01.png" id="8_iud88"]
+[ext_resource type="Texture2D" uid="uid://buy22n3xfjb2k" path="res://Sprites/adventurer-jump-03.png" id="9_548t7"]
+[ext_resource type="Texture2D" uid="uid://c8nitr4p6h7u6" path="res://Sprites/adventurer-attack2-02.png" id="9_ee5l5"]
 [ext_resource type="Texture2D" uid="uid://cdx3mvpupv5v5" path="res://Sprites/adventurer-run-03.png" id="9_jdk2k"]
+[ext_resource type="Texture2D" uid="uid://qp7cjvgcviiy" path="res://Sprites/adventurer-jump-00.png" id="10_7w2n4"]
 [ext_resource type="Texture2D" uid="uid://chir3o1w07kwf" path="res://Sprites/adventurer-run-04.png" id="10_ix6mg"]
+[ext_resource type="Texture2D" uid="uid://b8qggb62ensv0" path="res://Sprites/adventurer-attack2-03.png" id="10_kwsri"]
+[ext_resource type="Texture2D" uid="uid://pw88f4ylk5rx" path="res://Sprites/adventurer-attack2-04.png" id="11_8knn2"]
 [ext_resource type="Texture2D" uid="uid://4p0sek03lys6" path="res://Sprites/adventurer-run-05.png" id="11_848lv"]
-[ext_resource type="PackedScene" uid="uid://b3jp1payjqbpa" path="res://Scenes/Hitbox.tscn" id="12_i6oac"]
+[ext_resource type="PackedScene" uid="uid://co8ri1uxhwjg6" path="res://Scenes/Hitbox.tscn" id="12_i6oac"]
+[ext_resource type="Texture2D" uid="uid://brynix2mfsi5v" path="res://Sprites/adventurer-attack2-05.png" id="12_iq7wo"]
+[ext_resource type="Texture2D" uid="uid://imt550dbpnib" path="res://Sprites/adventurer-attack3-00.png" id="13_0q75y"]
+[ext_resource type="Texture2D" uid="uid://bf3eaqlu4jy2j" path="res://Sprites/adventurer-attack3-01.png" id="14_i8utp"]
+[ext_resource type="Texture2D" uid="uid://d1fgqwkajmyad" path="res://Sprites/adventurer-attack3-02.png" id="15_khwk7"]
+[ext_resource type="Texture2D" uid="uid://cls1lg1ssqgkb" path="res://Sprites/adventurer-attack3-03.png" id="16_hqqj5"]
+[ext_resource type="Texture2D" uid="uid://bfajbvvpvw2h2" path="res://Sprites/adventurer-attack3-04.png" id="17_pvqjp"]
+[ext_resource type="Texture2D" uid="uid://ct5bkkd6ol3vg" path="res://Sprites/adventurer-attack3-05.png" id="18_lrlyy"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_i1q3r"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qfev4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_qknif")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_370ma")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_c6ltn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_feq8k")
+}],
+"loop": true,
+"name": &"Attack1",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_ln0y5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_iud88")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ee5l5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_kwsri")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_8knn2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_iq7wo")
+}],
+"loop": true,
+"name": &"Attack2",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_0q75y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_i8utp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_khwk7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_hqqj5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_pvqjp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_lrlyy")
+}],
+"loop": true,
+"name": &"Attack3",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_8rcdo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_5nvs5")
+}],
+"loop": true,
+"name": &"Fall",
+"speed": 3.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_g6pk8")
@@ -30,7 +129,56 @@ animations = [{
 }],
 "loop": true,
 "name": &"Idle",
-"speed": 5.0
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_6d3ra")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_548t7")
+}],
+"loop": false,
+"name": &"Jump",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7w2n4")
+}],
+"loop": false,
+"name": &"JumpSquat",
+"speed": 60.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -58,16 +206,68 @@ animations = [{
 
 [node name="Player" type="Node2D"]
 texture_filter = 1
-script = ExtResource("1_7blok")
+script = ExtResource("1_gqpoo")
 
 [node name="Animations" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_i1q3r")
-animation = &"Run"
+animation = &"Attack3"
 autoplay = "Idle"
-frame_progress = 0.522953
+frame_progress = 0.510958
 
 [node name="Hitbox" parent="." instance=ExtResource("12_i6oac")]
 x = -4
 y = -7
 width = 8
 height = 24
+
+[node name="Attacks" type="Node2D" parent="."]
+
+[node name="Attack1" type="Node2D" parent="Attacks"]
+
+[node name="Hitbox1" parent="Attacks/Attack1" instance=ExtResource("12_i6oac")]
+visible = false
+y = -17
+height = 30
+color = Color(0.643137, 0, 0.0823529, 0.501961)
+
+[node name="Attack2" type="Node2D" parent="Attacks"]
+
+[node name="Hitbox1" parent="Attacks/Attack2" instance=ExtResource("12_i6oac")]
+visible = false
+x = 4
+y = -10
+width = 20
+height = 28
+color = Color(0.643137, 0, 0.0823529, 0.501961)
+
+[node name="Hitbox2" parent="Attacks/Attack2" instance=ExtResource("12_i6oac")]
+visible = false
+x = -16
+y = 6
+width = 40
+height = 12
+color = Color(0.643137, 0, 0.0823529, 0.501961)
+
+[node name="Attack3" type="Node2D" parent="Attacks"]
+
+[node name="Hitbox1" parent="Attacks/Attack3" instance=ExtResource("12_i6oac")]
+visible = false
+x = 0
+width = 26
+color = Color(0.643137, 0, 0.0823529, 0.501961)
+
+[node name="Hitbox2" parent="Attacks/Attack3" instance=ExtResource("12_i6oac")]
+visible = false
+y = -5
+color = Color(0.643137, 0, 0.0823529, 0.501961)
+
+[node name="Hitbox3" parent="Attacks/Attack3" instance=ExtResource("12_i6oac")]
+visible = false
+x = -28
+width = 26
+color = Color(0.643137, 0, 0.0823529, 0.501961)
+
+[node name="AttackTimeout" type="Timer" parent="."]
+wait_time = 0.5
+
+[connection signal="timeout" from="AttackTimeout" to="." method="OnAttackTimeout"]

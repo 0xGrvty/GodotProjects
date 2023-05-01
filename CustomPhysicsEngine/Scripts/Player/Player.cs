@@ -4,6 +4,7 @@ using System;
 public partial class Player : Actor {
     // Constants
     private const int NUM_JUMPS = 1;
+    private const int NUM_HEAD_RAYS = 4;
 
     // Static variables
     private static float COYOTE_TIME = 3f * Game.ONE_FRAME;
@@ -42,6 +43,7 @@ public partial class Player : Actor {
     private InputBuffer inputBuffer;
     private bool showComboList = false;
     private float attackInputBuffer = 0;
+    private Vector2[] headRays;
 
     // public variables
     public int AttackCounter { get => attackCounter; set => attackCounter = value; }
@@ -94,9 +96,13 @@ public partial class Player : Actor {
         facing = Facing.RIGHT;
         wasGrounded = true;
         inputBuffer = new InputBuffer(8);
+        headRays = new Vector2[NUM_HEAD_RAYS];
+        //InitHeadRays();
     }
     public override void _Draw() {
-        DrawLine(Vector2.Zero, 2f * Vector2.Down, Colors.Blue);
+        for (int i = 0; i < NUM_HEAD_RAYS; i++) {
+            DrawLine(headRays[i], headRays[i] * new Vector2(1, 5f * 1), Colors.Red);
+        }
     }
     public override void _Process(double delta) {
         //var direction = Math.Sign(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left"));
@@ -144,8 +150,15 @@ public partial class Player : Actor {
         currentState = currentState.EnterState(this);
         //GD.Print(inputBuffer.GetBuffer());
         //GD.Print(Hitbox.Left);
+        QueueRedraw();
     }
 
+    public override void _PhysicsProcess(double delta) {
+        var spaceState = GetWorld2D().DirectSpaceState;
+
+        for (int i = 0; i < NUM_HEAD_RAYS; i++) { 
+        }
+    }
 
     public void OnCollisionX() {
         velocity.X = 0;
@@ -288,5 +301,14 @@ public partial class Player : Actor {
         }
         
         return currentState;
+    }
+
+    private void InitHeadRays() {
+        var rayDist = Hitbox.GetWidth() / NUM_HEAD_RAYS;
+        for (int i = 0; i < NUM_HEAD_RAYS; i++) {
+            var rayStart = new Vector2(1 + (i * rayDist) + Hitbox.GetLocalLeft(), Hitbox.GetLocalTop());
+            headRays[i] = rayStart;
+            GD.Print(headRays[i]);
+        }
     }
 }

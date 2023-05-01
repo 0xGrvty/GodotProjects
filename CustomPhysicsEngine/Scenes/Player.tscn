@@ -217,7 +217,6 @@ frame_progress = 0.510958
 [node name="Hitbox" parent="." instance=ExtResource("12_i6oac")]
 x = -4
 y = -7
-width = 8
 height = 24
 
 [node name="Attacks" type="Node2D" parent="."]

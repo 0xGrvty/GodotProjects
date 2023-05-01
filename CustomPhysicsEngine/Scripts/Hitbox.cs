@@ -84,6 +84,24 @@ public partial class Hitbox: Node2D {
         return (int)GlobalPosition.Y + y + height;
     }
 
+    public int GetLocalLeft() {
+        return flipped ? (int)Position.X + x + width : (int)Position.X + x;
+    }
+    public int GetLocalRight() {
+        return flipped ? (int)Position.X + x : (int)Position.X + x + width;
+    }
+    public int GetLocalTop() {
+        return (int)Position.Y + y;
+    }
+    public int GetLocalBottom() {
+        return (int)Position.Y + y + height;
+    }
+
+    public int GetWidth()
+    {
+        return width;
+    }
+
     //AABB -> Axis-aligned Boundary Box
     public bool Intersects(Hitbox other, Vector2 offset) {
         if (!this.mCollidable || !other.Collidable) {

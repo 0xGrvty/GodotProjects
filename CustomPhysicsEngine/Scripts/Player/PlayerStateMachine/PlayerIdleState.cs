@@ -30,7 +30,7 @@ public partial class PlayerIdleState : IStateMachine {
 
         if (Input.IsActionJustPressed("Attack"))
         {
-            return player.playerAttackState_1;
+            return player.playerAttackState1;
         }
 
         return player.playerIdleState;

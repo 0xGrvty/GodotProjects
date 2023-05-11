@@ -51,11 +51,7 @@ public partial class Hitbox: Node2D {
     }
 
     public override void _Draw() {
-        if (flipped) {
-            DrawRect(new Rect2(-x - width, y, width, height), color);
-        } else {
-            DrawRect(new Rect2(x, y, width, height), color);
-        }
+        DrawRect(new Rect2(x, y, width, height), color);
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -97,6 +93,32 @@ public partial class Hitbox: Node2D {
         return (int)Position.Y + y + height;
     }
 
+    public float GetRealLeft() {
+        return flipped ? GlobalPosition.X + x + width : GlobalPosition.X + x;
+    }
+    public float GetRealRight() {
+        return flipped ? GlobalPosition.X + x : GlobalPosition.X + x + width;
+    }
+    public float GetRealTop() {
+        return GlobalPosition.Y + y;
+    }
+    public float GetRealBottom() {
+        return GlobalPosition.Y + y + height;
+    }
+
+    public float GetRealLocalLeft() {
+        return flipped ? Position.X + x + width : Position.X + x;
+    }
+    public float GetRealLocalRight() {
+        return flipped ? Position.X + x : Position.X + x + width;
+    }
+    public float GetRealLocalTop() {
+        return Position.Y + y;
+    }
+    public float GetRealLocalBottom() {
+        return Position.Y + y + height;
+    }
+
     public int GetWidth()
     {
         return width;
@@ -107,6 +129,7 @@ public partial class Hitbox: Node2D {
         if (!this.mCollidable || !other.Collidable) {
             return false;
         }
+
         return ((this.Right + offset.X) > other.Left && (this.Left + offset.X) < other.Right
             && (this.Bottom + offset.Y) > other.Top && (this.Top + offset.Y) < other.Bottom);
     }
@@ -114,13 +137,13 @@ public partial class Hitbox: Node2D {
     // This is a helper function that reverses the x and width variables when the hitbox is flipped.
     // Example would be if our player is asymmetrical for some reason
     // or if a hitbox needs to be reflected to the other side when the player turns around
-    public void SetFlipped(Vector2 scale) {
-        if (Mathf.Sign(scale.X) == -1 && flipped == false) {
+    public void SetFlipped(Facing facing) {
+        if (facing == Facing.LEFT && flipped == false) {
             //GD.Print(scale.X);
             x *= -1;
             width *= -1;
             flipped = true;
-        } else if (Mathf.Sign(scale.X) == 1 && flipped == true) {
+        } else if (facing == Facing.RIGHT && flipped == true) {
             x *= -1;
             width *= -1;
             flipped = false;

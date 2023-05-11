@@ -7,15 +7,6 @@ public partial class PlayerJumpState : IStateMachine {
         var direction = player.GetDirectionInput();
         player.DoMovement(player.GetProcessDeltaTime(), direction);
 
-        switch (player.Facing) {
-            case Facing.RIGHT:
-                player.Scale = new Vector2(1, 1);
-                break;
-            case Facing.LEFT:
-                player.Scale = new Vector2(-1, 1);
-                break;
-        }
-
         player.AnimatedSprite.SpeedScale = 1f;
 
         if (!player.AnimatedSprite.Animation.Equals("Jump")) {

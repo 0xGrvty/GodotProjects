@@ -1,11 +1,11 @@
 using Godot;
 using System;
 
-public partial class PlayerAttackState_3 : IStateMachine {
+public partial class PlayerAttackState3 : IStateMachine {
     private Attack attack;
     private int activeFrame = 2;
 
-    public PlayerAttackState_3(Node hitboxes) {
+    public PlayerAttackState3(Node hitboxes) {
         attack = new Attack(hitboxes);
     }
     public IStateMachine EnterState(Node actor) {
@@ -17,7 +17,7 @@ public partial class PlayerAttackState_3 : IStateMachine {
         /// TODO: Make hitbox active on X frame
         if (player.AnimatedSprite.Frame == activeFrame) {
 
-            attack.CheckHitboxes(player, player.Scale);
+            attack.CheckHitboxes(player, player.Facing);
 
         } else {
 
@@ -40,7 +40,7 @@ public partial class PlayerAttackState_3 : IStateMachine {
         //    }
         //}
 
-        return player.playerAttackState_3;
+        return player.playerAttackState3;
     }
     public void EmitStateChanged(Node actor, IStateMachine state) {
 

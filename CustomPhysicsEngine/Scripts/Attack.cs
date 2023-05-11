@@ -17,11 +17,11 @@ public partial class Attack : Hitbox {
 		}
 	}
 
-	public void CheckHitboxes(Node owner, Vector2 scale) {
+	public void CheckHitboxes(Node owner, Facing facing) {
         var hittable = owner.GetTree().GetNodesInGroup("Actors");
 
         foreach (Hitbox h in hitboxes) {
-            h.SetFlipped(scale);
+            h.SetFlipped(facing);
             h.Visible = true;
         }
         // O(N^2), can we make this faster somehow?  But then again, it breaks upon the very first hitbox that hits

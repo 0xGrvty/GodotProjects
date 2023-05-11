@@ -210,13 +210,13 @@ script = ExtResource("1_gqpoo")
 
 [node name="Animations" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_i1q3r")
-animation = &"Attack3"
+animation = &"Run"
 autoplay = "Idle"
-frame_progress = 0.510958
 
 [node name="Hitbox" parent="." instance=ExtResource("12_i6oac")]
 x = -4
 y = -7
+width = 8
 height = 24
 
 [node name="Attacks" type="Node2D" parent="."]
@@ -251,7 +251,6 @@ color = Color(0.643137, 0, 0.0823529, 0.501961)
 
 [node name="Hitbox1" parent="Attacks/Attack3" instance=ExtResource("12_i6oac")]
 visible = false
-x = 0
 width = 26
 color = Color(0.643137, 0, 0.0823529, 0.501961)
 

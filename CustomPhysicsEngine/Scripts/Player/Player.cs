@@ -2,9 +2,15 @@ using Godot;
 using System;
 
 public partial class Player : Actor {
+    // Signals
+    [Signal]
+    public delegate void LoadZoneTriggeredEventHandler();
+
+
     // Constants
     private const int NUM_JUMPS = 1;
     private const int NUM_HEAD_RAYS = 4;
+    private const int CORNER_CORRECTION = 4;
 
     // Static variables
     private static float COYOTE_TIME = 3f * Game.ONE_FRAME;
@@ -24,9 +30,9 @@ public partial class Player : Actor {
     private float localHoldTime = 0;
     private bool onGround = true;
     [Export]
-    private float jumpHeight = 10f;
+    private float jumpHeight = 21f;
     [Export]
-    private float jumpTimeToPeak = 0.4f;
+    private float jumpTimeToPeak = 0.3f;
     [Export]
     private float jumpTimeToDescent = 0.2f;
     private float jumpVelocity;
@@ -43,7 +49,8 @@ public partial class Player : Actor {
     private InputBuffer inputBuffer;
     private bool showComboList = false;
     private float attackInputBuffer = 0;
-    private Vector2[] headRays;
+    private Vector2 snapshotVelocity;
+    private int snapshotDirection;
 
     // public variables
     public int AttackCounter { get => attackCounter; set => attackCounter = value; }
@@ -62,9 +69,10 @@ public partial class Player : Actor {
     public PlayerJumpState playerJumpState;
     public PlayerJumpSquatState playerJumpSquatState;
     public PlayerFallState playerFallState;
-    public PlayerAttackState_1 playerAttackState_1;
-    public PlayerAttackState_2 playerAttackState_2;
-    public PlayerAttackState_3 playerAttackState_3;
+    public PlayerAttackState1 playerAttackState1;
+    public PlayerAttackState2 playerAttackState2;
+    public PlayerAttackState3 playerAttackState3;
+    public PlayerSceneTransitionState playerSceneTransitionState;
 
     public override void _Ready() {
         // No onready, so get the node in this part of the pipeline.
@@ -89,20 +97,24 @@ public partial class Player : Actor {
         playerJumpState = new PlayerJumpState();
         playerJumpSquatState = new PlayerJumpSquatState();
         playerFallState = new PlayerFallState();
-        playerAttackState_1 = new PlayerAttackState_1(GetNode<Node2D>("Attacks/Attack1"));
-        playerAttackState_2 = new PlayerAttackState_2(GetNode<Node2D>("Attacks/Attack2"));
-        playerAttackState_3 = new PlayerAttackState_3(GetNode<Node2D>("Attacks/Attack3"));
+        playerAttackState1 = new PlayerAttackState1(GetNode<Node2D>("Attacks/Attack1"));
+        playerAttackState2 = new PlayerAttackState2(GetNode<Node2D>("Attacks/Attack2"));
+        playerAttackState3 = new PlayerAttackState3(GetNode<Node2D>("Attacks/Attack3"));
+        playerSceneTransitionState = new PlayerSceneTransitionState();
         currentState = playerIdleState;
         facing = Facing.RIGHT;
         wasGrounded = true;
         inputBuffer = new InputBuffer(8);
-        headRays = new Vector2[NUM_HEAD_RAYS];
+        AddUserSignal(nameof(OnLoadZoneTriggered));
+        LoadZoneTriggered += OnLoadZoneTriggered;
+        //headRays = new Vector2[NUM_HEAD_RAYS];
         //InitHeadRays();
     }
     public override void _Draw() {
-        for (int i = 0; i < NUM_HEAD_RAYS; i++) {
-            DrawLine(headRays[i], headRays[i] * new Vector2(1, 5f * 1), Colors.Red);
-        }
+        DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
+        DrawLine(Vector2.Zero, 15f * Vector2.Up, Colors.Yellow);
+        DrawLine(Vector2.Zero, 15f * Vector2.Right, Colors.Green);
+        DrawLine(Vector2.Zero, 15f * Vector2.Left, Colors.Green);
     }
     public override void _Process(double delta) {
         //var direction = Math.Sign(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left"));
@@ -154,10 +166,34 @@ public partial class Player : Actor {
     }
 
     public override void _PhysicsProcess(double delta) {
-        var spaceState = GetWorld2D().DirectSpaceState;
+        // The ray-casting method actually doesn't work because in Godot, Raycast2D only interacts with _CollisionObject2D_
+        // and since we are using our own physics engine, we are only using Nodes, which are not CollisionObject2Ds.  Now we must figure out how to make our physics engine
+        // do what we want, which is to detect if we bonk our head, and if we can move them to the side so they can clear a corner
+        // Here's a way to check, but that's O(N^2) time: https://www.youtube.com/watch?v=tW-Nxbxg5qs
+        // But maybe we can simply make Hitboxes and check if there's a collision instead.  I was originally thinking this, but was not sure if 
+        // this was the best approach.  We are really decoupled from the Godot Physics API, so instead of forcing using it, we should try letting go of it as much as possible.
 
-        for (int i = 0; i < NUM_HEAD_RAYS; i++) { 
-        }
+        // Something I've realized:  Even though the solution above is O(N^2), gotta realize that we set the bounds of what we loop through in that particular instance.
+        // It is technically O(N^2), however we only check a hard-coded set of 3 pixels.  Now what if we had an upgrade that bumped corner correction (for some reason)
+        // an infinite amount of times?  Then yes, the above solution isn't optimal.  But we know that we want to check roughly 3-4 pixels only at a time whenever we jump.
+        // This limit makes the time negligible. I shouldn't make things harder on myself, just do it.  Remember the rule of thumb: Do not optimize unless you have to.
+
+        //if (velocity.Y < 0)
+        //{
+        //    var spaceState = GetWorld2D().DirectSpaceState;
+        //    var rayDist = Math.Abs(Hitbox.GetWidth()) / NUM_HEAD_RAYS;
+        //    for (int i = 0; i < NUM_HEAD_RAYS; i++)
+        //    {
+        //        var rayStart = new Vector2((i * rayDist) + Hitbox.GetLeft(), Hitbox.GetTop());
+        //        var query = PhysicsRayQueryParameters2D.Create(rayStart, new Vector2(rayStart.X, 15f * -1));
+        //        //query.Exclude = new Godot.Collections.Array<Rid> { CollisionObject2D.GetRid() };
+        //        var result = spaceState.IntersectRay(query);
+        //        if (result.Count > 0)
+        //        {
+        //            GD.Print("We hit this: " + result["collider_id"]);
+        //        }
+        //    }
+        //}
     }
 
     public void OnCollisionX() {
@@ -166,6 +202,37 @@ public partial class Player : Actor {
     }
 
     public void OnCollisionY() {
+        // First do a fuzzy check to see if the player hits a corner
+        if (velocity.Y < 0) {
+            if (velocity.X >= 0) {
+                for (int i = 1; i <= CORNER_CORRECTION; i++) {
+                    // If the fuzzy check returns false, then move them and let them jump!
+                    if (!GM.CheckWallsCollision(this, new Vector2(i, -1))) {
+                        GlobalPosition += new Vector2(i, -1);
+                        // return since we don't want to zero the remainder when we correct the jump
+                        return;
+                    }
+                    if (!GM.CheckWallsCollision(this, new Vector2(-i, -1))) {
+                        GlobalPosition += new Vector2(-i, -1);
+                        // return since we don't want to zero the remainder when we correct the jump
+                        return;
+                    }
+                }
+            }
+            if (velocity.X <= 0) {
+                for (int i = 1; i <= CORNER_CORRECTION; i++) {
+                    if (!GM.CheckWallsCollision(this, new Vector2(i, -1))) {
+                        GlobalPosition += new Vector2(i, -1);
+                        return;
+                    }
+                    if (!GM.CheckWallsCollision(this, new Vector2(-i, -1))) {
+                        GlobalPosition += new Vector2(-i, -1);
+                        return;
+                    }
+                }
+            }
+
+        }
         velocity.Y = 0;
         ZeroRemainderY();
     }
@@ -176,33 +243,42 @@ public partial class Player : Actor {
 
         if (direction > 0 && facing == Facing.LEFT) {
             facing = Facing.RIGHT;
-        }
-        else if (direction < 0 && facing == Facing.RIGHT) {
+            AnimatedSprite.FlipH = false;
+        } else if (direction < 0 && facing == Facing.RIGHT) {
             facing = Facing.LEFT;
+            AnimatedSprite.FlipH = true;
         }
 
-        switch (facing) {
-            case Facing.RIGHT:
-                Scale = new Vector2(1, 1);
-                Hitbox.SetFlipped(Scale);
-                break;
-            case Facing.LEFT:
-                Scale = new Vector2(-1, 1);
-                Hitbox.SetFlipped(Scale);
-                break;
-        }
+        Hitbox.SetFlipped(facing);
+        //switch (facing) {
+        //    case Facing.RIGHT:
+        //        //Scale = new Vector2(1, 1);
+        //        Hitbox.SetFlipped(facing);
+        //        AnimatedSprite.FlipH = false;
+        //        break;
+        //    case Facing.LEFT:
+        //        //Scale = new Vector2(-1, 1);
+        //        Hitbox.SetFlipped(facing);
+        //        AnimatedSprite.FlipH = true;
+        //        break;
+        //}
 
         inputBuffer.AddInput(directionVector);
 
         return direction;
     }
 
-    public void DoMovement(double delta, int direction) {
+    public void DoMovement(double delta, int direction, bool isSceneTransition = false) {
 
         Jump(delta);
 
         velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
         velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
+
+        if (isSceneTransition) {
+            velocity.X = maxSpeed * snapshotDirection;
+            velocity.Y = GetGravity();
+        }
 
         MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
         MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
@@ -229,12 +305,10 @@ public partial class Player : Actor {
             jumpBufferTime = 0;
             localHoldTime = JUMP_HOLD_TIME;
             jumping = true;
-        }
-        else if (localHoldTime > 0) {
+        } else if (localHoldTime > 0) {
             if (Input.IsActionPressed("Jump")) {
                 velocity = new Vector2(velocity.X, jumpVelocity);
-            }
-            else {
+            } else {
 
                 // Give the player a little nudge so that if they let go too early they can still make their jump
                 //velocity = new Vector2(velocity.X, 0.5f * velocity.Y);
@@ -292,23 +366,41 @@ public partial class Player : Actor {
             attackCounter--;
             switch (attackCounter) {
                 case 2:
-                    return playerAttackState_1;
+                    return playerAttackState1;
                 case 1:
-                    return playerAttackState_2;
+                    return playerAttackState2;
                 case 0:
-                    return playerAttackState_3;
+                    return playerAttackState3;
             }
         }
-        
+
         return currentState;
     }
 
-    private void InitHeadRays() {
-        var rayDist = Hitbox.GetWidth() / NUM_HEAD_RAYS;
-        for (int i = 0; i < NUM_HEAD_RAYS; i++) {
-            var rayStart = new Vector2(1 + (i * rayDist) + Hitbox.GetLocalLeft(), Hitbox.GetLocalTop());
-            headRays[i] = rayStart;
-            GD.Print(headRays[i]);
-        }
+    public void OnLoadZoneTriggered() {
+        SnapshotMovement();
+        currentState = playerSceneTransitionState;
     }
+
+    public void SnapshotMovement() {
+        snapshotDirection = GetDirectionInput();
+        snapshotVelocity = velocity;
+    }
+
+    public int GetSnapshotDirection() {
+        return snapshotDirection;
+    }
+
+    public Vector2 GetSnapshotVelocity() {
+        return snapshotVelocity;
+    }
+
+    //private void InitHeadRays() {
+    //    var rayDist = Hitbox.GetWidth() / NUM_HEAD_RAYS;
+    //    for (int i = 0; i < NUM_HEAD_RAYS; i++) {
+    //        var rayStart = new Vector2(1 + (i * rayDist) + Hitbox.GetLocalLeft(), Hitbox.GetLocalTop());
+    //        headRays[i] = rayStart;
+    //        GD.Print(headRays[i]);
+    //    }
+    //}
 }

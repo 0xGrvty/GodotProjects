@@ -103,6 +103,7 @@ position = Vector2(240, -16)
 [node name="LoadZone" parent="." instance=ExtResource("3_2ydgq")]
 position = Vector2(-16, 128)
 sceneTo = "res://Scenes/Level.tscn"
+dir = -1
 
 [node name="Hitbox" parent="LoadZone" instance=ExtResource("4_bgbj1")]
 position = Vector2(16, 0)
@@ -112,11 +113,14 @@ color = Color(0, 0.952941, 0.313726, 0.501961)
 [node name="LoadZone2" parent="." instance=ExtResource("3_2ydgq")]
 position = Vector2(208, 80)
 sceneTo = "res://Scenes/Level.tscn"
+dir = -1
 
 [node name="Hitbox" parent="LoadZone2" instance=ExtResource("4_bgbj1")]
-position = Vector2(0, 32)
+position = Vector2(0, 56)
 width = 32
 color = Color(0, 0.952941, 0.313726, 0.501961)
 
 [node name="StartingPosition" type="Marker2D" parent="."]
 position = Vector2(0, 136)
+
+[node name="Enemies" type="Node2D" parent="."]

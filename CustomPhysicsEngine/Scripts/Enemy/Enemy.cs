@@ -4,7 +4,9 @@ using System;
 public partial class Enemy : Actor {
     private Vector2 velocity = Vector2.Zero;
     public Vector2 Velocity { get => velocity; set => velocity = value; }
+    [Export]
     private float maxSpeed = 100;
+    [Export]
     private float maxAccel = 800;
     private bool onGround = true;
 
@@ -19,11 +21,13 @@ public partial class Enemy : Actor {
     private float fallGravity;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        // Remove this later, just needed it for testing.
+        // A Bat or Slime will be instantiated, but not an Enemy
         Hitbox = (Hitbox)GetNode<Node2D>("Hitbox");
 
         // Since C# does not have onready, we still need to fetch the globals.
-        // The documentation said we should be able to just call Game, but it did not work.
         // It is because GetTree is not a static method, it seems like.  I wonder if I am doing something incorrectly.
+        // The documentation said we should be able to just call Game, but it did not work. <-- It didn't work because you Autoloaded the script, dummy.  Autoload the scene next time, you friggin' noob
         GM = GetNode<Game>("/root/Game");
 
         // remove this later, just needed it for instance variables
@@ -56,5 +60,19 @@ public partial class Enemy : Actor {
     public void OnCollisionY() {
         velocity.Y = 0;
         ZeroRemainderY();
+    }
+
+    public float GetMaxSpeed()
+    {
+        return maxSpeed;
+    }
+
+    public float GetMaxAccel() { 
+        return maxAccel; 
+    }
+
+    public Vector2 GetVelocity()
+    {
+        return velocity;
     }
 }

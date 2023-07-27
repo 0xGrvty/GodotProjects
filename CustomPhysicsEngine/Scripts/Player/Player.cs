@@ -4,7 +4,7 @@ using System;
 public partial class Player : Actor {
     // Signals
     [Signal]
-    public delegate void LoadZoneTriggeredEventHandler();
+    public delegate void LoadZoneTriggeredEventHandler(int facing);
 
 
     // Constants
@@ -202,6 +202,10 @@ public partial class Player : Actor {
     }
 
     public void OnCollisionY() {
+        // See note in _PhysicsProcess.  You know what?  Maybe the best solution is the most straight forward.  We only need to check a few pixels to the left and right of our hitbox
+        // Why go through all that work making rays, checking if the corner is in between the rays, moving the character, and etc?  Just check 2-3 pixels to the left, then check 2-3 pixels to the right.
+        // This is why the Celeste devs are smart and I am not.
+
         // First do a fuzzy check to see if the player hits a corner
         if (velocity.Y < 0) {
             if (velocity.X >= 0) {
@@ -275,9 +279,10 @@ public partial class Player : Actor {
         velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
         velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
 
-        if (isSceneTransition) {
+        if (isSceneTransition && onGround) {
             velocity.X = maxSpeed * snapshotDirection;
-            velocity.Y = GetGravity();
+        } else if (isSceneTransition && !onGround) {
+            velocity.X = 0;
         }
 
         MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
@@ -377,13 +382,13 @@ public partial class Player : Actor {
         return currentState;
     }
 
-    public void OnLoadZoneTriggered() {
-        SnapshotMovement();
+    public void OnLoadZoneTriggered(int doorDirection) {
+        SnapshotMovement(doorDirection);
         currentState = playerSceneTransitionState;
     }
 
-    public void SnapshotMovement() {
-        snapshotDirection = GetDirectionInput();
+    public void SnapshotMovement(int doorDirection) {
+        snapshotDirection = doorDirection;
         snapshotVelocity = velocity;
     }
 

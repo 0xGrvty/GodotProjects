@@ -8,6 +8,8 @@ public partial class LoadZone : Node2D {
 	private Player player;
 	[Export]
 	private string sceneTo;
+	[Export]
+	private int dir;
 	public override void _Ready() {
 		loadZoneHitbox = GetNode<Hitbox>("Hitbox");
 		//player = (Player)GetParent().GetNode<Node2D>("Player");
@@ -23,7 +25,7 @@ public partial class LoadZone : Node2D {
 
     public override void _Process(double delta) {
         if (loadZoneHitbox.Intersects(player.Hitbox, Vector2.Zero) && player.currentState != player.playerSceneTransitionState) {
-			player.EmitSignal("LoadZoneTriggered");
+			player.EmitSignal("LoadZoneTriggered", dir);
 			sceneManager.ChangeScene(sceneTo);
 			QueueFree();
 		}

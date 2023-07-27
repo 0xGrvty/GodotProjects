@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Player : KinematicBody2D
+public partial class Player : CharacterBody2D
 {
 	[Export]
 	public int moveSpeed = 250;

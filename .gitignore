@@ -15,3 +15,7 @@
 # Release and Debug binaries
 **/Debug/
 **/Releases
+
+# Project ignores (Projects that are not in a shareable state)
+**/HelloWorld
+**/CastleGameJam

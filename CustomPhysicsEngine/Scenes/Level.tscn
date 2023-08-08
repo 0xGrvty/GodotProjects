@@ -210,5 +210,5 @@ position = Vector2(72, 136)
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="Bat" parent="Enemies" instance=ExtResource("8_s7cbv")]
-position = Vector2(352, 72)
-behavior = 2
+position = Vector2(368, 8)
+behavior = 3

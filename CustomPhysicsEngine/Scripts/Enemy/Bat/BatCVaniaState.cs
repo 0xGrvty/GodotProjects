@@ -5,7 +5,7 @@ public partial class BatCVaniaState : IStateMachine {
     public IStateMachine EnterState(Node actor) {
         var bat = actor as Bat;
 
-
+        bat.Move();
         return bat.cvaniaState;
     }
 

@@ -3,8 +3,14 @@ using System;
 
 public partial class Bat : Enemy {
     private Vector2 velocity = Vector2.Zero;
-    private bool onGround = true;
-    private Node2D target;
+    //private bool onGround = true;
+    private Node2D target = null;
+    private Vector2 targetDirection = Vector2.Zero;
+    private bool attackPlayer = false;
+    private Vector2 startingPos = Vector2.Zero;
+    private Vector2 swoopPos = Vector2.Zero;
+    private Vector2 swoopDirection = Vector2.Zero;
+    private int counter = 0;
 
     // Tween for straight state
     private Tween tween;
@@ -52,6 +58,8 @@ public partial class Bat : Enemy {
 
         AddToGroup("Actors");
 
+        startingPos = GlobalPosition;
+
         sleepState = new BatSleepState();
         swoopState = new BatSwoopState();
         straightState = new BatStraightState();
@@ -93,12 +101,52 @@ public partial class Bat : Enemy {
         currentState = currentState.EnterState(this);
     }
 
+    public void Move() {
+        var delta = GetPhysicsProcessDeltaTime();
+        switch (behavior) {
+
+            case Bat.Behavior.STRAIGHT:
+                velocity.X = Mathf.MoveToward(velocity.X, GetMaxSpeed() * GlobalPosition.DirectionTo(targetDirection).X, GetMaxAccel() * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, GetMaxSpeed() * GlobalPosition.DirectionTo(targetDirection).Y, GetMaxAccel() * (float)delta);
+                break;
+            case Bat.Behavior.SWOOP:
+                velocity.X = Mathf.MoveToward(velocity.X, targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
+                // y = mx + b
+                //GlobalPosition.DirectionTo(swoopPos).Normalized().X
+                //velocity.Y = Mathf.MoveToward(velocity.Y, 2f * swoopDirection.Normalized().X * GetMaxSpeed() * (GlobalPosition - swoopPos).Normalized().X + swoopPos.Y, GetMaxAccel() * (float)delta);
+                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.Normalized().X * (GetMaxSpeed() * (GlobalPosition - swoopPos).Normalized().X) + swoopPos.Normalized().Y, GetMaxAccel() * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta); // <-- this is really close
+                //velocity.Y = Mathf.MoveToward(velocity.Y, (targetDirection.Y * 2f * GetMaxSpeed() * GlobalPosition.Normalized().X) + (2f * GetMaxSpeed() * swoopPos.Normalized().Y), GetMaxAccel());
+                //GD.Print(velocity);
+                break;
+            case Bat.Behavior.CVANIA:
+                velocity.X = Mathf.MoveToward(velocity.X, 0.75f * targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta);
+                if (GlobalPosition.Y == swoopPos.Y)
+                {
+                    velocity.X = Mathf.MoveToward(velocity.X, 0.25f * targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
+                    velocity.Y = 0;
+                }
+
+                break;
+            default:
+                break;
+        }
+
+        MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
+        MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
+    }
+
     public bool CheckProximity(Node2D actor) {
-        if (GlobalPosition.DistanceTo(actor.GlobalPosition) < 200) {
+        if (GlobalPosition.DistanceTo(actor.GlobalPosition) < 200 && target == null) {
             // do stuff when the actor gets in range
             if (actor is Player) {
                 GD.Print("We are moving");
                 target = actor;
+                swoopPos = target.GlobalPosition;
+                targetDirection = GlobalPosition.DirectionTo(swoopPos);
+                swoopDirection = swoopPos.DirectionTo(GlobalPosition);
+                GD.Print(target);
                 return true;
             }
         }
@@ -123,5 +171,9 @@ public partial class Bat : Enemy {
 
     public Tween GetTween() {
         return tween;
+    }
+
+    public Vector2 GetTargetPosSnapshot() {
+        return targetDirection;
     }
 }

@@ -87,7 +87,6 @@ public partial class Bat : Enemy {
         //        break;
         //}
         currentState = sleepState;
-        GD.Print(currentState.ToString());
     }
 
 
@@ -112,12 +111,10 @@ public partial class Bat : Enemy {
             case Bat.Behavior.SWOOP:
                 velocity.X = Mathf.MoveToward(velocity.X, targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
                 // y = mx + b
-                //GlobalPosition.DirectionTo(swoopPos).Normalized().X
-                //velocity.Y = Mathf.MoveToward(velocity.Y, 2f * swoopDirection.Normalized().X * GetMaxSpeed() * (GlobalPosition - swoopPos).Normalized().X + swoopPos.Y, GetMaxAccel() * (float)delta);
-                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.Normalized().X * (GetMaxSpeed() * (GlobalPosition - swoopPos).Normalized().X) + swoopPos.Normalized().Y, GetMaxAccel() * (float)delta);
-                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta); // <-- this is really close
-                //velocity.Y = Mathf.MoveToward(velocity.Y, (targetDirection.Y * 2f * GetMaxSpeed() * GlobalPosition.Normalized().X) + (2f * GetMaxSpeed() * swoopPos.Normalized().Y), GetMaxAccel());
-                //GD.Print(velocity);
+                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta); // <-- this is really close
+                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * (swoopPos.DirectionTo(GlobalPosition).X - swoopPos.Normalized().Y), GetMaxAccel() * (float)delta);
+                
+                
                 break;
             case Bat.Behavior.CVANIA:
                 velocity.X = Mathf.MoveToward(velocity.X, 0.75f * targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
@@ -141,12 +138,10 @@ public partial class Bat : Enemy {
         if (GlobalPosition.DistanceTo(actor.GlobalPosition) < 200 && target == null) {
             // do stuff when the actor gets in range
             if (actor is Player) {
-                GD.Print("We are moving");
                 target = actor;
                 swoopPos = target.GlobalPosition;
                 targetDirection = GlobalPosition.DirectionTo(swoopPos);
                 swoopDirection = swoopPos.DirectionTo(GlobalPosition);
-                GD.Print(target);
                 return true;
             }
         }
@@ -175,5 +170,13 @@ public partial class Bat : Enemy {
 
     public Vector2 GetTargetPosSnapshot() {
         return targetDirection;
+    }
+
+    public void SetBehavior(Behavior behavior) {
+        this.behavior = behavior;
+    }
+
+    public Vector2 GetStartingPos() {
+        return startingPos;
     }
 }

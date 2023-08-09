@@ -211,4 +211,6 @@ position = Vector2(72, 136)
 
 [node name="Bat" parent="Enemies" instance=ExtResource("8_s7cbv")]
 position = Vector2(368, 8)
-behavior = 3
+behavior = 2
+maxSpeed = 250.0
+maxAccel = 850.0

@@ -22,6 +22,11 @@ public partial class BatSwoopState : IStateMachine {
         //bat.MoveX(bat.Velocity.X * (float)bat.GetPhysicsProcessDeltaTime(), new Callable(bat, nameof(bat.OnCollisionX)));
         //bat.MoveY(bat.Velocity.Y * (float)bat.GetPhysicsProcessDeltaTime(), new Callable(bat, nameof(bat.OnCollisionY)));
         bat.Move();
+        if (bat.Velocity.Y < 0 && bat.GlobalPosition.Y <= bat.GetStartingPos().Y) {
+
+            bat.Velocity = Vector2.Zero;
+            return bat.sleepState;
+        }
         return bat.swoopState;
     }
 

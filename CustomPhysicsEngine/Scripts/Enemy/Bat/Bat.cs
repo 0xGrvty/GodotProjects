@@ -108,6 +108,7 @@ public partial class Bat : Enemy {
                 velocity.X = Mathf.MoveToward(velocity.X, GetMaxSpeed() * GlobalPosition.DirectionTo(targetDirection).X, GetMaxAccel() * (float)delta);
                 velocity.Y = Mathf.MoveToward(velocity.Y, GetMaxSpeed() * GlobalPosition.DirectionTo(targetDirection).Y, GetMaxAccel() * (float)delta);
                 break;
+            // This can probably be done with a tween.  Let's explore this option later.
             case Bat.Behavior.SWOOP:
                 velocity.X = Mathf.MoveToward(velocity.X, targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
                 // y = mx + b

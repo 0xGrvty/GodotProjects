@@ -8,7 +8,7 @@ public partial class Bat : Enemy {
     private Vector2 targetDirection = Vector2.Zero;
     private bool attackPlayer = false;
     private Vector2 startingPos = Vector2.Zero;
-    private Vector2 swoopPos = Vector2.Zero;
+    private Vector2 targetPos = Vector2.Zero;
     private Vector2 swoopDirection = Vector2.Zero;
     private int counter = 0;
 
@@ -26,7 +26,8 @@ public partial class Bat : Enemy {
         SLEEP = 0,
         STRAIGHT = 1,
         SWOOP = 2,
-        CVANIA = 3
+        CVANIA = 3,
+        ROCKET = 4
     }
 
     [Export]
@@ -48,6 +49,7 @@ public partial class Bat : Enemy {
     public BatSwoopState swoopState;
     public BatStraightState straightState;
     public BatCVaniaState cvaniaState;
+    public BatRocketState rocketState;
 
 
     public override void _Ready() {
@@ -64,6 +66,7 @@ public partial class Bat : Enemy {
         swoopState = new BatSwoopState();
         straightState = new BatStraightState();
         cvaniaState = new BatCVaniaState();
+        rocketState = new BatRocketState();
 
         //switch (behavior) {
         //    case Behavior.SLEEP:
@@ -103,29 +106,38 @@ public partial class Bat : Enemy {
     public void Move() {
         var delta = GetPhysicsProcessDeltaTime();
         switch (behavior) {
+            case Bat.Behavior.SLEEP:
+                velocity = Vector2.Zero;
+                break;
 
             case Bat.Behavior.STRAIGHT:
-                velocity.X = Mathf.MoveToward(velocity.X, GetMaxSpeed() * GlobalPosition.DirectionTo(targetDirection).X, GetMaxAccel() * (float)delta);
-                velocity.Y = Mathf.MoveToward(velocity.Y, GetMaxSpeed() * GlobalPosition.DirectionTo(targetDirection).Y, GetMaxAccel() * (float)delta);
+                velocity.X = Mathf.MoveToward(velocity.X, GetMaxSpeed() * GlobalPosition.DirectionTo(target.GlobalPosition).X, GetMaxAccel() * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, GetMaxSpeed() * GlobalPosition.DirectionTo(target.GlobalPosition).Y, GetMaxAccel() * (float)delta);
                 break;
             // This can probably be done with a tween.  Let's explore this option later.
             case Bat.Behavior.SWOOP:
                 velocity.X = Mathf.MoveToward(velocity.X, targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
-                // y = mx + b
-                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta); // <-- this is really close
-                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * (swoopPos.DirectionTo(GlobalPosition).X - swoopPos.Normalized().Y), GetMaxAccel() * (float)delta);
-                
-                
+                // y = mx + b <- velocity
+                // y = mx^2 + 2mx + b <- position
+                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * (targetPos.DirectionTo(GlobalPosition).X - targetPos.Normalized().Y), GetMaxAccel() * (float)delta);
+                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * (Mathf.Pow(swoopPos.DirectionTo(GlobalPosition).X, 2) - swoopPos.Normalized().Y), GetMaxAccel() * (float)delta);
+                //velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * 0.25f * GetMaxSpeed() * (Mathf.Sin(4f* counter * (float)delta)), GetMaxAccel() * (float)delta);
+                counter++;
                 break;
             case Bat.Behavior.CVANIA:
-                velocity.X = Mathf.MoveToward(velocity.X, 0.75f * targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
-                velocity.Y = Mathf.MoveToward(velocity.Y, swoopDirection.X * GetMaxSpeed() * swoopPos.DirectionTo(GlobalPosition).X, GetMaxAccel() * (float)delta);
-                if (GlobalPosition.Y == swoopPos.Y)
-                {
+                velocity.X = Mathf.MoveToward(velocity.X, targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, 2.4f * swoopDirection.X * GetMaxSpeed() * (targetPos.DirectionTo(GlobalPosition).X - targetPos.Normalized().Y), GetMaxAccel() * (float)delta);
+                if (GlobalPosition.Y >= targetPos.Y) {
                     velocity.X = Mathf.MoveToward(velocity.X, 0.25f * targetDirection.X * GetMaxSpeed(), GetMaxAccel() * (float)delta);
                     velocity.Y = 0;
                 }
 
+                break;
+
+            case Bat.Behavior.ROCKET:
+                InitTween();
+                GD.Print(GlobalPosition);
                 break;
             default:
                 break;
@@ -140,9 +152,9 @@ public partial class Bat : Enemy {
             // do stuff when the actor gets in range
             if (actor is Player) {
                 target = actor;
-                swoopPos = target.GlobalPosition;
-                targetDirection = GlobalPosition.DirectionTo(swoopPos);
-                swoopDirection = swoopPos.DirectionTo(GlobalPosition);
+                targetPos = target.GlobalPosition;
+                targetDirection = GlobalPosition.DirectionTo(targetPos);
+                swoopDirection = targetPos.DirectionTo(GlobalPosition);
                 return true;
             }
         }
@@ -159,10 +171,18 @@ public partial class Bat : Enemy {
     }
 
     public void InitTween() {
-        tween = CreateTween().SetLoops().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut);
-        //tween.Connect(Tween.SignalName.StepFinished, new Callable(this, nameof(OnTweenStep)));
-        tween.TweenProperty(this, "follow", start + offset, time).SetDelay(delay);
-        tween.TweenProperty(this, "follow", start, time).SetDelay(delay);
+        // Ensure we create only one tween and not reset it constantly
+        if (tween != null) { return; }
+
+        // The missile will travel back first, a little "wind-up"
+        // Wait, what if we got rid of the bat all together and made it a projectile instead?
+        // That way we can mess with the tween types and have a crap ton of different projectiles.
+        tween = CreateTween().SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.In);
+        // We want the velocity to change since we are on our own physics engine.
+        tween.TweenProperty(this, "velocity", targetDirection * GetMaxSpeed(), time).SetDelay(delay);
+
+        // This works, but we wouldn't be moving by integers as defined by our physics engine.
+        //tween.TweenProperty(this, "global_position", targetPos, time).SetDelay(delay);
     }
 
     public Tween GetTween() {

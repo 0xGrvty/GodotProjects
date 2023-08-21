@@ -5,7 +5,6 @@ using static Bat;
 public partial class BatSleepState : IStateMachine {
     public IStateMachine EnterState(Node actor) {
         var bat = actor as Bat;
-        bat.Velocity = Vector2.Zero;
         foreach (Node2D a in bat.GM.GetAllActors()) {
 
             if (bat.CheckProximity(a)) {
@@ -20,6 +19,9 @@ public partial class BatSleepState : IStateMachine {
 
                     case Bat.Behavior.CVANIA:
                         return bat.cvaniaState;
+
+                    case Bat.Behavior.ROCKET:
+                        return bat.rocketState;
 
                     default:
                         return bat.sleepState;

@@ -24,6 +24,9 @@ public partial class Solid : Wall {
             Hitbox.Collidable = !JumpThru;
 
             foreach (Actor actor in gm.GetAllActors()) {
+                if (actor is Missile) {
+                    continue;
+                }
 
                 if (Hitbox.Intersects(actor.Hitbox, Vector2.Zero)) {
 

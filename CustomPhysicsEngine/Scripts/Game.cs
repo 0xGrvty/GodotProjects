@@ -25,9 +25,12 @@ public partial class Game : Node {
         foreach (Wall wall in walls) {
             if (wall.JumpThru) {
                 if (offset == Vector2.Down && entity.IsRiding((Solid)wall, offset)) {
+                    if (entity is Missile) {
+                        return false;
+                    }
                     return true;
                 }
-            } else if (entity.Hitbox.Intersects(wall.Hitbox, offset)) { 
+            } else if (entity.Hitbox.Intersects(wall.Hitbox, offset)) {
                 return true; 
             }
         }

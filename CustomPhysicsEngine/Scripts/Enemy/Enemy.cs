@@ -40,7 +40,6 @@ public partial class Enemy : Actor {
 
     public override void _Process(double delta) {
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
-
         velocity.X = Mathf.MoveToward(velocity.X, 0, maxAccel * (float)delta);
         velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
 

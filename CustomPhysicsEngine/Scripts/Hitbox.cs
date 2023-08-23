@@ -126,6 +126,7 @@ public partial class Hitbox: Node2D {
 
     //AABB -> Axis-aligned Boundary Box
     public bool Intersects(Hitbox other, Vector2 offset) {
+        // If either this or the other hitbox are intangible, return false (they are dodging, invincible, etc)
         if (!this.mCollidable || !other.Collidable) {
             return false;
         }
@@ -137,6 +138,8 @@ public partial class Hitbox: Node2D {
     // This is a helper function that reverses the x and width variables when the hitbox is flipped.
     // Example would be if our player is asymmetrical for some reason
     // or if a hitbox needs to be reflected to the other side when the player turns around
+
+    // Can probably find a better way to do this.
     public void SetFlipped(Facing facing) {
         if (facing == Facing.LEFT && flipped == false) {
             //GD.Print(scale.X);

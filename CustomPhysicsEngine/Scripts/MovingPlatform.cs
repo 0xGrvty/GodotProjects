@@ -39,7 +39,7 @@ public partial class MovingPlatform : Solid
         //tween.Play();
     }
 
-    // I couldn't get this to work, from Godot 3.5 -> 4.0, tween_step changed to step_finished,
+    // I couldn't get this to work. From Godot 3.5 -> 4.0, tween_step changed to step_finished,
     // however step_finished fires when the end of a tweener (tween_property) is completed rather than
     // when the end of a step of the tween happens.
     private void OnTweenStep(int idx) {

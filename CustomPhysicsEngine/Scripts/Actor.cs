@@ -46,6 +46,9 @@ public partial class Actor : Node2D {
 
             // If the game manager detects a collision, then perform the callback function, otherwise update the position
             if (gm.CheckWallsCollision(this, new Vector2(step, 0))) {
+                if (this is Missile) {
+                    GD.Print("We hit it in the X way");
+                }
                 callback.Call();
                 return;
             }

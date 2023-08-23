@@ -17,8 +17,6 @@ public partial class Bat : Enemy {
     private Vector2 start;
     private Vector2 follow;
     [Export]
-    Vector2 offset = Vector2.Zero;
-    [Export]
     float time = 2;
     [Export]
     float delay = 1;

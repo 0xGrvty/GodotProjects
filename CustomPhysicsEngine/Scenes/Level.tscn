@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://r2l5gtmxmf51"]
+[gd_scene load_steps=10 format=3 uid="uid://r2l5gtmxmf51"]
 
 [ext_resource type="Script" path="res://Scripts/Level.cs" id="1_jxd4l"]
 [ext_resource type="PackedScene" uid="uid://dh56k2g0n40ud" path="res://Scenes/Wall.tscn" id="2_uh6qd"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cfdfaprqtyiht" path="res://Scenes/LoadZone.tscn" id="6_qi4n6"]
 [ext_resource type="PackedScene" uid="uid://co8ri1uxhwjg6" path="res://Scenes/Hitbox.tscn" id="7_hccxs"]
 [ext_resource type="PackedScene" uid="uid://bjr6ib7qcjgx0" path="res://Scenes/Bat.tscn" id="8_s7cbv"]
+[ext_resource type="PackedScene" uid="uid://bl1lqvg6r20q4" path="res://Scenes/Missile.tscn" id="9_wd6ab"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_jxd4l")
@@ -178,7 +179,6 @@ jumpThru = true
 [node name="MovingPlatform3" parent="." instance=ExtResource("3_xsmw4")]
 position = Vector2(208, 72)
 offset = Vector2(0, -60)
-time = 1.5
 delay = 0.0
 
 [node name="MovingPlatform2" parent="." instance=ExtResource("3_xsmw4")]
@@ -216,3 +216,19 @@ delay = 0.25
 behavior = 4
 maxSpeed = 700.0
 maxAccel = 850.0
+
+[node name="Missile" parent="Enemies" instance=ExtResource("9_wd6ab")]
+position = Vector2(320, 32)
+time = 3.0
+delay = 0.0
+offset = Vector2(0, 20)
+maxSpeed = 600.0
+
+[node name="Missile2" parent="Enemies" instance=ExtResource("9_wd6ab")]
+position = Vector2(352, 80)
+delay = 0.0
+
+[node name="Missile3" parent="Enemies" instance=ExtResource("9_wd6ab")]
+position = Vector2(368, 40)
+delay = 0.0
+speedMultiplier = Vector2(0.3, 0.5)

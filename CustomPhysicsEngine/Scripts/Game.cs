@@ -32,6 +32,9 @@ public partial class Game : Node {
 
     public override void _Process(double delta) {
         /// TODO: FIGURE OUT HOW TO MAKE A CAMERA YAY
+        /// Remember that we are moving by integers, so simply
+        /// doing this will cause a jittery camera.
+        /// Maybe try some kind of interpolation here
         camera.GlobalPosition = player.GlobalPosition;
     }
 

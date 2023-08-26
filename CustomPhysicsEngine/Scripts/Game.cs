@@ -1,21 +1,38 @@
 using Godot;
 using System;
+using System.Runtime.CompilerServices;
 
 public partial class Game : Node {
+    internal static string HITSTOP_SIGNAL = "Hitstop";
     // Will be referencing this multiple times so we should make it static
     private static float one_frame = 1f / (float)ProjectSettings.GetSetting("application/run/max_fps");
     public static float ONE_FRAME { get => one_frame; }
+
+    [Signal]
+    public delegate void HitstopEventHandler(int frames);
 
     [Export]
     private string pathToLevel1;
     private Player player;
     private Node2D levels;
 
+    private bool isWaiting = false;
+    private Camera2D camera;
+
     public override void _Ready() {
         //levels = GetNode<Node2D>("Levels");
         player = (Player)GetNode<Node2D>("Player");
+        camera = GetNode<Camera2D>("Camera");
         //levels.AddChild(GD.Load<PackedScene>(pathToLevel1).Instantiate());
         GetTree().ChangeSceneToFile(pathToLevel1);
+
+        /// TODO: Replace this with a for loop that loops through all things that can request hitstops
+        player.Connect(HITSTOP_SIGNAL, new Callable(this, nameof(HandleHitstop)));
+    }
+
+    public override void _Process(double delta) {
+        /// TODO: FIGURE OUT HOW TO MAKE A CAMERA YAY
+        camera.GlobalPosition = player.GlobalPosition;
     }
 
     public bool CheckWallsCollision(Actor entity, Vector2 offset) {
@@ -56,5 +73,16 @@ public partial class Game : Node {
         }
 
         return riders;
+    }
+
+    public async void HandleHitstop(int frames) {
+        if (isWaiting) {
+            return;
+        }
+        isWaiting = true;
+        Engine.TimeScale = 0;
+        await ToSignal(GetTree().CreateTimer(frames * ONE_FRAME, true, false, true), SceneTreeTimer.SignalName.Timeout);
+        Engine.TimeScale = 1;
+        isWaiting = false;
     }
 }

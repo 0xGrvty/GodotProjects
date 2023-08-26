@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://crc51ar7j8dc7"]
+
+[ext_resource type="Script" path="res://Scripts/Camera.cs" id="1_y33dd"]
+
+[node name="Camera" type="Camera2D"]
+position_smoothing_enabled = true
+script = ExtResource("1_y33dd")
+
+[node name="ShakeTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="ShakeTimer" to="." method="OnShakeTimerTimeout"]

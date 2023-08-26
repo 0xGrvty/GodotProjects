@@ -31,6 +31,8 @@ public partial class Attack : Hitbox {
                 foreach (Hitbox h in hitboxes) {
                     if (h.Intersects(a.Hitbox, Vector2.Zero)) {
                         hitlist.Add(a);
+                        owner.EmitSignal("Hitstop", 3);
+                        owner.EmitSignal("ShakeCamera", true);
                         GD.Print("Ow fuck");
                         break;
                     }

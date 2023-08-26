@@ -5,7 +5,10 @@ public partial class Player : Actor {
     // Signals
     [Signal]
     public delegate void LoadZoneTriggeredEventHandler(int facing);
-
+    [Signal]
+    public delegate void HitstopEventHandler();
+    [Signal]
+    public delegate void ShakeCameraEventHandler();
 
     // Constants
     private const int NUM_JUMPS = 1;
@@ -85,6 +88,7 @@ public partial class Player : Actor {
         // It is because GetTree is not a static method, it seems like.  I wonder if I am doing something incorrectly.
         GM = GetNode<Game>("/root/Game");
         AddToGroup("Actors");
+        AddToGroup("CameraShakers");
 
         // Building a Better Jump GDC talk
         jumpVelocity = ((2.0f * jumpHeight) / jumpTimeToPeak) * -1.0f; // In Godot 2D, down is positive, so flip the signs
@@ -354,6 +358,8 @@ public partial class Player : Actor {
         jumpBufferTime = 0;
     }
 
+    // Redo this function.  It is messy and doesn't make sense.
+    // See how we did the Missile code.
     public IStateMachine DoAttack() {
         var attackPressed = Input.IsActionJustPressed("Attack");
 
@@ -381,6 +387,22 @@ public partial class Player : Actor {
 
         return currentState;
     }
+
+    //public void DoAttack() {
+    //    var attackPressed = Input.IsActionJustPressed("Attack");
+
+    //    if (attackInputBuffer < 0.0) {
+    //        ResetAttackCounter();
+    //    }
+
+    //    attackInputBuffer -= (float)GetPhysicsProcessDeltaTime();
+
+    //    if (attackPressed) {
+    //        attackInputBuffer = ATTACK_INPUT_BUFFER;
+    //    }
+
+
+    //}
 
     public void OnLoadZoneTriggered(int doorDirection) {
         SnapshotMovement(doorDirection);

@@ -135,7 +135,6 @@ public partial class Bat : Enemy {
 
             case Bat.Behavior.ROCKET:
                 InitTween();
-                GD.Print(GlobalPosition);
                 break;
             default:
                 break;

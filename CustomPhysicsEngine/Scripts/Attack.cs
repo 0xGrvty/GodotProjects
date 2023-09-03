@@ -33,7 +33,6 @@ public partial class Attack : Hitbox {
                         hitlist.Add(a);
                         owner.EmitSignal("Hitstop", 3);
                         owner.EmitSignal("ShakeCamera", true);
-                        GD.Print("Ow fuck");
                         break;
                     }
                 }

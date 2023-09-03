@@ -8,6 +8,10 @@ public partial class Game : Node {
     private static float one_frame = 1f / (float)ProjectSettings.GetSetting("application/run/max_fps");
     public static float ONE_FRAME { get => one_frame; }
 
+    private static Vector2 screenSize = new Vector2((float)ProjectSettings.GetSetting("display/window/size/viewport_width"), (float)ProjectSettings.GetSetting("display/window/size/viewport_height"));
+
+    public static Vector2 ScreenSize { get => screenSize; }
+
     [Signal]
     public delegate void HitstopEventHandler(int frames);
 
@@ -18,24 +22,30 @@ public partial class Game : Node {
 
     private bool isWaiting = false;
     private Camera2D camera;
+    //private Node camera;
 
     public override void _Ready() {
         //levels = GetNode<Node2D>("Levels");
         player = (Player)GetNode<Node2D>("Player");
-        camera = GetNode<Camera2D>("Camera");
+        camera = GetNode<Camera2D>("CameraShake");
+        //camera = GetNode<Node>("Camera");
         //levels.AddChild(GD.Load<PackedScene>(pathToLevel1).Instantiate());
         GetTree().ChangeSceneToFile(pathToLevel1);
+        //var canvasTransform = camera.GetViewport().CanvasTransform;
+        //canvasTransform[2] = -player.GlobalPosition + screenSize / 2;
+        //camera.GetViewport().CanvasTransform = canvasTransform;
 
         /// TODO: Replace this with a for loop that loops through all things that can request hitstops
         player.Connect(HITSTOP_SIGNAL, new Callable(this, nameof(HandleHitstop)));
     }
 
     public override void _Process(double delta) {
-        /// TODO: FIGURE OUT HOW TO MAKE A CAMERA YAY
-        /// Remember that we are moving by integers, so simply
-        /// doing this will cause a jittery camera.
-        /// Maybe try some kind of interpolation here
+        // Remember that we are moving by integers, so simply
+        // doing this will cause a jittery camera.
+        // I wonder if there's a way to make a smoother camera.
+        camera.GlobalPosition = camera.GlobalPosition.Lerp(player.GlobalPosition, (float)delta * 5.0f);
         camera.GlobalPosition = player.GlobalPosition;
+
     }
 
     public bool CheckWallsCollision(Actor entity, Vector2 offset) {
@@ -84,7 +94,7 @@ public partial class Game : Node {
         }
         isWaiting = true;
         Engine.TimeScale = 0;
-        await ToSignal(GetTree().CreateTimer(frames * ONE_FRAME, true, false, true), SceneTreeTimer.SignalName.Timeout);
+        await ToSignal(GetTree().CreateTimer(Math.Abs(frames) * ONE_FRAME, true, false, true), SceneTreeTimer.SignalName.Timeout);
         Engine.TimeScale = 1;
         isWaiting = false;
     }

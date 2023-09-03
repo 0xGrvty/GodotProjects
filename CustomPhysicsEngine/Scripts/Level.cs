@@ -8,6 +8,5 @@ public partial class Level : Node {
     public override void _Ready() {
         startingPosition = GetNode<Marker2D>("StartingPosition");
         player = (Player)GetParent().GetNode<Node2D>("Game/Player");
-        player.GlobalPosition = startingPosition.GlobalPosition;
     }
 }

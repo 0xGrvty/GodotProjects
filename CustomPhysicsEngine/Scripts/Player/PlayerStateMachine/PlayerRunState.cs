@@ -3,7 +3,6 @@ using System;
 
 public partial class PlayerRunState : IStateMachine {
     public IStateMachine EnterState(Node actor) {
-        var jumpSquatEnabled = false;
         var player = actor as Player;
         var direction = player.GetDirectionInput();
         player.DoMovement(player.GetProcessDeltaTime(), direction);

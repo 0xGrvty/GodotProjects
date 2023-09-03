@@ -9,6 +9,8 @@ public partial class Player : Actor {
     public delegate void HitstopEventHandler();
     [Signal]
     public delegate void ShakeCameraEventHandler();
+    [Signal]
+    public delegate void MoveEventHandler();
 
     // Constants
     private const int NUM_JUMPS = 1;
@@ -25,10 +27,6 @@ public partial class Player : Actor {
     private Vector2 velocity = Vector2.Zero;
     private float maxSpeed = 100;
     private float maxAccel = 800;
-    //private AnimatedSprite2D animatedSprite;
-    //private float gravity = 1000;
-    //private float maxFall = 160;
-    //private float jumpForce = -160;
 
     private float localHoldTime = 0;
     private bool onGround = true;
@@ -111,8 +109,6 @@ public partial class Player : Actor {
         inputBuffer = new InputBuffer(8);
         AddUserSignal(nameof(OnLoadZoneTriggered));
         LoadZoneTriggered += OnLoadZoneTriggered;
-        //headRays = new Vector2[NUM_HEAD_RAYS];
-        //InitHeadRays();
     }
     public override void _Draw() {
         DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
@@ -121,51 +117,8 @@ public partial class Player : Actor {
         DrawLine(Vector2.Zero, 15f * Vector2.Left, Colors.Green);
     }
     public override void _Process(double delta) {
-        //var direction = Math.Sign(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left"));
-        //if (direction > 0) {
-        //    facing = Facing.RIGHT;
-        //} else if (direction < 0) {
-        //    facing = Facing.LEFT;
-        //}
-        //var direction = GetDirectionInput();
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
-        //DoMovement(delta, direction);
-
-        //var onGround = GlobalPosition.Y >= 160;
-
-        //var jumping = Input.IsActionJustPressed("Jump");
-
-        //if (jumping && onGround) {
-        //	velocity = new Vector2(velocity.X, jumpForce);
-        //	localHoldTime = jumpHoldTime;
-        //} else if (localHoldTime > 0) {
-        //	if (Input.IsActionPressed("Jump")) {
-        //		velocity = new Vector2(velocity.X, jumpForce);
-        //	} else {
-        //		localHoldTime = 0;
-        //	}
-        //}
-        //localHoldTime -= (float)delta;
-
-        //Jump(delta);
-
-
-        ////if (direction > 0) { animatedSprite.FlipH = false; } else if (direction < 0) { animatedSprite.FlipH = true; }
-        ////if (direction != 0) { animatedSprite.Play("Run"); } else { animatedSprite.Play("Idle"); }
-
-
-
-        //velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
-        ////velocity.Y = Mathf.MoveToward(velocity.Y, maxFall, gravity * (float)delta); // Before implementing Building a Better Jump GDC talk
-        //velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta); // == velocity.Y += GetGravity() * (float)delta;
-        ////velocity.X = maxSpeed * direction;
-
-        //// In Actor, if a collision is detected, then perform the callback function
-        //MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
-        //MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
         currentState = currentState.EnterState(this);
-        //GD.Print(inputBuffer.GetBuffer());
-        //GD.Print(Hitbox.Left);
         QueueRedraw();
     }
 
@@ -258,18 +211,6 @@ public partial class Player : Actor {
         }
 
         Hitbox.SetFlipped(facing);
-        //switch (facing) {
-        //    case Facing.RIGHT:
-        //        //Scale = new Vector2(1, 1);
-        //        Hitbox.SetFlipped(facing);
-        //        AnimatedSprite.FlipH = false;
-        //        break;
-        //    case Facing.LEFT:
-        //        //Scale = new Vector2(-1, 1);
-        //        Hitbox.SetFlipped(facing);
-        //        AnimatedSprite.FlipH = true;
-        //        break;
-        //}
 
         inputBuffer.AddInput(directionVector);
 
@@ -291,6 +232,7 @@ public partial class Player : Actor {
 
         MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
         MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
+        if (velocity != Vector2.Zero) EmitSignal(SignalName.Move);
     }
 
     public void Jump(double delta) {
@@ -309,8 +251,6 @@ public partial class Player : Actor {
         if ((jumpBufferTime > 0.0f && (onGround || wasGrounded)) || (jumpBufferTime > 0.0f && numJumps > 0)) {
             numJumps--;
             velocity = new Vector2(velocity.X, jumpVelocity);
-            //localHoldTime = JUMP_HOLD_TIME;
-            //jumpBufferTime = JUMP_BUFFER_TIME;
             jumpBufferTime = 0;
             localHoldTime = JUMP_HOLD_TIME;
             jumping = true;
@@ -421,13 +361,4 @@ public partial class Player : Actor {
     public Vector2 GetSnapshotVelocity() {
         return snapshotVelocity;
     }
-
-    //private void InitHeadRays() {
-    //    var rayDist = Hitbox.GetWidth() / NUM_HEAD_RAYS;
-    //    for (int i = 0; i < NUM_HEAD_RAYS; i++) {
-    //        var rayStart = new Vector2(1 + (i * rayDist) + Hitbox.GetLocalLeft(), Hitbox.GetLocalTop());
-    //        headRays[i] = rayStart;
-    //        GD.Print(headRays[i]);
-    //    }
-    //}
 }

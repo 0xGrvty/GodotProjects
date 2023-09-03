@@ -1,69 +1,24 @@
 using Godot;
 using System;
 
-public partial class Camera : Camera2D {
-    // Inspector exports
-    [Export]
-    private double amplitude = 6f;
-    [Export]
-    private float duration = 0.8f;
-    [Export(PropertyHint.ExpEasing)]
-    private float DAMP_EASING = 1.0f;
-    [Export]
-    private bool shake = false;
+// Custom camera class
+// Not finished, just seeing how it works.
+public partial class Camera : Node {
 
-    // Private variables
-    private Timer timer;
-    private bool enabled = false;
-
-    public bool Shake { get => shake; set => SetShake(value); }
-    public float Duration { get => duration; set => SetDuration(value); }
+    private Vector2 screenSize = new Vector2((float) ProjectSettings.GetSetting("display/window/size/viewport_width"), (float) ProjectSettings.GetSetting("display/window/size/viewport_height"));
+    private Player player;
 
     public override void _Ready() {
-        GD.Randomize();
-        SetProcess(false);
-        timer = GetNode<Timer>("ShakeTimer");
+        //var canvasTransform = GetViewport().CanvasTransform;
+        //canvasTransform[2] = GetParent().GetNode<Node2D>("Player").GlobalPosition;
+        //GD.Print(GetParent().GetNode<Node2D>("Player").GlobalPosition);
+        //GD.Print(canvasTransform);
+        //GetViewport().CanvasTransform = canvasTransform;
+        player = (Player)GetParent().GetNode<Node2D>("Player");
 
-        ConnectToShakers();
     }
 
-    public override void _Process(double delta) {
-        var damping = (float)Mathf.Ease(timer.TimeLeft / timer.WaitTime, DAMP_EASING);
-        Offset = new Vector2(
-            (float)GD.RandRange(amplitude, -amplitude) * damping,
-            (float)GD.RandRange(amplitude, -amplitude) * damping
-            );
+    public void UpdateCamera() {
+        return;
     }
-
-    public void SetShake(bool shake) {
-        this.shake = shake;
-        SetProcess(this.shake);
-        Offset = new Vector2();
-        if (this.shake) timer.Start();
-    }
-
-    public void SetDuration(float duration) {
-        this.duration = duration;
-        timer.WaitTime = this.duration;
-    }
-
-    public void OnShakeTimerTimeout() {
-        SetShake(false);
-    }
-
-    public void HandleShake(bool enabled) {
-        GD.Print(enabled);
-        this.enabled = enabled;
-        if (!this.enabled) return;
-        SetShake(this.enabled);
-    }
-
-    private void ConnectToShakers() {
-        GD.Print("Connecting to shakers");
-        foreach (var shaker in GetTree().GetNodesInGroup("CameraShakers")) {
-            shaker.Connect("ShakeCamera", new Callable(this, nameof(HandleShake)));
-            GD.Print("Shaker connected: " + shaker.Name);
-        }
-    }
-
 }

@@ -80,44 +80,44 @@ public partial class Hitbox: Node2D {
         return (int)GlobalPosition.Y + y + height;
     }
 
-    public int GetLocalLeft() {
-        return flipped ? (int)Position.X + x + width : (int)Position.X + x;
-    }
-    public int GetLocalRight() {
-        return flipped ? (int)Position.X + x : (int)Position.X + x + width;
-    }
-    public int GetLocalTop() {
-        return (int)Position.Y + y;
-    }
-    public int GetLocalBottom() {
-        return (int)Position.Y + y + height;
-    }
+    //public int GetLocalLeft() {
+    //    return flipped ? (int)Position.X + x + width : (int)Position.X + x;
+    //}
+    //public int GetLocalRight() {
+    //    return flipped ? (int)Position.X + x : (int)Position.X + x + width;
+    //}
+    //public int GetLocalTop() {
+    //    return (int)Position.Y + y;
+    //}
+    //public int GetLocalBottom() {
+    //    return (int)Position.Y + y + height;
+    //}
 
-    public float GetRealLeft() {
-        return flipped ? GlobalPosition.X + x + width : GlobalPosition.X + x;
-    }
-    public float GetRealRight() {
-        return flipped ? GlobalPosition.X + x : GlobalPosition.X + x + width;
-    }
-    public float GetRealTop() {
-        return GlobalPosition.Y + y;
-    }
-    public float GetRealBottom() {
-        return GlobalPosition.Y + y + height;
-    }
+    //public float GetRealLeft() {
+    //    return flipped ? GlobalPosition.X + x + width : GlobalPosition.X + x;
+    //}
+    //public float GetRealRight() {
+    //    return flipped ? GlobalPosition.X + x : GlobalPosition.X + x + width;
+    //}
+    //public float GetRealTop() {
+    //    return GlobalPosition.Y + y;
+    //}
+    //public float GetRealBottom() {
+    //    return GlobalPosition.Y + y + height;
+    //}
 
-    public float GetRealLocalLeft() {
-        return flipped ? Position.X + x + width : Position.X + x;
-    }
-    public float GetRealLocalRight() {
-        return flipped ? Position.X + x : Position.X + x + width;
-    }
-    public float GetRealLocalTop() {
-        return Position.Y + y;
-    }
-    public float GetRealLocalBottom() {
-        return Position.Y + y + height;
-    }
+    //public float GetRealLocalLeft() {
+    //    return flipped ? Position.X + x + width : Position.X + x;
+    //}
+    //public float GetRealLocalRight() {
+    //    return flipped ? Position.X + x : Position.X + x + width;
+    //}
+    //public float GetRealLocalTop() {
+    //    return Position.Y + y;
+    //}
+    //public float GetRealLocalBottom() {
+    //    return Position.Y + y + height;
+    //}
 
     public int GetWidth()
     {
@@ -140,7 +140,7 @@ public partial class Hitbox: Node2D {
     // or if a hitbox needs to be reflected to the other side when the player turns around
 
     // Can probably find a better way to do this.
-    public void SetFlipped(Facing facing) {
+    public void FlipHitboxes(Facing facing) {
         if (facing == Facing.LEFT && flipped == false) {
             //GD.Print(scale.X);
             x *= -1;

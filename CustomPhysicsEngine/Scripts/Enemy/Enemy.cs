@@ -23,7 +23,7 @@ public partial class Enemy : Actor {
     public override void _Ready() {
         // Remove this later, just needed it for testing.
         // A Bat or Slime will be instantiated, but not an Enemy
-        Hitbox = (Hitbox)GetNode<Node2D>("Hitbox");
+        Hurtbox = (Hitbox)GetNode<Node2D>("Hitbox");
 
         // Since C# does not have onready, we still need to fetch the globals.
         // It is because GetTree is not a static method, it seems like.  I wonder if I am doing something incorrectly.

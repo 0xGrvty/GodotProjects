@@ -24,7 +24,6 @@ public partial class MovingPlatform : Solid
     }
 
     public override void _Process(double delta) {
-        // Should there be a way to fire this off via signals
         MoveY(follow.Y - (GlobalPosition.Y + remainder.Y));
         MoveX(follow.X - (GlobalPosition.X + remainder.X));
     }

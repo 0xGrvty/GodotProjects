@@ -21,7 +21,9 @@ public partial class Attack : Hitbox {
         var hittable = owner.GetTree().GetNodesInGroup("Actors");
 
         foreach (Hitbox h in hitboxes) {
-            h.SetFlipped(facing);
+            // Since the attack hitboxes are attached to the player and we are not changing the scale, only flipping the animations
+            // we need to flip the hitbox nodes and correct each hitbox's new Left and Right boundaries.
+            h.FlipHitboxes(facing);
             h.Visible = true;
         }
         // O(N^2), can we make this faster somehow?  But then again, it breaks upon the very first hitbox that hits
@@ -29,10 +31,11 @@ public partial class Attack : Hitbox {
         foreach (Actor a in hittable) {
             if (a is Enemy && !hitlist.Contains(a)) {
                 foreach (Hitbox h in hitboxes) {
-                    if (h.Intersects(a.Hitbox, Vector2.Zero)) {
+                    if (h.Intersects(a.Hurtbox, Vector2.Zero)) {
                         hitlist.Add(a);
                         owner.EmitSignal("Hitstop", 3);
                         owner.EmitSignal("ShakeCamera", true);
+                        GD.Print("hit");
                         break;
                     }
                 }

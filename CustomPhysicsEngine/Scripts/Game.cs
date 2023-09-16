@@ -16,7 +16,7 @@ public partial class Game : Node {
     public delegate void HitstopEventHandler(int frames);
 
     [Export]
-    private string pathToLevel1;
+    private string pathToTestLevel;
     private Player player;
     private Node2D levels;
 
@@ -26,22 +26,17 @@ public partial class Game : Node {
 
     public override void _Ready() {
         //levels = GetNode<Node2D>("Levels");
+        GetTree().ChangeSceneToFile(pathToTestLevel);
         player = (Player)GetNode<Node2D>("Player");
         camera = GetNode<Camera2D>("CameraShake");
-        //camera = GetNode<Node>("Camera");
-        //levels.AddChild(GD.Load<PackedScene>(pathToLevel1).Instantiate());
-        GetTree().ChangeSceneToFile(pathToLevel1);
-        //var canvasTransform = camera.GetViewport().CanvasTransform;
-        //canvasTransform[2] = -player.GlobalPosition + screenSize / 2;
-        //camera.GetViewport().CanvasTransform = canvasTransform;
 
         /// TODO: Replace this with a for loop that loops through all things that can request hitstops
         player.Connect(HITSTOP_SIGNAL, new Callable(this, nameof(HandleHitstop)));
     }
 
     public override void _Process(double delta) {
-        // Remember that we are moving by integers, so simply
-        // doing this will cause a jittery camera.
+        // Remember that we are moving by integers,
+        // so simply doing this will cause a jittery camera.
         // I wonder if there's a way to make a smoother camera.
         camera.GlobalPosition = camera.GlobalPosition.Lerp(player.GlobalPosition, (float)delta * 5.0f);
         camera.GlobalPosition = player.GlobalPosition;
@@ -55,12 +50,9 @@ public partial class Game : Node {
         foreach (Wall wall in walls) {
             if (wall.JumpThru) {
                 if (offset == Vector2.Down && entity.IsRiding((Solid)wall, offset)) {
-                    if (entity is Missile) {
-                        return false;
-                    }
                     return true;
                 }
-            } else if (entity.Hitbox.Intersects(wall.Hitbox, offset)) {
+            } else if (entity.Hurtbox.Intersects(wall.Hitbox, offset)) {
                 return true; 
             }
         }

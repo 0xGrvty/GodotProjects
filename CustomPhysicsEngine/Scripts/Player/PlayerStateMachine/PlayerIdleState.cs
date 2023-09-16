@@ -33,6 +33,10 @@ public partial class PlayerIdleState : IStateMachine {
             return player.playerAttackState1;
         }
 
+        if (Input.IsActionJustPressed("ChargeAttack")) {
+            return player.playerChargeAttackState;
+        }
+
         return player.playerIdleState;
     }
     public void EmitStateChanged(Node actor, IStateMachine state) {

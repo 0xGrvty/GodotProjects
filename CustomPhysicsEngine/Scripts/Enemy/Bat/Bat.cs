@@ -51,8 +51,8 @@ public partial class Bat : Enemy {
 
 
     public override void _Ready() {
-        Hitbox = (Hitbox)GetNode<Node2D>("Hitbox");
-        Hitbox.SetCollidable(false);
+        Hurtbox = (Hitbox)GetNode<Node2D>("Hitbox");
+        Hurtbox.SetCollidable(false);
 
         GM = GetNode<Game>("/root/Game");
 

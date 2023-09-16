@@ -24,7 +24,7 @@ public partial class LoadZone : Node2D {
 	}
 
     public override void _Process(double delta) {
-        if (loadZoneHitbox.Intersects(player.Hitbox, Vector2.Zero) && player.currentState != player.playerSceneTransitionState) {
+        if (loadZoneHitbox.Intersects(player.Hurtbox, Vector2.Zero) && player.currentState != player.playerSceneTransitionState) {
 			player.EmitSignal("LoadZoneTriggered", dir);
 			sceneManager.ChangeScene(sceneTo);
 			QueueFree();

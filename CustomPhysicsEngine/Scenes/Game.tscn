@@ -6,14 +6,17 @@
 
 [node name="Game" type="Node"]
 script = ExtResource("1_o8vre")
-pathToLevel1 = "res://Scenes/Level.tscn"
+pathToTestLevel = "res://Scenes/TestLevel.tscn"
 
 [node name="Levels" type="Node2D" parent="."]
 
-[node name="Player" parent="." instance=ExtResource("2_bxfmo")]
-
 [node name="CameraShake" parent="." instance=ExtResource("3_an2n5")]
-position_smoothing_speed = 2.0
+position_smoothing_speed = 4.0
 amplitude = 1.0
 duration = 2.0
 DAMP_EASING = 12.5533
+
+[node name="Player" parent="." instance=ExtResource("2_bxfmo")]
+maxSpeed = 512.0
+maxAccel = 1000.0
+jumpHeight = 256.0

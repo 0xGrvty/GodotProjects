@@ -7,4 +7,6 @@
 script = ExtResource("1_c8duu")
 
 [node name="Hitbox" parent="." instance=ExtResource("2_jj6fs")]
+width = 128
+height = 128
 color = Color(0.556863, 0, 0.54902, 0.501961)

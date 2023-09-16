@@ -25,7 +25,9 @@ public partial class Player : Actor {
 
     // private variables
     private Vector2 velocity = Vector2.Zero;
+    [Export]
     private float maxSpeed = 100;
+    [Export]
     private float maxAccel = 800;
 
     private float localHoldTime = 0;
@@ -74,11 +76,12 @@ public partial class Player : Actor {
     public PlayerAttackState2 playerAttackState2;
     public PlayerAttackState3 playerAttackState3;
     public PlayerSceneTransitionState playerSceneTransitionState;
+    public PlayerChargeAttackState playerChargeAttackState;
 
     public override void _Ready() {
         // No onready, so get the node in this part of the pipeline.
         AnimatedSprite = GetNode<AnimatedSprite2D>("Animations");
-        Hitbox = (Hitbox)GetNode<Node2D>("Hitbox");
+        Hurtbox = (Hitbox)GetNode<Node2D>("Hurtbox");
         attackTimer = GetNode<Timer>("AttackTimeout");
 
         // Since C# does not have onready, we still need to fetch the globals.
@@ -103,6 +106,7 @@ public partial class Player : Actor {
         playerAttackState2 = new PlayerAttackState2(GetNode<Node2D>("Attacks/Attack2"));
         playerAttackState3 = new PlayerAttackState3(GetNode<Node2D>("Attacks/Attack3"));
         playerSceneTransitionState = new PlayerSceneTransitionState();
+        playerChargeAttackState = new PlayerChargeAttackState(GetNode<Node2D>("Attacks/ChargeAttack"));
         currentState = playerIdleState;
         facing = Facing.RIGHT;
         wasGrounded = true;
@@ -210,8 +214,6 @@ public partial class Player : Actor {
             AnimatedSprite.FlipH = true;
         }
 
-        Hitbox.SetFlipped(facing);
-
         inputBuffer.AddInput(directionVector);
 
         return direction;
@@ -233,6 +235,13 @@ public partial class Player : Actor {
         MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
         MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
         if (velocity != Vector2.Zero) EmitSignal(SignalName.Move);
+    }
+
+    public void ForceMove(double delta, int direction) {
+        velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
+        velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
+        MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
+        MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
     }
 
     public void Jump(double delta) {
@@ -299,10 +308,9 @@ public partial class Player : Actor {
     }
 
     // Redo this function.  It is messy and doesn't make sense.
-    // See how we did the Missile code.
     public IStateMachine DoAttack() {
         var attackPressed = Input.IsActionJustPressed("Attack");
-
+        
         if (attackInputBuffer < 0.0) {
             ResetAttackCounter();
         }
@@ -314,6 +322,7 @@ public partial class Player : Actor {
         }
 
         if (attackInputBuffer > 0) {
+            velocity = Vector2.Zero;
             attackCounter--;
             switch (attackCounter) {
                 case 2:
@@ -327,22 +336,6 @@ public partial class Player : Actor {
 
         return currentState;
     }
-
-    //public void DoAttack() {
-    //    var attackPressed = Input.IsActionJustPressed("Attack");
-
-    //    if (attackInputBuffer < 0.0) {
-    //        ResetAttackCounter();
-    //    }
-
-    //    attackInputBuffer -= (float)GetPhysicsProcessDeltaTime();
-
-    //    if (attackPressed) {
-    //        attackInputBuffer = ATTACK_INPUT_BUFFER;
-    //    }
-
-
-    //}
 
     public void OnLoadZoneTriggered(int doorDirection) {
         SnapshotMovement(doorDirection);
@@ -360,5 +353,13 @@ public partial class Player : Actor {
 
     public Vector2 GetSnapshotVelocity() {
         return snapshotVelocity;
+    }
+
+    public float GetMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public float GetMaxAccel() {
+        return maxAccel;
     }
 }

@@ -1,0 +1,122 @@
+[gd_scene load_steps=5 format=3 uid="uid://yejuff36s1pd"]
+
+[ext_resource type="Script" path="res://Scripts/Level.cs" id="1_dlys8"]
+[ext_resource type="PackedScene" uid="uid://dh56k2g0n40ud" path="res://Scenes/Wall.tscn" id="2_7ir4f"]
+[ext_resource type="PackedScene" uid="uid://dq65meiknqbdp" path="res://Scenes/MovingPlatform.tscn" id="3_0jjqm"]
+[ext_resource type="PackedScene" uid="uid://clbkkk6x3p145" path="res://Scenes/Enemy.tscn" id="4_fv6y6"]
+
+[node name="TestLevel" type="Node2D"]
+script = ExtResource("1_dlys8")
+
+[node name="StartingPosition" type="Marker2D" parent="."]
+position = Vector2(256, 320)
+
+[node name="Walls" type="Node" parent="."]
+
+[node name="Wall" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 960)
+
+[node name="Wall27" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 832)
+
+[node name="Wall28" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 704)
+
+[node name="Wall29" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 576)
+
+[node name="Wall30" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 448)
+
+[node name="Wall31" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 320)
+
+[node name="Wall32" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 192)
+
+[node name="Wall33" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(0, 64)
+
+[node name="Wall2" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1536, 960)
+
+[node name="Wall3" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1408, 960)
+
+[node name="Wall4" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1280, 960)
+
+[node name="Wall5" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1152, 960)
+
+[node name="Wall6" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1024, 960)
+
+[node name="Wall7" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(896, 960)
+
+[node name="Wall8" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(768, 960)
+
+[node name="Wall9" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(640, 960)
+
+[node name="Wall10" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(512, 960)
+
+[node name="Wall11" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(384, 960)
+
+[node name="Wall12" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(256, 960)
+
+[node name="Wall13" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(128, 960)
+
+[node name="Wall14" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1664, 960)
+
+[node name="Wall15" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(3200, 960)
+
+[node name="Wall16" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(3072, 960)
+
+[node name="Wall17" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2944, 960)
+
+[node name="Wall18" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2816, 960)
+
+[node name="Wall19" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2688, 960)
+
+[node name="Wall20" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2560, 960)
+
+[node name="Wall21" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2432, 960)
+
+[node name="Wall22" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2304, 960)
+
+[node name="Wall23" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2176, 960)
+
+[node name="Wall24" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(2048, 960)
+
+[node name="Wall25" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1920, 960)
+
+[node name="Wall26" parent="Walls" instance=ExtResource("2_7ir4f")]
+position = Vector2(1792, 960)
+
+[node name="MovingPlatforms" type="Node" parent="."]
+
+[node name="MovingPlatform" parent="MovingPlatforms" instance=ExtResource("3_0jjqm")]
+position = Vector2(384, 192)
+offset = Vector2(128, 480)
+
+[node name="Enemy" parent="." instance=ExtResource("4_fv6y6")]
+position = Vector2(1280, 768)

@@ -26,8 +26,8 @@ public partial class Missile : Enemy
     private Vector2 speedMultiplier = Vector2.One;
 
     public override void _Ready() {
-        Hitbox = (Hitbox)GetNode<Node2D>("Hitbox");
-        Hitbox.SetCollidable(true);
+        Hurtbox = (Hitbox)GetNode<Node2D>("Hitbox");
+        Hurtbox.SetCollidable(true);
         GM = GetNode<Game>("/root/Game");
 
         start = GlobalPosition;

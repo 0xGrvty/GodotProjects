@@ -11,11 +11,11 @@ using System;
 // since everything is rounded to the nearest integer.
 public partial class Actor : Node2D {
     private Vector2 remainder = Vector2.Zero;
-    private Hitbox hitbox;
+    private Hitbox hurtbox;
     private Game gm;
     private AnimatedSprite2D animatedSprite;
     public Game GM { get => gm; set => gm = value; }
-    public Hitbox Hitbox { get => hitbox; set => hitbox = value; }
+    public Hitbox Hurtbox { get => hurtbox; set => hurtbox = value; }
     public AnimatedSprite2D AnimatedSprite { get => animatedSprite; set => animatedSprite = value; }
 
     // Take the amount (velocity.x * delta time)
@@ -46,9 +46,6 @@ public partial class Actor : Node2D {
 
             // If the game manager detects a collision, then perform the callback function, otherwise update the position
             if (gm.CheckWallsCollision(this, new Vector2(step, 0))) {
-                if (this is Missile) {
-                    GD.Print("We hit it in the X way");
-                }
                 callback.Call();
                 return;
             }
@@ -87,7 +84,7 @@ public partial class Actor : Node2D {
 
     // Returns true if there is an intersect with the solid and if there is not an intersect with itself (squish)
     public bool IsRiding(Solid solid, Vector2 offset) {
-        return !hitbox.Intersects(solid.Hitbox, Vector2.Zero) && hitbox.Intersects(solid.Hitbox, offset);
+        return !hurtbox.Intersects(solid.Hitbox, Vector2.Zero) && hurtbox.Intersects(solid.Hitbox, offset);
     }
 
     // Figure something out for getting squished.  Force player to crouch?

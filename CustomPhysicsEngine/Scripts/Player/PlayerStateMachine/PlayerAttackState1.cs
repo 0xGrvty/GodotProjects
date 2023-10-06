@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public partial class PlayerAttackState1 : IStateMachine {
     private Attack attack;
     private int activeFrame = 2;
+
     public PlayerAttackState1(Node hitboxes) {
         attack = new Attack(hitboxes);
     }
@@ -13,18 +14,23 @@ public partial class PlayerAttackState1 : IStateMachine {
         var player = actor as Player;
         player.AnimatedSprite.SpeedScale = 1;
         player.AnimatedSprite.Play("Attack1");
-        player.DoAttack();
+        player.DoAttack(attack, activeFrame);
 
-        if (player.AnimatedSprite.Frame == activeFrame) {
+        // Refactor this into player.DoAttack()
+        //if (player.AnimatedSprite.Frame == activeFrame) {
 
-            attack.CheckHitboxes(player, player.Facing);
-        } else {
+        //    if (attack.CheckHitboxes(player, player.Facing)) {
+        //        player.EmitSignal("Hitstop", 3);
+        //        player.EmitSignal("ShakeCamera", true);
+        //    }
 
-            foreach (Hitbox h in attack.GetHitboxes()) {
-                h.Visible = false;
-            }
+        //} else {
 
-        }
+        //    foreach (Hitbox h in attack.GetHitboxes()) {
+        //        h.Visible = false;
+        //    }
+
+        //}
 
         if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
             attack.ClearHitlist();

@@ -23,7 +23,7 @@ public partial class CameraShake : Camera2D {
         GD.Randomize();
         SetProcess(false);
         timer = GetNode<Timer>("ShakeTimer");
-
+        
         ConnectToShakers();
     }
 

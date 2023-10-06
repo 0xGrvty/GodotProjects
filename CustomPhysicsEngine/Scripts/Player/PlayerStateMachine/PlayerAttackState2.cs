@@ -13,11 +13,14 @@ public partial class PlayerAttackState2 : IStateMachine {
         var player = actor as Player;
         player.AnimatedSprite.SpeedScale = 1;
         player.AnimatedSprite.Play("Attack2");
-        player.DoAttack();
+        player.DoAttack(attack, activeFrame);
 
         if (player.AnimatedSprite.Frame == activeFrame) {
 
-            attack.CheckHitboxes(player, player.Facing);
+            if (attack.CheckHitboxes(player, player.Facing)) {
+                player.EmitSignal("Hitstop", 3);
+                player.EmitSignal("ShakeCamera", true);
+            }
 
         } else {
 

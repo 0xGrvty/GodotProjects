@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Custom Physics Engine": {
+      "commandName": "Project"
+    },
+    "Debugger": {
+      "commandName": "Executable",
+      "executablePath": "S:\\Godot\\Godot 4.1\\Godot_v4.1-stable_mono_win64.exe",
+      "commandLineArgs": "--path . --verbose",
+      "workingDirectory": "S:\\Godot\\Godot Projects\\CustomPhysicsEngine",
+      "nativeDebugging": true
+    }
+  }
+}

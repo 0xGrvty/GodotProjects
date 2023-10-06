@@ -17,7 +17,7 @@ public partial class Attack : Hitbox {
 		}
 	}
 
-	public void CheckHitboxes(Node owner, Facing facing) {
+	public bool CheckHitboxes(Node owner, Facing facing) {
         var hittable = owner.GetTree().GetNodesInGroup("Actors");
 
         foreach (Hitbox h in hitboxes) {
@@ -29,19 +29,20 @@ public partial class Attack : Hitbox {
         // O(N^2), can we make this faster somehow?  But then again, it breaks upon the very first hitbox that hits
         // And I can't imagine a metroidvania where there are millions of hitboxes on _one_ attack.
         foreach (Actor a in hittable) {
-            if (a is Enemy && !hitlist.Contains(a)) {
+            if (a != owner && !hitlist.Contains(a)) {
                 foreach (Hitbox h in hitboxes) {
                     if (h.Intersects(a.Hurtbox, Vector2.Zero)) {
                         hitlist.Add(a);
-                        owner.EmitSignal("Hitstop", 3);
-                        owner.EmitSignal("ShakeCamera", true);
-                        GD.Print("hit");
-                        break;
+                        //owner.EmitSignal("Hitstop", 3);
+                        //owner.EmitSignal("ShakeCamera", true);
+                        //GD.Print("hit");
+                        return true;
                     }
                 }
 
             }
         }
+        return false;
     }
 
     public Godot.Collections.Array GetHitboxes() {

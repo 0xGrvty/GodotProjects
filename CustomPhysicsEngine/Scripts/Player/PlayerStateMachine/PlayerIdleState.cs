@@ -6,7 +6,7 @@ public partial class PlayerIdleState : IStateMachine {
         var player = actor as Player;
         var direction = player.GetDirectionInput();
         player.DoMovement(player.GetProcessDeltaTime(), direction);
-        player.DoAttack();
+        //player.DoAttack();
         player.AnimatedSprite.SpeedScale = 1;
         player.AnimatedSprite.Play("Idle");
 
@@ -33,9 +33,9 @@ public partial class PlayerIdleState : IStateMachine {
             return player.playerAttackState1;
         }
 
-        if (Input.IsActionJustPressed("ChargeAttack")) {
-            return player.playerChargeAttackState;
-        }
+        //if (Input.IsActionJustPressed("ChargeAttack")) {
+        //    return player.playerChargeAttackState;
+        //}
 
         return player.playerIdleState;
     }

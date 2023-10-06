@@ -4,6 +4,8 @@ using System;
 public partial class PlayerChargeAttackState : IStateMachine {
     private Attack attack;
     private int activeFrame = 0;
+
+    public Attack Attack { get { return attack; } }
     public PlayerChargeAttackState(Node hitboxes) {
         attack = new Attack(hitboxes);
     }
@@ -35,6 +37,7 @@ public partial class PlayerChargeAttackState : IStateMachine {
 
             }
 
+            // There has to be an absolute better way to do this.  AnimatedSprite.AnimationFinished signal?
             if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
                 attack.ClearHitlist();
                 return player.playerIdleState;

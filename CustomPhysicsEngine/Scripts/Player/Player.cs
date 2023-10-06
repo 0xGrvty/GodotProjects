@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Diagnostics;
 
 public partial class Player : Actor {
     // Signals
@@ -29,7 +30,7 @@ public partial class Player : Actor {
     private float maxSpeed = 100;
     [Export]
     private float maxAccel = 800;
-
+    private bool canSpecial = true;
     private float localHoldTime = 0;
     private bool onGround = true;
     [Export]
@@ -65,6 +66,7 @@ public partial class Player : Actor {
     public int NumJumps { get => numJumps; set => numJumps = value; }
     public bool WasGrounded { get => wasGrounded; set => wasGrounded = value; }
     public float AttackInputBuffer { get => attackInputBuffer; set => attackInputBuffer = value; }
+    public bool CanSpecial { get => canSpecial; set => canSpecial = value; }
     // State machine
     public IStateMachine currentState;
     public PlayerRunState playerRunState;
@@ -110,9 +112,10 @@ public partial class Player : Actor {
         currentState = playerIdleState;
         facing = Facing.RIGHT;
         wasGrounded = true;
-        inputBuffer = new InputBuffer(8);
+        inputBuffer = new InputBuffer(3);
         AddUserSignal(nameof(OnLoadZoneTriggered));
         LoadZoneTriggered += OnLoadZoneTriggered;
+
     }
     public override void _Draw() {
         DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
@@ -308,33 +311,51 @@ public partial class Player : Actor {
     }
 
     // Redo this function.  It is messy and doesn't make sense.
-    public IStateMachine DoAttack() {
-        var attackPressed = Input.IsActionJustPressed("Attack");
-        
-        if (attackInputBuffer < 0.0) {
-            ResetAttackCounter();
-        }
+    //public IStateMachine DoAttack() {
+    //    var attackPressed = Input.IsActionJustPressed("Attack");
 
-        attackInputBuffer -= (float)GetProcessDeltaTime();
+    //    if (attackInputBuffer < 0.0) {
+    //        ResetAttackCounter();
+    //    }
 
-        if (attackPressed) {
-            attackInputBuffer = ATTACK_INPUT_BUFFER;
-        }
+    //    attackInputBuffer -= (float)GetProcessDeltaTime();
 
-        if (attackInputBuffer > 0) {
-            velocity = Vector2.Zero;
-            attackCounter--;
-            switch (attackCounter) {
-                case 2:
-                    return playerAttackState1;
-                case 1:
-                    return playerAttackState2;
-                case 0:
-                    return playerAttackState3;
+    //    if (attackPressed) {
+    //        attackInputBuffer = ATTACK_INPUT_BUFFER;
+    //    }
+
+    //    if (attackInputBuffer > 0) {
+    //        velocity = Vector2.Zero;
+    //        attackCounter--;
+    //        switch (attackCounter) {
+    //            case 2:
+    //                return playerAttackState1;
+    //            case 1:
+    //                return playerAttackState2;
+    //            case 0:
+    //                return playerAttackState3;
+    //        }
+    //    }
+
+    //    return currentState;
+    //}
+
+    public void DoAttack(Attack attack, int activeFrame) {
+        if (AnimatedSprite.Frame == activeFrame) {
+
+            if (attack.CheckHitboxes(this, facing)) {
+                EmitSignal("Hitstop", 3);
+                EmitSignal("ShakeCamera", true);
             }
+
+        } else {
+
+            foreach (Hitbox h in attack.GetHitboxes()) {
+                h.Visible = false;
+            }
+
         }
 
-        return currentState;
     }
 
     public void OnLoadZoneTriggered(int doorDirection) {

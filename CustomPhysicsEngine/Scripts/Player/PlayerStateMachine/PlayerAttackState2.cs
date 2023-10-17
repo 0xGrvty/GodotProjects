@@ -15,30 +15,30 @@ public partial class PlayerAttackState2 : IStateMachine {
         player.AnimatedSprite.Play("Attack2");
         player.DoAttack(attack, activeFrame);
 
-        if (player.AnimatedSprite.Frame == activeFrame) {
+        //if (player.AnimatedSprite.Frame == activeFrame) {
 
-            if (attack.CheckHitboxes(player, player.Facing)) {
-                player.EmitSignal("Hitstop", 3);
-                player.EmitSignal("ShakeCamera", true);
-            }
+        //    if (attack.CheckHitboxes(player, player.Facing)) {
+        //        player.EmitSignal("Hitstop", 3);
+        //        player.EmitSignal("ShakeCamera", true);
+        //    }
 
-        } else {
+        //} else {
 
-            foreach (Hitbox h in attack.GetHitboxes()) {
-                h.Visible = false;
-            }
+        //    foreach (Hitbox h in attack.GetHitboxes()) {
+        //        h.Visible = false;
+        //    }
 
-        }
+        //}
 
-        if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
-            attack.ClearHitlist();
-            if (player.AttackInputBuffer > 0.0f) {
-                return player.playerAttackState3;
-            }
-            return player.playerIdleState;
-        }
+        //if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
+        //    attack.ClearHitlist();
+        //    if (player.AttackInputBuffer > 0.0f) {
+        //        return player.playerAttackState3;
+        //    }
+        //    return player.playerIdleState;
+        //}
 
-        return player.playerAttackState2;
+        return player.ChangeAttackState(this, player.playerAttackState3);
     }
     public void EmitStateChanged(Node actor, IStateMachine state) {
 

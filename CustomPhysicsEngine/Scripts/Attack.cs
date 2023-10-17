@@ -8,7 +8,7 @@ public partial class Attack : Hitbox {
     private int damage;
     public Attack(Node hitboxGroup) {
 		var hitboxes = hitboxGroup.GetChildren();
-        this.hitlist = new Godot.Collections.Array();
+        hitlist = new Godot.Collections.Array();
         this.hitboxes = new Godot.Collections.Array();
 		foreach (Hitbox h in hitboxes) {
 			if (!this.hitboxes.Contains(h)) {

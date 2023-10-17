@@ -28,8 +28,11 @@ public partial class PlayerIdleState : IStateMachine {
             return player.playerFallState;
         }
 
-        if (Input.IsActionJustPressed("Attack"))
-        {
+        if (Input.IsActionJustPressed("Attack")) {
+            var attackButton = new StringName("Attack");
+            // Technically don't *need* this, but just for consistency's sake, we should
+            // add the input into the buffer when we press it for the first time
+            player.AttackInputBuffer.AddInput(attackButton);
             return player.playerAttackState1;
         }
 

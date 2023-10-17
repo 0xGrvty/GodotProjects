@@ -338,9 +338,8 @@ script = ExtResource("1_gqpoo")
 
 [node name="Animations" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_i1q3r")
-animation = &"Attack1"
+animation = &"Attack3"
 autoplay = "Idle"
-frame_progress = 0.489517
 centered = false
 
 [node name="Hurtbox" parent="." instance=ExtResource("12_i6oac")]

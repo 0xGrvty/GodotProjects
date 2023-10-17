@@ -16,6 +16,7 @@ public partial class PlayerAttackState1 : IStateMachine {
         player.AnimatedSprite.Play("Attack1");
         player.DoAttack(attack, activeFrame);
 
+
         // Refactor this into player.DoAttack()
         //if (player.AnimatedSprite.Frame == activeFrame) {
 
@@ -32,22 +33,15 @@ public partial class PlayerAttackState1 : IStateMachine {
 
         //}
 
-        if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
-            attack.ClearHitlist();
-            if (player.AttackInputBuffer > 0.0f) {
-                return player.playerAttackState2;
-            }
-            return player.playerIdleState;
-        }
-
-        
-        //if (Input.IsActionJustPressed("Attack") && player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount("Attack1") - 3) {
-        //    player.AttackCounter--;
-        //    player.GetAttackTimer().Start();
-        //    return player.playerAttackState_2;
+        //if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
+        //    attack.ClearHitlist();
+        //    if (player.AttackInputBuffer > 0.0f) {
+        //        return player.playerAttackState2;
+        //    }
+        //    return player.playerIdleState;
         //}
 
-        return player.playerAttackState1;
+        return player.ChangeAttackState(this, player.playerAttackState2);
     }
     public void EmitStateChanged(Node actor, IStateMachine state) {
 

@@ -22,7 +22,7 @@ public partial class Player : Actor {
     private static float COYOTE_TIME = 3f * Game.ONE_FRAME;
     private static float JUMP_BUFFER_TIME = 6f * Game.ONE_FRAME;
     private static float JUMP_HOLD_TIME = 12f * Game.ONE_FRAME;
-    public static float ATTACK_INPUT_BUFFER = 12f * Game.ONE_FRAME;
+    public static int ATTACK_INPUT_BUFFER = 12; // 12 frame buffer
 
     // private variables
     private Vector2 velocity = Vector2.Zero;
@@ -50,9 +50,10 @@ public partial class Player : Actor {
     private float coyoteTime = 0;
     private bool wasGrounded = true;
     private float jumpBufferTime = 0;
-    private InputBuffer inputBuffer;
+    private InputBuffer dirInputBuffer;
+    private InputBuffer attackInputBuffer;
     private bool showComboList = false;
-    private float attackInputBuffer = 0;
+    //private float attackInputBuffer = 0;
     private Vector2 snapshotVelocity;
     private int snapshotDirection;
 
@@ -65,8 +66,9 @@ public partial class Player : Actor {
     public bool IsJumping { get => isJumping; }
     public int NumJumps { get => numJumps; set => numJumps = value; }
     public bool WasGrounded { get => wasGrounded; set => wasGrounded = value; }
-    public float AttackInputBuffer { get => attackInputBuffer; set => attackInputBuffer = value; }
+    //public float AttackInputBuffer { get => attackInputBuffer; set => attackInputBuffer = value; }
     public bool CanSpecial { get => canSpecial; set => canSpecial = value; }
+    public InputBuffer AttackInputBuffer { get => attackInputBuffer; }
     // State machine
     public IStateMachine currentState;
     public PlayerRunState playerRunState;
@@ -112,7 +114,8 @@ public partial class Player : Actor {
         currentState = playerIdleState;
         facing = Facing.RIGHT;
         wasGrounded = true;
-        inputBuffer = new InputBuffer(3);
+        dirInputBuffer = new InputBuffer(9);
+        attackInputBuffer = new InputBuffer(ATTACK_INPUT_BUFFER);
         AddUserSignal(nameof(OnLoadZoneTriggered));
         LoadZoneTriggered += OnLoadZoneTriggered;
 
@@ -123,9 +126,19 @@ public partial class Player : Actor {
         DrawLine(Vector2.Zero, 15f * Vector2.Right, Colors.Green);
         DrawLine(Vector2.Zero, 15f * Vector2.Left, Colors.Green);
     }
+
+    //public override void _UnhandledInput(InputEvent @event) {
+    //    if (@event is InputEventAction action) {
+    //        if (action.IsActionPressed("Attack")) {
+    //            GD.Print(action);
+    //            return;
+    //        }
+    //    }
+    //}
     public override void _Process(double delta) {
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
         currentState = currentState.EnterState(this);
+        //GD.Print(attackInputBuffer.GetBuffer());
         QueueRedraw();
     }
 
@@ -217,8 +230,8 @@ public partial class Player : Actor {
             AnimatedSprite.FlipH = true;
         }
 
-        inputBuffer.AddInput(directionVector);
-
+        dirInputBuffer.AddInput(directionVector);
+        GD.Print(dirInputBuffer.GetBuffer());
         return direction;
     }
 
@@ -292,7 +305,7 @@ public partial class Player : Actor {
 
     public void ResetAttackCounter() {
         //attackTimer.Stop();
-        attackInputBuffer = 0;
+        //attackInputBuffer = 0;
         attackCounter = 3;
     }
 
@@ -341,6 +354,13 @@ public partial class Player : Actor {
     //}
 
     public void DoAttack(Attack attack, int activeFrame) {
+        attackInputBuffer.AddInput(new StringName());
+
+        if (Input.IsActionJustPressed("Attack")) {
+            var attackButton = new StringName("Attack");
+            attackInputBuffer.AddInput(attackButton);
+        }
+
         if (AnimatedSprite.Frame == activeFrame) {
 
             if (attack.CheckHitboxes(this, facing)) {
@@ -355,7 +375,42 @@ public partial class Player : Actor {
             }
 
         }
+    }
 
+    // This might not work for some types of moves (combo attacks, like attack 3 into attack 1 OR charge attack)
+    // This function is done for now, and actually it may make more sense to include it in another interface specifically for AttackStates.
+    // Next thing to figure out is how I would want the special attacks to chain to the normal attacks.
+    // Ideas right now:
+    // - Attack 3 into special only (and special into special)
+    // - Any attack can chain into any special (and like above, special into special)
+    public IStateMachine ChangeAttackState(IStateMachine currentState, IStateMachine nextState) {
+
+        if (AnimatedSprite.Frame >= AnimatedSprite.SpriteFrames.GetFrameCount(AnimatedSprite.Animation) - 1) {
+            /// TODO: Clear the attack's hitlist.
+            /// Since this function was originally taken from the attack states,
+            /// it was easy to simply reference the attack and clear the hitlist.
+            /// Now that this function is in the player script, we can't easily do that
+            /// unless we move this into another AttackState interface that every attack would extend from
+            //attack.ClearHitlist();
+            //ResetAttackCounter();
+
+            // 1 = attack.  If the attack input buffer contains 1, play the next state on the last frame of the current animation.
+            // This works for now.  But be wary of attacks that have less frames than the buffer.  You can double-tap really
+            // fast and get the 2nd attack out.
+            // A reasonable solution is to reduce the frame buffer
+            // Another solution is to consume the first valid input and replace it with a NIL input.
+
+            // Actually, a third solution is to clear the buffer before the next animation starts playing.
+            // Leaving this long note here for now just in case I need to reference it again.
+            
+
+            if (attackInputBuffer.GetBuffer().Contains(1)) {
+                attackInputBuffer.ClearBuffer();
+                return nextState;
+            }
+            return playerIdleState;
+        }
+        return currentState;
     }
 
     public void OnLoadZoneTriggered(int doorDirection) {

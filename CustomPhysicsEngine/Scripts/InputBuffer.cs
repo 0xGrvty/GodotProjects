@@ -29,7 +29,7 @@ public partial class InputBuffer : Node {
         UP_RIGHT = 9
     }
 
-    private enum BUTTON {
+    public enum BUTTON {
         NIL = 0,
         ATTACK = 1, // X
         JUMP = 2, // Z

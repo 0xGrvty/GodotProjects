@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class PlayerAttackState3 : IStateMachine {
+public partial class PlayerAttackState3 : IStateMachine, IAttackState {
     private Attack attack;
     private int activeFrame = 2;
 
@@ -42,9 +42,30 @@ public partial class PlayerAttackState3 : IStateMachine {
         //    }
         //}
 
-        return player.ChangeAttackState(this, player.playerAttackState1);
+        return ChangeState(player);
     }
     public void EmitStateChanged(Node actor, IStateMachine state) {
 
+    }
+
+    public IStateMachine ChangeState(Node actor) {
+        var player = actor as Player;
+        var playerAttackBuffer = player.GetInputBufferContents();
+
+        if (player.IsOnLastFrame()) {
+
+            attack.ClearHitlist();
+
+            if (playerAttackBuffer.Contains((int)InputBuffer.BUTTON.ATTACK)) {
+
+                return player.playerAttackState1;
+
+            }
+
+            return player.playerIdleState;
+
+        }
+
+        return this;
     }
 }

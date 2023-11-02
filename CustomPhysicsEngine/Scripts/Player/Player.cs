@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Diagnostics;
 
 public partial class Player : Actor {
     // Signals
@@ -81,10 +80,12 @@ public partial class Player : Actor {
     public PlayerAttackState3 playerAttackState3;
     public PlayerSceneTransitionState playerSceneTransitionState;
     public PlayerChargeAttackState playerChargeAttackState;
+    public PlayerUppercutState playerUppercutState;
 
     public override void _Ready() {
         // No onready, so get the node in this part of the pipeline.
         AnimatedSprite = GetNode<AnimatedSprite2D>("Animations");
+        AP = GetNode<AnimationPlayer>("AnimationPlayer");
         Hurtbox = (Hitbox)GetNode<Node2D>("Hurtbox");
         attackTimer = GetNode<Timer>("AttackTimeout");
 
@@ -111,6 +112,7 @@ public partial class Player : Actor {
         playerAttackState3 = new PlayerAttackState3(GetNode<Node2D>("Attacks/Attack3"));
         playerSceneTransitionState = new PlayerSceneTransitionState();
         playerChargeAttackState = new PlayerChargeAttackState(GetNode<Node2D>("Attacks/ChargeAttack"));
+        playerUppercutState = new PlayerUppercutState(GetNode<Node2D>("Attacks/Uppercut"));
         currentState = playerIdleState;
         facing = Facing.RIGHT;
         wasGrounded = true;
@@ -118,7 +120,6 @@ public partial class Player : Actor {
         attackInputBuffer = new InputBuffer(ATTACK_INPUT_BUFFER);
         AddUserSignal(nameof(OnLoadZoneTriggered));
         LoadZoneTriggered += OnLoadZoneTriggered;
-
     }
     public override void _Draw() {
         DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
@@ -138,7 +139,6 @@ public partial class Player : Actor {
     public override void _Process(double delta) {
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
         currentState = currentState.EnterState(this);
-        //GD.Print(attackInputBuffer.GetBuffer());
         QueueRedraw();
     }
 
@@ -231,7 +231,6 @@ public partial class Player : Actor {
         }
 
         dirInputBuffer.AddInput(directionVector);
-        GD.Print(dirInputBuffer.GetBuffer());
         return direction;
     }
 
@@ -275,7 +274,7 @@ public partial class Player : Actor {
         // or check if the player was allowed to jump and if they have enough jumps (double jump, mid-air jump)
         if ((jumpBufferTime > 0.0f && (onGround || wasGrounded)) || (jumpBufferTime > 0.0f && numJumps > 0)) {
             numJumps--;
-            velocity = new Vector2(velocity.X, jumpVelocity);
+           velocity = new Vector2(velocity.X, jumpVelocity);
             jumpBufferTime = 0;
             localHoldTime = JUMP_HOLD_TIME;
             jumping = true;
@@ -354,6 +353,7 @@ public partial class Player : Actor {
     //}
 
     public void DoAttack(Attack attack, int activeFrame) {
+        // Maybe we should add the attack input on every frame, that way we can buffer an attack while falling or something.
         attackInputBuffer.AddInput(new StringName());
 
         if (Input.IsActionJustPressed("Attack")) {
@@ -366,6 +366,9 @@ public partial class Player : Actor {
             if (attack.CheckHitboxes(this, facing)) {
                 EmitSignal("Hitstop", 3);
                 EmitSignal("ShakeCamera", true);
+
+                // If the attack lands, allow the player to perform a special attack
+                canSpecial = true;
             }
 
         } else {
@@ -375,6 +378,8 @@ public partial class Player : Actor {
             }
 
         }
+
+
     }
 
     // This might not work for some types of moves (combo attacks, like attack 3 into attack 1 OR charge attack)
@@ -385,7 +390,8 @@ public partial class Player : Actor {
     // - Any attack can chain into any special (and like above, special into special)
     public IStateMachine ChangeAttackState(IStateMachine currentState, IStateMachine nextState) {
 
-        if (AnimatedSprite.Frame >= AnimatedSprite.SpriteFrames.GetFrameCount(AnimatedSprite.Animation) - 1) {
+        // If the animation is on the last frame
+        if (IsOnLastFrame()) {
             /// TODO: Clear the attack's hitlist.
             /// Since this function was originally taken from the attack states,
             /// it was easy to simply reference the attack and clear the hitlist.
@@ -411,6 +417,16 @@ public partial class Player : Actor {
             return playerIdleState;
         }
         return currentState;
+    }
+
+    // We use this a lot, so let's make a helper function.
+    // Note:  We may get rid of this later as we refactor our player to use an AnimationPlayer instead.
+    public bool IsOnLastFrame() {
+        return AnimatedSprite.Frame >= AnimatedSprite.SpriteFrames.GetFrameCount(AnimatedSprite.Animation) - 1;
+    }
+
+    public Godot.Collections.Array<Variant> GetInputBufferContents() {
+        return attackInputBuffer.GetBuffer();
     }
 
     public void OnLoadZoneTriggered(int doorDirection) {

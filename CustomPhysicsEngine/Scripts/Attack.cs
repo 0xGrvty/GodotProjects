@@ -3,6 +3,8 @@ using Godot.Collections;
 using System;
 
 public partial class Attack : Hitbox {
+
+    // An attack shouldn't know the frame it is active on.  The attack should only worry about actually doing damage/adding an entity to the hitlist.
 	private Godot.Collections.Array hitboxes;
     private Godot.Collections.Array hitlist;
     private int damage;

@@ -2,8 +2,11 @@ using Godot;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
-public partial class PlayerAttackState1 : IStateMachine {
+public partial class PlayerAttackState1 : IStateMachine, IAttackState {
+    // An attack shouldn't know the frame it is active on.  The attack should only worry about actually doing damage/adding an entity to the hitlist.
+    // The state will handle any frame checks.
     private Attack attack;
     private int activeFrame = 2;
 
@@ -41,9 +44,26 @@ public partial class PlayerAttackState1 : IStateMachine {
         //    return player.playerIdleState;
         //}
 
-        return player.ChangeAttackState(this, player.playerAttackState2);
+        //return player.ChangeAttackState(this, player.playerAttackState2);
+        return ChangeState(player);
     }
+
+    public IStateMachine ChangeState(Node actor) {
+        var player = actor as Player;
+        var playerAttackBuffer = player.GetInputBufferContents();
+        if (player.IsOnLastFrame()) {
+            attack.ClearHitlist();
+            if (playerAttackBuffer.Contains((int)InputBuffer.BUTTON.ATTACK)) {
+                return player.playerAttackState2;
+            }
+            return player.playerIdleState;
+        }
+        return this;
+    }
+
     public void EmitStateChanged(Node actor, IStateMachine state) {
 
     }
+
+
 }

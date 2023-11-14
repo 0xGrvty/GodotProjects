@@ -68,10 +68,10 @@ public partial class Hitbox: Node2D {
     }
 
     public int GetLeft() {
-        return flipped ? (int)GlobalPosition.X + x + width : (int)GlobalPosition.X + x;
+        return (int)Scale.X == 1 ? (int)GlobalPosition.X + x : (int)GlobalPosition.X - x - width;
     }
     public int GetRight() {
-        return flipped ? (int)GlobalPosition.X + x : (int)GlobalPosition.X + x + width;
+        return (int)Scale.X == 1 ? (int)GlobalPosition.X + x + width : (int)GlobalPosition.X - x;
     }
     public int GetTop() {
         return (int)GlobalPosition.Y + y;
@@ -79,45 +79,6 @@ public partial class Hitbox: Node2D {
     public int GetBottom() {
         return (int)GlobalPosition.Y + y + height;
     }
-
-    //public int GetLocalLeft() {
-    //    return flipped ? (int)Position.X + x + width : (int)Position.X + x;
-    //}
-    //public int GetLocalRight() {
-    //    return flipped ? (int)Position.X + x : (int)Position.X + x + width;
-    //}
-    //public int GetLocalTop() {
-    //    return (int)Position.Y + y;
-    //}
-    //public int GetLocalBottom() {
-    //    return (int)Position.Y + y + height;
-    //}
-
-    //public float GetRealLeft() {
-    //    return flipped ? GlobalPosition.X + x + width : GlobalPosition.X + x;
-    //}
-    //public float GetRealRight() {
-    //    return flipped ? GlobalPosition.X + x : GlobalPosition.X + x + width;
-    //}
-    //public float GetRealTop() {
-    //    return GlobalPosition.Y + y;
-    //}
-    //public float GetRealBottom() {
-    //    return GlobalPosition.Y + y + height;
-    //}
-
-    //public float GetRealLocalLeft() {
-    //    return flipped ? Position.X + x + width : Position.X + x;
-    //}
-    //public float GetRealLocalRight() {
-    //    return flipped ? Position.X + x : Position.X + x + width;
-    //}
-    //public float GetRealLocalTop() {
-    //    return Position.Y + y;
-    //}
-    //public float GetRealLocalBottom() {
-    //    return Position.Y + y + height;
-    //}
 
     public int GetWidth()
     {
@@ -141,16 +102,9 @@ public partial class Hitbox: Node2D {
 
     // Can probably find a better way to do this.
     public void FlipHitboxes(Facing facing) {
-        if (facing == Facing.LEFT && flipped == false) {
-            //GD.Print(scale.X);
-            x *= -1;
-            width *= -1;
-            flipped = true;
-        } else if (facing == Facing.RIGHT && flipped == true) {
-            x *= -1;
-            width *= -1;
-            flipped = false;
-        }
+        var theScale = Scale;
+        theScale.X = (int)facing;
+        Scale = theScale;
 
     }
 

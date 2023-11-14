@@ -13,17 +13,21 @@ public partial class Actor : Node2D {
     private Vector2 remainder = Vector2.Zero;
     private Hitbox hurtbox;
     private Game gm;
+    private Facing facing;
 
     // All actors will have either an Animated Sprite or an Animation Player.
     // Background objects, collectibles, and things of that nature will have Animated Sprites.
     // Controllable units and enemies will have an Animation Player.  This allows us to use more functionality
     // in the Animation Player such as call methods during specific frames of animation.
     private AnimatedSprite2D animatedSprite;
-    private AnimationPlayer animationPlayer;
+    
+    private Sprite2D sprite;
     public Game GM { get => gm; set => gm = value; }
     public Hitbox Hurtbox { get => hurtbox; set => hurtbox = value; }
     public AnimatedSprite2D AnimatedSprite { get => animatedSprite; set => animatedSprite = value; }
-    public AnimationPlayer AP { get => animationPlayer; set => animationPlayer = value; }
+    
+    public Sprite2D Sprite { get => sprite; set => sprite = value; }
+    public Facing Facing { get => facing; set => facing = value; }
 
     // Take the amount (velocity.x * delta time)
     // and add it to the remainder.  Round this and this will give us how much we should move.

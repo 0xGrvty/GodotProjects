@@ -5,7 +5,6 @@ public partial class PlayerUppercutState : IStateMachine {
     private Attack attack;
     private int activeFrame = 0;
     public PlayerUppercutState(Node hitboxes) {
-        attack = new Attack(hitboxes);
     }
 
     public IStateMachine EnterState(Node actor) {

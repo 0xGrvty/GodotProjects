@@ -1,69 +1,32 @@
 using Godot;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
-public partial class PlayerAttackState1 : IStateMachine, IAttackState {
-    // An attack shouldn't know the frame it is active on.  The attack should only worry about actually doing damage/adding an entity to the hitlist.
-    // The state will handle any frame checks.
-    private Attack attack;
-    private int activeFrame = 2;
-
-    public PlayerAttackState1(Node hitboxes) {
-        attack = new Attack(hitboxes);
-    }
-    public IStateMachine EnterState(Node actor) {
-        var player = actor as Player;
-        player.AnimatedSprite.SpeedScale = 1;
-        player.AnimatedSprite.Play("Attack1");
-        player.DoAttack(attack, activeFrame);
 
 
-        // Refactor this into player.DoAttack()
-        //if (player.AnimatedSprite.Frame == activeFrame) {
 
-        //    if (attack.CheckHitboxes(player, player.Facing)) {
-        //        player.EmitSignal("Hitstop", 3);
-        //        player.EmitSignal("ShakeCamera", true);
-        //    }
+public partial class PlayerAttackState1 : State {
 
-        //} else {
+    // Newly refactored to use the animation player.  We are calling ChangeState() from the animation timeline now.
+    // Using AnimatedSprite2D caused an issue where the next animation would start before allowing the last frame to finish
+    // AnimatedSprite2D should be used for non-actors such as collectibles, trees, NPCs in the background
 
-        //    foreach (Hitbox h in attack.GetHitboxes()) {
-        //        h.Visible = false;
-        //    }
+    [Export]
+    private Player actor;
+    [Export]
+    private AnimationPlayer ap;
 
-        //}
 
-        //if (player.AnimatedSprite.Frame >= player.AnimatedSprite.SpriteFrames.GetFrameCount(player.AnimatedSprite.Animation) - 1) {
-        //    attack.ClearHitlist();
-        //    if (player.AttackInputBuffer > 0.0f) {
-        //        return player.playerAttackState2;
-        //    }
-        //    return player.playerIdleState;
-        //}
-
-        //return player.ChangeAttackState(this, player.playerAttackState2);
-        return ChangeState(player);
+    public override void EnterState() {
+        ap.Play("Attack1");
     }
 
-    public IStateMachine ChangeState(Node actor) {
-        var player = actor as Player;
-        var playerAttackBuffer = player.GetInputBufferContents();
-        if (player.IsOnLastFrame()) {
-            attack.ClearHitlist();
-            if (playerAttackBuffer.Contains((int)InputBuffer.BUTTON.ATTACK)) {
-                return player.playerAttackState2;
-            }
-            return player.playerIdleState;
+    public override void PhysicsUpdate(double delta) {
+        actor.DoAttack();
+    }
+
+    public void ChangeState() {
+        if (actor.GetInputBufferContents().Contains(1)) {
+            EmitSignal(nameof(StateFinished), this, "Attack2");
+        } else {
+            EmitSignal(nameof(StateFinished), this, "Idle");
         }
-        return this;
     }
-
-    public void EmitStateChanged(Node actor, IStateMachine state) {
-
-    }
-
-
 }

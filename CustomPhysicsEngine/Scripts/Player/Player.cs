@@ -4,8 +4,6 @@ using System;
 public partial class Player : Actor {
     // Signals
     [Signal]
-    public delegate void LoadZoneTriggeredEventHandler(int facing);
-    [Signal]
     public delegate void HitstopEventHandler();
     [Signal]
     public delegate void ShakeCameraEventHandler();
@@ -21,7 +19,7 @@ public partial class Player : Actor {
     private static float COYOTE_TIME = 3f * Game.ONE_FRAME;
     private static float JUMP_BUFFER_TIME = 6f * Game.ONE_FRAME;
     private static float JUMP_HOLD_TIME = 12f * Game.ONE_FRAME;
-    public static int ATTACK_INPUT_BUFFER = 12; // 12 frame buffer
+    public static int ATTACK_INPUT_BUFFER = 24; // 24 frame buffer
 
     // private variables
     private Vector2 velocity = Vector2.Zero;
@@ -41,7 +39,7 @@ public partial class Player : Actor {
     private float jumpVelocity;
     private float jumpGravity;
     private float fallGravity;
-    private Facing facing;
+    
     private bool isJumping;
     private int attackCounter = 3;
     private Timer attackTimer;
@@ -55,21 +53,23 @@ public partial class Player : Actor {
     //private float attackInputBuffer = 0;
     private Vector2 snapshotVelocity;
     private int snapshotDirection;
+    private AnimationPlayer animationPlayer;
 
     // public variables
     public int AttackCounter { get => attackCounter; set => attackCounter = value; }
     public float JumpBufferTime { get => jumpBufferTime; set => jumpBufferTime = value; }
     public float CoyoteTime { get => coyoteTime; set => coyoteTime = value; }
-    public Facing Facing { get => facing; set => facing = value; }
+    
     public Vector2 Velocity { get => velocity; set => velocity = value; }
     public bool IsJumping { get => isJumping; }
     public int NumJumps { get => numJumps; set => numJumps = value; }
     public bool WasGrounded { get => wasGrounded; set => wasGrounded = value; }
-    //public float AttackInputBuffer { get => attackInputBuffer; set => attackInputBuffer = value; }
     public bool CanSpecial { get => canSpecial; set => canSpecial = value; }
     public InputBuffer AttackInputBuffer { get => attackInputBuffer; }
+    public AnimationPlayer AP { get => animationPlayer; set => animationPlayer = value; }
     // State machine
     public IStateMachine currentState;
+    public FiniteStateMachine fsm;
     public PlayerRunState playerRunState;
     public PlayerIdleState playerIdleState;
     public PlayerJumpState playerJumpState;
@@ -87,11 +87,8 @@ public partial class Player : Actor {
         AnimatedSprite = GetNode<AnimatedSprite2D>("Animations");
         AP = GetNode<AnimationPlayer>("AnimationPlayer");
         Hurtbox = (Hitbox)GetNode<Node2D>("Hurtbox");
-        attackTimer = GetNode<Timer>("AttackTimeout");
-
+        Sprite = GetNode<Sprite2D>("Sprite");
         // Since C# does not have onready, we still need to fetch the globals.
-        // The documentation said we should be able to just call Game, but it did not work.
-        // It is because GetTree is not a static method, it seems like.  I wonder if I am doing something incorrectly.
         GM = GetNode<Game>("/root/Game");
         AddToGroup("Actors");
         AddToGroup("CameraShakers");
@@ -102,24 +99,28 @@ public partial class Player : Actor {
         fallGravity = ((-2.0f * jumpHeight) / (jumpTimeToDescent * jumpTimeToDescent)) * -1.0f;
 
         // player state machine
-        playerRunState = new PlayerRunState();
-        playerIdleState = new PlayerIdleState();
-        playerJumpState = new PlayerJumpState();
-        playerJumpSquatState = new PlayerJumpSquatState();
-        playerFallState = new PlayerFallState();
-        playerAttackState1 = new PlayerAttackState1(GetNode<Node2D>("Attacks/Attack1"));
-        playerAttackState2 = new PlayerAttackState2(GetNode<Node2D>("Attacks/Attack2"));
-        playerAttackState3 = new PlayerAttackState3(GetNode<Node2D>("Attacks/Attack3"));
-        playerSceneTransitionState = new PlayerSceneTransitionState();
-        playerChargeAttackState = new PlayerChargeAttackState(GetNode<Node2D>("Attacks/ChargeAttack"));
-        playerUppercutState = new PlayerUppercutState(GetNode<Node2D>("Attacks/Uppercut"));
-        currentState = playerIdleState;
-        facing = Facing.RIGHT;
+        //playerRunState = new PlayerRunState();
+        //playerIdleState = new PlayerIdleState();
+        //playerJumpState = new PlayerJumpState();
+        //playerJumpSquatState = new PlayerJumpSquatState();
+        //playerFallState = new PlayerFallState();
+        //playerAttackState1 = new PlayerAttackState1();
+        //playerAttackState2 = new PlayerAttackState2();
+        //playerAttackState3 = new PlayerAttackState3();
+        //playerSceneTransitionState = new PlayerSceneTransitionState();
+        //currentState = playerIdleState;
+        playerAttackState1 = (PlayerAttackState1)GetNode<Node>("StateMachine/Attack1");
+        playerAttackState2 = (PlayerAttackState2)GetNode<Node>("StateMachine/Attack2");
+        playerAttackState3 = (PlayerAttackState3)GetNode<Node>("StateMachine/Attack3");
+        playerRunState = (PlayerRunState)GetNode<Node>("StateMachine/Run");
+        playerIdleState = (PlayerIdleState)GetNode<Node>("StateMachine/Idle");
+        playerJumpState = (PlayerJumpState)GetNode<Node>("StateMachine/Jump");
+        playerFallState = (PlayerFallState)GetNode<Node>("StateMachine/Fall");
+        fsm = (FiniteStateMachine)GetNode<Node>("StateMachine");
+        Facing = Facing.RIGHT;
         wasGrounded = true;
         dirInputBuffer = new InputBuffer(9);
         attackInputBuffer = new InputBuffer(ATTACK_INPUT_BUFFER);
-        AddUserSignal(nameof(OnLoadZoneTriggered));
-        LoadZoneTriggered += OnLoadZoneTriggered;
     }
     public override void _Draw() {
         DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
@@ -128,49 +129,10 @@ public partial class Player : Actor {
         DrawLine(Vector2.Zero, 15f * Vector2.Left, Colors.Green);
     }
 
-    //public override void _UnhandledInput(InputEvent @event) {
-    //    if (@event is InputEventAction action) {
-    //        if (action.IsActionPressed("Attack")) {
-    //            GD.Print(action);
-    //            return;
-    //        }
-    //    }
-    //}
     public override void _Process(double delta) {
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
-        currentState = currentState.EnterState(this);
+        //currentState = currentState.EnterState(this);
         QueueRedraw();
-    }
-
-    public override void _PhysicsProcess(double delta) {
-        // The ray-casting method actually doesn't work because in Godot, Raycast2D only interacts with _CollisionObject2D_
-        // and since we are using our own physics engine, we are only using Nodes, which are not CollisionObject2Ds.  Now we must figure out how to make our physics engine
-        // do what we want, which is to detect if we bonk our head, and if we can move them to the side so they can clear a corner
-        // Here's a way to check, but that's O(N^2) time: https://www.youtube.com/watch?v=tW-Nxbxg5qs
-        // But maybe we can simply make Hitboxes and check if there's a collision instead.  I was originally thinking this, but was not sure if 
-        // this was the best approach.  We are really decoupled from the Godot Physics API, so instead of forcing using it, we should try letting go of it as much as possible.
-
-        // Something I've realized:  Even though the solution above is O(N^2), gotta realize that we set the bounds of what we loop through in that particular instance.
-        // It is technically O(N^2), however we only check a hard-coded set of 3 pixels.  Now what if we had an upgrade that bumped corner correction (for some reason)
-        // an infinite amount of times?  Then yes, the above solution isn't optimal.  But we know that we want to check roughly 3-4 pixels only at a time whenever we jump.
-        // This limit makes the time negligible. I shouldn't make things harder on myself, just do it.  Remember the rule of thumb: Do not optimize unless you have to.
-
-        //if (velocity.Y < 0)
-        //{
-        //    var spaceState = GetWorld2D().DirectSpaceState;
-        //    var rayDist = Math.Abs(Hitbox.GetWidth()) / NUM_HEAD_RAYS;
-        //    for (int i = 0; i < NUM_HEAD_RAYS; i++)
-        //    {
-        //        var rayStart = new Vector2((i * rayDist) + Hitbox.GetLeft(), Hitbox.GetTop());
-        //        var query = PhysicsRayQueryParameters2D.Create(rayStart, new Vector2(rayStart.X, 15f * -1));
-        //        //query.Exclude = new Godot.Collections.Array<Rid> { CollisionObject2D.GetRid() };
-        //        var result = spaceState.IntersectRay(query);
-        //        if (result.Count > 0)
-        //        {
-        //            GD.Print("We hit this: " + result["collider_id"]);
-        //        }
-        //    }
-        //}
     }
 
     public void OnCollisionX() {
@@ -179,9 +141,6 @@ public partial class Player : Actor {
     }
 
     public void OnCollisionY() {
-        // See note in _PhysicsProcess.  You know what?  Maybe the best solution is the most straight forward.  We only need to check a few pixels to the left and right of our hitbox
-        // Why go through all that work making rays, checking if the corner is in between the rays, moving the character, and etc?  Just check 2-3 pixels to the left, then check 2-3 pixels to the right.
-        // This is why the Celeste devs are smart and I am not.
 
         // First do a fuzzy check to see if the player hits a corner
         if (velocity.Y < 0) {
@@ -222,41 +181,28 @@ public partial class Player : Actor {
         var directionVector = new Vector2(Math.Sign(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left")), Math.Sign(Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up")));
         var direction = Math.Sign(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left"));
 
-        if (direction > 0 && facing == Facing.LEFT) {
-            facing = Facing.RIGHT;
-            AnimatedSprite.FlipH = false;
-        } else if (direction < 0 && facing == Facing.RIGHT) {
-            facing = Facing.LEFT;
-            AnimatedSprite.FlipH = true;
+        if (direction > 0 && Facing == Facing.LEFT) {
+            Facing = Facing.RIGHT;
+            Sprite.FlipH = false;
+
+        } else if (direction < 0 && Facing == Facing.RIGHT) {
+            Facing = Facing.LEFT;
+            Sprite.FlipH = true;
         }
 
         dirInputBuffer.AddInput(directionVector);
         return direction;
     }
 
-    public void DoMovement(double delta, int direction, bool isSceneTransition = false) {
-
+    public void DoMovement(double delta, int direction) {
         Jump(delta);
 
         velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
         velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
 
-        if (isSceneTransition && onGround) {
-            velocity.X = maxSpeed * snapshotDirection;
-        } else if (isSceneTransition && !onGround) {
-            velocity.X = 0;
-        }
-
         MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
         MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
         if (velocity != Vector2.Zero) EmitSignal(SignalName.Move);
-    }
-
-    public void ForceMove(double delta, int direction) {
-        velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
-        velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
-        MoveX(velocity.X * (float)delta, new Callable(this, nameof(OnCollisionX)));
-        MoveY(velocity.Y * (float)delta, new Callable(this, nameof(OnCollisionY)));
     }
 
     public void Jump(double delta) {
@@ -284,9 +230,11 @@ public partial class Player : Actor {
             } else {
 
                 // Give the player a little nudge so that if they let go too early they can still make their jump
-                //velocity = new Vector2(velocity.X, 0.5f * velocity.Y);
+                //velocity = new Vector2(velocity.X, 1.15f * velocity.Y);
+
                 localHoldTime = 0;
             }
+            //velocity = new Vector2(velocity.X, 1.15f * velocity.Y);
             localHoldTime -= (float)delta;
         }
 
@@ -322,37 +270,7 @@ public partial class Player : Actor {
         jumpBufferTime = 0;
     }
 
-    // Redo this function.  It is messy and doesn't make sense.
-    //public IStateMachine DoAttack() {
-    //    var attackPressed = Input.IsActionJustPressed("Attack");
-
-    //    if (attackInputBuffer < 0.0) {
-    //        ResetAttackCounter();
-    //    }
-
-    //    attackInputBuffer -= (float)GetProcessDeltaTime();
-
-    //    if (attackPressed) {
-    //        attackInputBuffer = ATTACK_INPUT_BUFFER;
-    //    }
-
-    //    if (attackInputBuffer > 0) {
-    //        velocity = Vector2.Zero;
-    //        attackCounter--;
-    //        switch (attackCounter) {
-    //            case 2:
-    //                return playerAttackState1;
-    //            case 1:
-    //                return playerAttackState2;
-    //            case 0:
-    //                return playerAttackState3;
-    //        }
-    //    }
-
-    //    return currentState;
-    //}
-
-    public void DoAttack(Attack attack, int activeFrame) {
+    public void DoAttack() {
         // Maybe we should add the attack input on every frame, that way we can buffer an attack while falling or something.
         attackInputBuffer.AddInput(new StringName());
 
@@ -361,62 +279,6 @@ public partial class Player : Actor {
             attackInputBuffer.AddInput(attackButton);
         }
 
-        if (AnimatedSprite.Frame == activeFrame) {
-
-            if (attack.CheckHitboxes(this, facing)) {
-                EmitSignal("Hitstop", 3);
-                EmitSignal("ShakeCamera", true);
-
-                // If the attack lands, allow the player to perform a special attack
-                canSpecial = true;
-            }
-
-        } else {
-
-            foreach (Hitbox h in attack.GetHitboxes()) {
-                h.Visible = false;
-            }
-
-        }
-
-
-    }
-
-    // This might not work for some types of moves (combo attacks, like attack 3 into attack 1 OR charge attack)
-    // This function is done for now, and actually it may make more sense to include it in another interface specifically for AttackStates.
-    // Next thing to figure out is how I would want the special attacks to chain to the normal attacks.
-    // Ideas right now:
-    // - Attack 3 into special only (and special into special)
-    // - Any attack can chain into any special (and like above, special into special)
-    public IStateMachine ChangeAttackState(IStateMachine currentState, IStateMachine nextState) {
-
-        // If the animation is on the last frame
-        if (IsOnLastFrame()) {
-            /// TODO: Clear the attack's hitlist.
-            /// Since this function was originally taken from the attack states,
-            /// it was easy to simply reference the attack and clear the hitlist.
-            /// Now that this function is in the player script, we can't easily do that
-            /// unless we move this into another AttackState interface that every attack would extend from
-            //attack.ClearHitlist();
-            //ResetAttackCounter();
-
-            // 1 = attack.  If the attack input buffer contains 1, play the next state on the last frame of the current animation.
-            // This works for now.  But be wary of attacks that have less frames than the buffer.  You can double-tap really
-            // fast and get the 2nd attack out.
-            // A reasonable solution is to reduce the frame buffer
-            // Another solution is to consume the first valid input and replace it with a NIL input.
-
-            // Actually, a third solution is to clear the buffer before the next animation starts playing.
-            // Leaving this long note here for now just in case I need to reference it again.
-            
-
-            if (attackInputBuffer.GetBuffer().Contains(1)) {
-                attackInputBuffer.ClearBuffer();
-                return nextState;
-            }
-            return playerIdleState;
-        }
-        return currentState;
     }
 
     // We use this a lot, so let's make a helper function.
@@ -427,24 +289,6 @@ public partial class Player : Actor {
 
     public Godot.Collections.Array<Variant> GetInputBufferContents() {
         return attackInputBuffer.GetBuffer();
-    }
-
-    public void OnLoadZoneTriggered(int doorDirection) {
-        SnapshotMovement(doorDirection);
-        currentState = playerSceneTransitionState;
-    }
-
-    public void SnapshotMovement(int doorDirection) {
-        snapshotDirection = doorDirection;
-        snapshotVelocity = velocity;
-    }
-
-    public int GetSnapshotDirection() {
-        return snapshotDirection;
-    }
-
-    public Vector2 GetSnapshotVelocity() {
-        return snapshotVelocity;
     }
 
     public float GetMaxSpeed() {

@@ -1,26 +1,25 @@
 using Godot;
 using System;
 
-public partial class PlayerJumpState : IStateMachine {
-    public IStateMachine EnterState(Node actor) {
-        var player = actor as Player;
-        var direction = player.GetDirectionInput();
-        player.DoMovement(player.GetProcessDeltaTime(), direction);
+public partial class PlayerJumpState : State {
 
-        player.AnimatedSprite.SpeedScale = 1f;
+    [Export]
+    private Player actor;
+    [Export]
+    private AnimationPlayer ap;
 
-        if (!player.AnimatedSprite.Animation.Equals("Jump")) {
-            player.AnimatedSprite.Play("Jump");
-        }
-
-        if (player.Velocity.Y > 0.0) {
-            return player.playerFallState;
-        }
-
-        return player.playerJumpState;
+    public override void EnterState() {
+        ap.Play("Jump");
     }
-    public void EmitStateChanged(Node actor, IStateMachine state) {
 
+    public override void PhysicsUpdate(double delta) {
+        var direction = actor.GetDirectionInput();
+        actor.DoMovement(actor.GetPhysicsProcessDeltaTime(), direction);
+
+        // Transition from jumping to falling
+        if (actor.Velocity.Y > 0.0) {
+            EmitSignal(nameof(StateFinished), this, "Fall");
+        }
     }
 
 }

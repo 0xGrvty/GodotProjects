@@ -3,10 +3,9 @@ using System;
 
 public partial class PlayerSceneTransitionState : IStateMachine {
 
-
+    // Currently unused and unfinished class
     public IStateMachine EnterState(Node actor) {
         var player = actor as Player;
-        player.DoMovement(player.GetProcessDeltaTime(), player.GetSnapshotDirection(), true);
 
         if (player.IsGrounded()) {
             player.AnimatedSprite.Play("Run");

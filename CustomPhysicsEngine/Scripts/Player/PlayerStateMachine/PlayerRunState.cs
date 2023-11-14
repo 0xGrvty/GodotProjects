@@ -1,35 +1,35 @@
 using Godot;
 using System;
 
-public partial class PlayerRunState : IStateMachine {
-    public IStateMachine EnterState(Node actor) {
-        var player = actor as Player;
-        var direction = player.GetDirectionInput();
-        player.DoMovement(player.GetProcessDeltaTime(), direction);
+public partial class PlayerRunState : State {
 
-        player.AnimatedSprite.SpeedScale = 1;
-        player.AnimatedSprite.Play("Run");
-
-        if (direction == 0) {
-           //EmitStateChanged(player, player.playerIdleState);
-            return player.playerIdleState;
-        }
-
-        if (player.IsJumping) {
-            //EmitStateChanged(player, player.playerJumpState);
-            return player.playerJumpState;
-        }
-
-        if (player.Velocity.Y > 0.0 && !player.IsGrounded()) {
-            player.WasGrounded = true;
-            return player.playerFallState;
-        }
-
-        return player.playerRunState;
+    [Export]
+    private Player actor;
+    [Export]
+    private AnimationPlayer ap;
+    public override void EnterState() {
+        ap.Play("Run");
     }
 
-    public void EmitStateChanged(Node actor, IStateMachine state) {
-        GD.Print(actor.Name, " Is now in ", state, " state");
+    public override void PhysicsUpdate(double delta) {
+        var direction = actor.GetDirectionInput();
+        actor.DoMovement(actor.GetPhysicsProcessDeltaTime(), direction);
+
+        // If the player is not holding a direction at all
+        if (direction == 0) {
+            EmitSignal(nameof(StateFinished), this, "Idle");
+        }
+
+        // If the player jumps while running
+        if (actor.IsJumping) {
+            EmitSignal(nameof(StateFinished), this, "Jump");
+        }
+
+        // If the player suddenly falls and is no longer grounded
+        if (actor.Velocity.Y > 0.0 && !actor.IsGrounded()) {
+            actor.WasGrounded = true;
+            EmitSignal(nameof(StateFinished), this, "Fall");
+        }
     }
 
 }

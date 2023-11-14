@@ -16,6 +16,6 @@ public partial class SceneManager : Node {
         GetTree().ChangeSceneToFile(scenePath);
         animationPlayer.PlayBackwards("dissolve");
         await ToSignal(animationPlayer, "animation_finished");
-        player.currentState = player.playerIdleState;
+        //player.currentState = player.playerIdleState;
     }
 }

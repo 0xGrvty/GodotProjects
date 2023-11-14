@@ -6,7 +6,6 @@ public abstract partial class AttackState : Node {
     private int activeFrame = 0;
 
     public void InitAttack(Node hitboxGroup, int activeFrame = 0) {
-        attack = new Attack(hitboxGroup);
         this.activeFrame = activeFrame;
     }
 

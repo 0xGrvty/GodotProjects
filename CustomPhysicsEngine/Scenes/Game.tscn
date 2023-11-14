@@ -11,9 +11,9 @@ pathToTestLevel = "res://Scenes/TestLevel.tscn"
 [node name="Levels" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("2_bxfmo")]
-maxSpeed = 512.0
-maxAccel = 1000.0
-jumpHeight = 256.0
+maxSpeed = 800.0
+maxAccel = 3400.0
+jumpHeight = 200.0
 
 [node name="CameraShake" parent="." instance=ExtResource("3_an2n5")]
 position_smoothing_speed = 4.0

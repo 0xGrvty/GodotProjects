@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Diagnostics.Metrics;
+using static Godot.TextServer;
 
 public partial class Player : Actor {
     // Signals
@@ -19,7 +21,7 @@ public partial class Player : Actor {
     private static float COYOTE_TIME = 3f * Game.ONE_FRAME;
     private static float JUMP_BUFFER_TIME = 6f * Game.ONE_FRAME;
     private static float JUMP_HOLD_TIME = 12f * Game.ONE_FRAME;
-    public static int ATTACK_INPUT_BUFFER = 24; // 24 frame buffer
+    public static int ATTACK_INPUT_BUFFER = 12; // 24 frame buffer
 
     // private variables
     private Vector2 velocity = Vector2.Zero;
@@ -39,7 +41,7 @@ public partial class Player : Actor {
     private float jumpVelocity;
     private float jumpGravity;
     private float fallGravity;
-    
+
     private bool isJumping;
     private int attackCounter = 3;
     private Timer attackTimer;
@@ -54,12 +56,13 @@ public partial class Player : Actor {
     private Vector2 snapshotVelocity;
     private int snapshotDirection;
     private AnimationPlayer animationPlayer;
+    private Godot.Collections.Dictionary<StringName, State> states;
 
     // public variables
     public int AttackCounter { get => attackCounter; set => attackCounter = value; }
     public float JumpBufferTime { get => jumpBufferTime; set => jumpBufferTime = value; }
     public float CoyoteTime { get => coyoteTime; set => coyoteTime = value; }
-    
+
     public Vector2 Velocity { get => velocity; set => velocity = value; }
     public bool IsJumping { get => isJumping; }
     public int NumJumps { get => numJumps; set => numJumps = value; }
@@ -90,37 +93,37 @@ public partial class Player : Actor {
         Sprite = GetNode<Sprite2D>("Sprite");
         // Since C# does not have onready, we still need to fetch the globals.
         GM = GetNode<Game>("/root/Game");
+
+        // Add the Player to the groups
         AddToGroup("Actors");
         AddToGroup("CameraShakers");
 
-        // Building a Better Jump GDC talk
-        jumpVelocity = ((2.0f * jumpHeight) / jumpTimeToPeak) * -1.0f; // In Godot 2D, down is positive, so flip the signs
-        jumpGravity = ((-2.0f * jumpHeight) / (jumpTimeToPeak * jumpTimeToPeak)) * -1.0f;
-        fallGravity = ((-2.0f * jumpHeight) / (jumpTimeToDescent * jumpTimeToDescent)) * -1.0f;
 
-        // player state machine
-        //playerRunState = new PlayerRunState();
-        //playerIdleState = new PlayerIdleState();
-        //playerJumpState = new PlayerJumpState();
-        //playerJumpSquatState = new PlayerJumpSquatState();
-        //playerFallState = new PlayerFallState();
-        //playerAttackState1 = new PlayerAttackState1();
-        //playerAttackState2 = new PlayerAttackState2();
-        //playerAttackState3 = new PlayerAttackState3();
-        //playerSceneTransitionState = new PlayerSceneTransitionState();
-        //currentState = playerIdleState;
+
+        // Player state machine
+        fsm = (FiniteStateMachine)GetNode<Node>("StateMachine");
         playerAttackState1 = (PlayerAttackState1)GetNode<Node>("StateMachine/Attack1");
         playerAttackState2 = (PlayerAttackState2)GetNode<Node>("StateMachine/Attack2");
         playerAttackState3 = (PlayerAttackState3)GetNode<Node>("StateMachine/Attack3");
+        playerChargeAttackState = (PlayerChargeAttackState)GetNode<Node>("StateMachine/Charge");
         playerRunState = (PlayerRunState)GetNode<Node>("StateMachine/Run");
         playerIdleState = (PlayerIdleState)GetNode<Node>("StateMachine/Idle");
         playerJumpState = (PlayerJumpState)GetNode<Node>("StateMachine/Jump");
         playerFallState = (PlayerFallState)GetNode<Node>("StateMachine/Fall");
-        fsm = (FiniteStateMachine)GetNode<Node>("StateMachine");
+
+
+        // Initializations
+        // Building a Better Jump GDC talk
+        jumpVelocity = ((2.0f * jumpHeight) / jumpTimeToPeak) * -1.0f; // In Godot 2D, down is positive, so flip the signs
+        jumpGravity = ((-2.0f * jumpHeight) / (jumpTimeToPeak * jumpTimeToPeak)) * -1.0f;
+        fallGravity = ((-2.0f * jumpHeight) / (jumpTimeToDescent * jumpTimeToDescent)) * -1.0f;
         Facing = Facing.RIGHT;
         wasGrounded = true;
         dirInputBuffer = new InputBuffer(9);
         attackInputBuffer = new InputBuffer(ATTACK_INPUT_BUFFER);
+        states = new Godot.Collections.Dictionary<StringName, State>();
+        ConnectAttackSignals();
+
     }
     public override void _Draw() {
         DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
@@ -133,6 +136,19 @@ public partial class Player : Actor {
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
         //currentState = currentState.EnterState(this);
         QueueRedraw();
+    }
+
+    public void ConnectAttackSignals() {
+        foreach (var child in fsm.GetChildren()) {
+            if (child is State c) {
+                states[c.Name.ToString().ToLower()] = c;
+
+                if (c is IAttackState) {
+                    c.Connect(nameof(c.OnAttack), new Callable(this, nameof(OnAttackPressed)));
+                    //c.Connect(nameof(c.OnAttack), new Callable(this, nameof(DoAttack)));
+                }
+            }
+        }
     }
 
     public void OnCollisionX() {
@@ -220,7 +236,7 @@ public partial class Player : Actor {
         // or check if the player was allowed to jump and if they have enough jumps (double jump, mid-air jump)
         if ((jumpBufferTime > 0.0f && (onGround || wasGrounded)) || (jumpBufferTime > 0.0f && numJumps > 0)) {
             numJumps--;
-           velocity = new Vector2(velocity.X, jumpVelocity);
+            velocity = new Vector2(velocity.X, jumpVelocity);
             jumpBufferTime = 0;
             localHoldTime = JUMP_HOLD_TIME;
             jumping = true;
@@ -250,41 +266,37 @@ public partial class Player : Actor {
         return onGround;
     }
 
-    public void ResetAttackCounter() {
-        //attackTimer.Stop();
-        //attackInputBuffer = 0;
-        attackCounter = 3;
-    }
-
-    public Timer GetAttackTimer() {
-        return attackTimer;
-    }
-
-    public void OnAttackTimeout() {
-        attackCounter = 3;
-    }
-
     public void ResetGroundedStats() {
         coyoteTime = COYOTE_TIME;
         numJumps = NUM_JUMPS;
         jumpBufferTime = 0;
     }
 
+
+    // For good practice, call this via signal to add an attack in the input buffer
     public void DoAttack() {
         // Maybe we should add the attack input on every frame, that way we can buffer an attack while falling or something.
         attackInputBuffer.AddInput(new StringName());
-
         if (Input.IsActionJustPressed("Attack")) {
             var attackButton = new StringName("Attack");
             attackInputBuffer.AddInput(attackButton);
         }
-
+        DoMovement(GetPhysicsProcessDeltaTime(), Mathf.Sign(velocity.X));
     }
 
-    // We use this a lot, so let's make a helper function.
-    // Note:  We may get rid of this later as we refactor our player to use an AnimationPlayer instead.
-    public bool IsOnLastFrame() {
-        return AnimatedSprite.Frame >= AnimatedSprite.SpriteFrames.GetFrameCount(AnimatedSprite.Animation) - 1;
+    // Shift the player a small amount after a certain frame in the attack animation
+    // Used via call method track from the AnimationPlayer
+    public void AttackShift(float weight, float duration) {
+
+        // We are using a tween here because we need the velocity to change over a period of time.  Trying to emulate
+        // Dead Cells where the player slides a very slight amount, then slows down.
+        var tween = GetTree().CreateTween().SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        tween.TweenProperty(this, "velocity", new Vector2(weight * maxSpeed * (int)Facing, velocity.Y), duration);
+        tween.TweenProperty(this, "velocity", new Vector2(0, velocity.Y), duration);
+    }
+
+    private void OnAttackPressed(State state) {
+        velocity.X = 0;
     }
 
     public Godot.Collections.Array<Variant> GetInputBufferContents() {

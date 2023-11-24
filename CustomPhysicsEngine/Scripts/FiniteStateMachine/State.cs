@@ -5,6 +5,10 @@ public abstract partial class State : Node {
 
     [Signal]
     public delegate void StateFinishedEventHandler(State state, String newState);
+    [Signal]
+    public delegate void OnAttackEventHandler(State state);
+    [Signal]
+    public delegate void AttackShiftEventHandler(State state, float weight, float duration);
 
 
     // Each state could do something different, so make these functions overridable

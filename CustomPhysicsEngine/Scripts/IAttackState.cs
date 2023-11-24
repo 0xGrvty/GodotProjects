@@ -7,5 +7,5 @@ public partial interface IAttackState {
     // Maybe we want special attacks like ChargeAttack to be able to cancel into Uppercut, but we don't want
     // Uppercut to cancel into ChargeAttack.
 
-    IStateMachine ChangeState(Node actor);
+    void ChangeState();
 }

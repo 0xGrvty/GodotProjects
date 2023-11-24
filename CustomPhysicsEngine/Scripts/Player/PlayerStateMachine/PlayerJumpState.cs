@@ -4,7 +4,7 @@ using System;
 public partial class PlayerJumpState : State {
 
     [Export]
-    private Player actor;
+    private Player p;
     [Export]
     private AnimationPlayer ap;
 
@@ -13,11 +13,11 @@ public partial class PlayerJumpState : State {
     }
 
     public override void PhysicsUpdate(double delta) {
-        var direction = actor.GetDirectionInput();
-        actor.DoMovement(actor.GetPhysicsProcessDeltaTime(), direction);
+        var direction = p.GetDirectionInput();
+        p.DoMovement(p.GetPhysicsProcessDeltaTime(), direction);
 
         // Transition from jumping to falling
-        if (actor.Velocity.Y > 0.0) {
+        if (p.Velocity.Y > 0.0) {
             EmitSignal(nameof(StateFinished), this, "Fall");
         }
     }

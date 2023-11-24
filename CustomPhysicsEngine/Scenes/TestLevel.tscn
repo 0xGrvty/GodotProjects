@@ -14,6 +14,7 @@ position = Vector2(256, 320)
 [node name="Walls" type="Node" parent="."]
 
 [node name="Wall" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(0, 960)
 
 [node name="Wall27" parent="Walls" instance=ExtResource("2_7ir4f")]
@@ -38,36 +39,42 @@ position = Vector2(0, 192)
 position = Vector2(0, 64)
 
 [node name="Wall2" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(1536, 960)
 
 [node name="Wall3" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(1408, 960)
 
 [node name="Wall4" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(1280, 960)
 
 [node name="Wall5" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(1152, 960)
 
 [node name="Wall6" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(1024, 960)
 
 [node name="Wall7" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(896, 960)
 
 [node name="Wall8" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(768, 960)
 
 [node name="Wall9" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(640, 960)
 
 [node name="Wall10" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(512, 960)
 
 [node name="Wall11" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(384, 960)
 
 [node name="Wall12" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(256, 960)
 
 [node name="Wall13" parent="Walls" instance=ExtResource("2_7ir4f")]
@@ -80,36 +87,42 @@ position = Vector2(1664, 960)
 position = Vector2(3200, 960)
 
 [node name="Wall16" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(3072, 960)
 
 [node name="Wall17" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(2944, 960)
 
 [node name="Wall18" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(2816, 960)
 
 [node name="Wall19" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(2688, 960)
 
 [node name="Wall20" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(2560, 960)
 
 [node name="Wall21" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(2432, 960)
 
 [node name="Wall22" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(2304, 960)
 
 [node name="Wall23" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(2176, 960)
 
 [node name="Wall24" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(2048, 960)
 
 [node name="Wall25" parent="Walls" instance=ExtResource("2_7ir4f")]
 position = Vector2(1920, 960)
 
 [node name="Wall26" parent="Walls" instance=ExtResource("2_7ir4f")]
+modulate = Color(0, 0, 1, 1)
 position = Vector2(1792, 960)
 
 [node name="MovingPlatforms" type="Node" parent="."]

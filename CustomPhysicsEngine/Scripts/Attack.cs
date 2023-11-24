@@ -30,7 +30,8 @@ public partial class Attack : Node {
         foreach (Hitbox h in hitboxes) {
             // Since the attack hitboxes are attached to the player and we are not changing the scale, only flipping the animations
             // we need to flip the hitbox nodes and correct each hitbox's new Left and Right boundaries.
-            h.FlipHitboxes(o.Facing);
+
+            h.FlipHitboxes(o.Facing); /// TODO: this is a no-no, try to find a way to decouple this.
         }
         // O(N^2), can we make this faster somehow?  But then again, it breaks upon the very first hitbox that hits
         // And I can't imagine a metroidvania where there are millions of hitboxes on _one_ attack.

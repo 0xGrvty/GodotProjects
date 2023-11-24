@@ -1,10 +1,10 @@
 using Godot;
 using System;
 
-public partial class PlayerAttackState3 : State {
+public partial class PlayerAttackState3 : State, IAttackState {
 
     [Export]
-    private Player actor;
+    private Player p;
     [Export]
     private AnimationPlayer ap;
 
@@ -13,12 +13,14 @@ public partial class PlayerAttackState3 : State {
     }
 
     public override void PhysicsUpdate(double delta) {
-        actor.DoAttack();
+        p.DoAttack();
     }
+
+    // This is used with the AnimationPlayer in the inspector
     public void ChangeState() {
 
         // If the player presses attack within a few frames of the animation finishing
-        if (actor.GetInputBufferContents().Contains(1)) {
+        if (p.GetInputBufferContents().Contains(1)) {
             EmitSignal(nameof(StateFinished), this, "Attack1");
 
         // Else if the player does not press the attack button

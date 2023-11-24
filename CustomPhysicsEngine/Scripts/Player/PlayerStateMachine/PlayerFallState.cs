@@ -3,7 +3,7 @@ using System;
 
 public partial class PlayerFallState : State {
     [Export]
-    private Player actor;
+    private Player p;
     [Export]
     private AnimationPlayer ap;
 
@@ -16,29 +16,29 @@ public partial class PlayerFallState : State {
         // because we need to know if we need to turn the player
         // and just in case if the player is stuck in the animation (such as hitstun, if we choose to implement it)
         // we would still want to know which direction they are holding.
-        var direction = actor.GetDirectionInput();
-        actor.DoMovement(actor.GetPhysicsProcessDeltaTime(), direction);
+        var direction = p.GetDirectionInput();
+        p.DoMovement(p.GetPhysicsProcessDeltaTime(), direction);
 
         // If the player was grounded, and there is still time on the Coyote Timer, let them jump
-        if (actor.WasGrounded) {
-            actor.CoyoteTime -= (float)actor.GetPhysicsProcessDeltaTime();
-            if (actor.CoyoteTime <= 0.0f) {
-                actor.WasGrounded = false;
-                actor.NumJumps--;
+        if (p.WasGrounded) {
+            p.CoyoteTime -= (float)p.GetPhysicsProcessDeltaTime();
+            if (p.CoyoteTime <= 0.0f) {
+                p.WasGrounded = false;
+                p.NumJumps--;
             }
         }
 
         
-        if (actor.IsJumping) {
-            if (actor.IsGrounded()) {
-                actor.ResetGroundedStats();
-                actor.NumJumps--;
+        if (p.IsJumping) {
+            if (p.IsGrounded()) {
+                p.ResetGroundedStats();
+                p.NumJumps--;
             }
         }
 
         // If the player becomes grounded, reset their number of jumps and transition to the next state
-        if (actor.IsGrounded()) {
-            actor.ResetGroundedStats();
+        if (p.IsGrounded()) {
+            p.ResetGroundedStats();
             // If the player is holding a direction, put them in the run animation if they are falling and they touch the ground
             if (direction != 0) {
                 EmitSignal(nameof(StateFinished), this, "Run");

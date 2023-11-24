@@ -24,6 +24,7 @@ public partial class FiniteStateMachine : Node {
             initState.EnterState();
             currentState = initState;
         }
+        
     }
 
     // Do the current state's Update function if it exists
@@ -57,4 +58,5 @@ public partial class FiniteStateMachine : Node {
     }
 
     public State GetState() { return currentState; }
+    public Godot.Collections.Dictionary<StringName, State> GetStates() { return states; }
 }

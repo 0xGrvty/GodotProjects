@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://xxmdlnh5wyjt"]
 
 [ext_resource type="Script" path="res://Scripts/Afterimage.cs" id="1_xn63o"]
-[ext_resource type="Texture2D" uid="uid://bdsg76igr21fi" path="res://icon.svg" id="2_osfnk"]
+[ext_resource type="Texture2D" uid="uid://cvkhknqgnavbf" path="res://icon.svg" id="2_osfnk"]
 
 [sub_resource type="Shader" id="Shader_pthwt"]
 code = "shader_type canvas_item;

@@ -85,6 +85,14 @@ public partial class Hitbox: Node2D {
         return width;
     }
 
+    public int GetX() {
+        return x;
+    }
+
+    public int GetY() {
+        return y;
+    }
+
     //AABB -> Axis-aligned Boundary Box
     public bool Intersects(Hitbox other, Vector2 offset) {
         // If either this or the other hitbox are intangible, return false (they are dodging, invincible, etc)

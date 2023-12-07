@@ -1,8 +1,9 @@
-[gd_scene load_steps=80 format=3 uid="uid://7a7bdq2ggqbe"]
+[gd_scene load_steps=82 format=3 uid="uid://7a7bdq2ggqbe"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Player.cs" id="1_gqpoo"]
 [ext_resource type="Texture2D" uid="uid://cs17g132sk77w" path="res://Sprites/adventurer-fall-00.png" id="2_8rcdo"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerStateMachine/PlayerAttackState1.cs" id="2_fkhyp"]
+[ext_resource type="PackedScene" uid="uid://xxmdlnh5wyjt" path="res://Scenes/Afterimage.tscn" id="2_h7jl3"]
 [ext_resource type="Texture2D" uid="uid://lpu8ht3ovnex" path="res://Sprites/adventurer-attack1-00.png" id="2_qfev4"]
 [ext_resource type="Script" path="res://Scripts/FiniteStateMachine/FiniteStateMachine.cs" id="2_ruya8"]
 [ext_resource type="Texture2D" uid="uid://bq75llbwajxmu" path="res://Sprites/adventurer-fall-01.png" id="3_5nvs5"]
@@ -45,6 +46,7 @@
 [ext_resource type="Texture2D" uid="uid://bfajbvvpvw2h2" path="res://Sprites/adventurer-attack3-04.png" id="17_pvqjp"]
 [ext_resource type="Texture2D" uid="uid://ct5bkkd6ol3vg" path="res://Sprites/adventurer-attack3-05.png" id="18_lrlyy"]
 [ext_resource type="Texture2D" uid="uid://d130v5gxmcd5c" path="res://Sprites/adventurer-crouch-00.png" id="19_nlaki"]
+[ext_resource type="Material" uid="uid://w2kgtjvdh8r7" path="res://Materials/Afterimage.tres" id="20_oy3au"]
 [ext_resource type="Texture2D" uid="uid://cfig32nv034ae" path="res://Sprites/adventurer-crouch-01.png" id="20_rx234"]
 [ext_resource type="Texture2D" uid="uid://brx3ll3qt42fa" path="res://Sprites/adventurer-crouch-02.png" id="21_b5sk8"]
 [ext_resource type="Texture2D" uid="uid://c0nuaovjmoisr" path="res://Assets/Player/Sprite Sheets/Player_Idle.png" id="21_g8qt1"]
@@ -490,6 +492,60 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [2, 3, 4, 5, 6, 7]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [2.5, 0.2],
+"method": &"AttackShift"
+}]
+}
+tracks/5/type = "method"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("StateMachine/Charge")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.6),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"ChangeState"
+}]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Attacks/ChargeAttack")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"CheckHitboxes"
+}, {
+"args": [],
+"method": &"CheckHitboxes"
+}, {
+"args": [],
+"method": &"CheckHitboxes"
+}, {
+"args": [],
+"method": &"CheckHitboxes"
+}, {
+"args": [],
+"method": &"ClearHitlist"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_txc8p"]
@@ -1071,6 +1127,7 @@ animations = [{
 [node name="Player" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_gqpoo")
+afterimageScene = ExtResource("2_h7jl3")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initState")]
 script = ExtResource("2_ruya8")
@@ -1116,6 +1173,10 @@ script = ExtResource("10_gyhph")
 p = NodePath("../..")
 ap = NodePath("../../AnimationPlayer")
 
+[node name="AfterimageTimer" type="Timer" parent="StateMachine/Charge"]
+process_callback = 0
+wait_time = 0.05
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_process_mode = 0
 libraries = {
@@ -1123,6 +1184,7 @@ libraries = {
 }
 
 [node name="Sprite" type="Sprite2D" parent="."]
+material = ExtResource("20_oy3au")
 texture = ExtResource("21_g8qt1")
 centered = false
 hframes = 4
@@ -1137,6 +1199,7 @@ autoplay = "Idle"
 centered = false
 
 [node name="Hurtbox" parent="." instance=ExtResource("12_i6oac")]
+visible = false
 x = 15
 y = 5
 width = 30
@@ -1199,7 +1262,10 @@ width = 56
 height = 40
 color = Color(0.643137, 0, 0.0823529, 0.501961)
 
-[node name="ChargeAttack" type="Node2D" parent="Attacks"]
+[node name="ChargeAttack" type="Node2D" parent="Attacks" node_paths=PackedStringArray("owner")]
+position = Vector2(-2, 0)
+script = ExtResource("43_joaxu")
+owner = NodePath("../..")
 
 [node name="Hitbox1" parent="Attacks/ChargeAttack" instance=ExtResource("12_i6oac")]
 visible = false

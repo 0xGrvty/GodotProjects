@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Threading;
 
+
+// Unused, not currently maintained.
 public partial class LoadZone : Node2D {
 	private SceneManager sceneManager;
 	private Hitbox loadZoneHitbox;
@@ -24,10 +26,12 @@ public partial class LoadZone : Node2D {
 	}
 
     public override void _Process(double delta) {
-        if (loadZoneHitbox.Intersects(player.Hurtbox, Vector2.Zero) && player.currentState != player.playerSceneTransitionState) {
-			player.EmitSignal("LoadZoneTriggered", dir);
-			sceneManager.ChangeScene(sceneTo);
-			QueueFree();
-		}
+
+        // This isn't a great way to do this.  Also our game has been scoped down to one screen, so this is useless right now.
+        //if (loadZoneHitbox.Intersects(player.Hurtbox, Vector2.Zero) && player.currentState != player.playerSceneTransitionState) {
+		//	player.EmitSignal("LoadZoneTriggered", dir);
+		//	sceneManager.ChangeScene(sceneTo);
+		//	QueueFree();
+		//}
     }
 }

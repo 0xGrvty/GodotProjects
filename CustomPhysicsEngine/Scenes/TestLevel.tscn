@@ -9,7 +9,7 @@
 script = ExtResource("1_dlys8")
 
 [node name="StartingPosition" type="Marker2D" parent="."]
-position = Vector2(256, 320)
+position = Vector2(256, 768)
 
 [node name="Walls" type="Node" parent="."]
 

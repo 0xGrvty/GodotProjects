@@ -10,6 +10,11 @@ public partial class PlayerAttackState3 : State, IAttackState {
 
     public override void EnterState() {
         ap.Play("Attack3");
+        EmitSignal(nameof(OnAttack), this);
+    }
+
+    public override void ExitState() {
+        p.AttackInputBuffer.ClearBuffer();
     }
 
     public override void PhysicsUpdate(double delta) {
@@ -20,8 +25,12 @@ public partial class PlayerAttackState3 : State, IAttackState {
     public void ChangeState() {
 
         // If the player presses attack within a few frames of the animation finishing
-        if (p.GetInputBufferContents().Contains(1)) {
+        if (p.GetInputBufferContents().Contains((int)InputBuffer.BUTTON.ATTACK)) {
             EmitSignal(nameof(StateFinished), this, "Attack1");
+
+            
+        } else if (p.GetInputBufferContents().Contains((int)InputBuffer.BUTTON.CHARGE)) {
+            EmitSignal(nameof(StateFinished), this, "Charge");
 
         // Else if the player does not press the attack button
         } else {

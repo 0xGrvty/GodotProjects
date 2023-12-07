@@ -20,7 +20,8 @@ public partial class PlayerIdleState : State {
 
         // For good practice, emit a signal.  Signal up, call down!.
         var direction = p.GetDirectionInput();
-        p.DoMovement(p.GetPhysicsProcessDeltaTime(), direction);
+        p.DoMovement(GetPhysicsProcessDeltaTime(), direction);
+        p.Jump(GetPhysicsProcessDeltaTime());
 
 
         // Check to see if the player is jumping and if they are grounded first
@@ -41,7 +42,7 @@ public partial class PlayerIdleState : State {
 
             // For good practice, make this a signal.  Signal up, call down!
             p.AttackInputBuffer.AddInput(attackButton);
-            EmitSignal(nameof(OnAttack), this);
+            //EmitSignal(nameof(OnAttack), this);
             EmitSignal(nameof(StateFinished), this, "Attack1");
         }
 

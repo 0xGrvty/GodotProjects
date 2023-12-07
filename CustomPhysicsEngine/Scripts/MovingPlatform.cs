@@ -23,6 +23,9 @@ public partial class MovingPlatform : Solid
         InitTween();
     }
 
+    // Because of how our scene tree is laid out, the Player's process function fires *before* this one
+    // which causes the platform to clip the player when moving in upwards directions.
+    // If we can think of a way to fix this, we will implement it.
     public override void _Process(double delta) {
         MoveY(follow.Y - (GlobalPosition.Y + remainder.Y));
         MoveX(follow.X - (GlobalPosition.X + remainder.X));
@@ -31,18 +34,8 @@ public partial class MovingPlatform : Solid
     private void InitTween()
     {
         tween = CreateTween().SetLoops().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.InOut);
-        //tween.Connect(Tween.SignalName.StepFinished, new Callable(this, nameof(OnTweenStep)));
         tween.TweenProperty(this, "follow", start + offset, time).SetDelay(delay);
         tween.TweenProperty(this, "follow", start, time).SetDelay(delay);
-
-        //tween.Play();
     }
 
-    // I couldn't get this to work. From Godot 3.5 -> 4.0, tween_step changed to step_finished,
-    // however step_finished fires when the end of a tweener (tween_property) is completed rather than
-    // when the end of a step of the tween happens.
-    private void OnTweenStep(int idx) {
-        MoveY(follow.Y - (GlobalPosition.Y + remainder.Y));
-        MoveX(follow.X - (GlobalPosition.X + remainder.X));
-    }
 }

@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://xxmdlnh5wyjt"]
+
+[ext_resource type="Script" path="res://Scripts/Afterimage.cs" id="1_xn63o"]
+[ext_resource type="Texture2D" uid="uid://cvkhknqgnavbf" path="res://icon.svg" id="2_osfnk"]
+
+[sub_resource type="Shader" id="Shader_pthwt"]
+code = "shader_type canvas_item;
+
+uniform bool whiten = false;
+uniform float mix_weight = 1.0;
+
+void fragment() {
+	vec4 texture_color = COLOR * texture(TEXTURE, UV);
+	if (whiten) {
+		vec3 white = vec3(0.1,0.1,1);
+		vec3 whitened_texture_rgb = mix(texture_color.rgb, white, mix_weight);
+		COLOR = vec4(whitened_texture_rgb, texture_color.a);
+	} else {
+		COLOR = texture_color;
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bietq"]
+shader = SubResource("Shader_pthwt")
+shader_parameter/whiten = true
+shader_parameter/mix_weight = 0.5
+
+[node name="Afterimage" type="Node2D"]
+z_index = -1
+script = ExtResource("1_xn63o")
+
+[node name="GhostTexture" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_bietq")
+texture = ExtResource("2_osfnk")
+
+[node name="InstanceTimer" type="Timer" parent="."]
+wait_time = 0.3

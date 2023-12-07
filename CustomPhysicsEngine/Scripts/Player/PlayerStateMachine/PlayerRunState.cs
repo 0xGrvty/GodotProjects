@@ -13,7 +13,8 @@ public partial class PlayerRunState : State {
 
     public override void PhysicsUpdate(double delta) {
         var direction = p.GetDirectionInput();
-        p.DoMovement(p.GetPhysicsProcessDeltaTime(), direction);
+        p.DoMovement(GetPhysicsProcessDeltaTime(), direction);
+        p.Jump(GetPhysicsProcessDeltaTime());
 
         // If the player is not holding a direction at all
         if (direction == 0) {
@@ -43,7 +44,7 @@ public partial class PlayerRunState : State {
 
             // For good practice, make this a signal.  Signal up, call down!
             p.AttackInputBuffer.AddInput(attackButton);
-            EmitSignal(nameof(OnAttack), this);
+            //EmitSignal(nameof(OnAttack), this);
             EmitSignal(nameof(StateFinished), this, "Attack1");
         }
     }

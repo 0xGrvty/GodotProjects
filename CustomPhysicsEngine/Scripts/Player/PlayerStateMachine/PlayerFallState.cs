@@ -17,7 +17,8 @@ public partial class PlayerFallState : State {
         // and just in case if the player is stuck in the animation (such as hitstun, if we choose to implement it)
         // we would still want to know which direction they are holding.
         var direction = p.GetDirectionInput();
-        p.DoMovement(p.GetPhysicsProcessDeltaTime(), direction);
+        p.DoMovement(GetPhysicsProcessDeltaTime(), direction);
+        p.Jump(GetPhysicsProcessDeltaTime());
 
         // If the player was grounded, and there is still time on the Coyote Timer, let them jump
         if (p.WasGrounded) {
@@ -25,20 +26,19 @@ public partial class PlayerFallState : State {
             if (p.CoyoteTime <= 0.0f) {
                 p.WasGrounded = false;
                 p.NumJumps--;
-            }
-        }
-
-        
-        if (p.IsJumping) {
-            if (p.IsGrounded()) {
-                p.ResetGroundedStats();
-                p.NumJumps--;
+                EmitSignal(nameof(StateFinished), this, "Jump");
             }
         }
 
         // If the player becomes grounded, reset their number of jumps and transition to the next state
         if (p.IsGrounded()) {
             p.ResetGroundedStats();
+
+            // If the player jumps as soon as they hit the ground
+            if (p.IsJumping) {
+                p.NumJumps--;
+                EmitSignal(nameof(StateFinished), this, "Jump");
+            }
             // If the player is holding a direction, put them in the run animation if they are falling and they touch the ground
             if (direction != 0) {
                 EmitSignal(nameof(StateFinished), this, "Run");

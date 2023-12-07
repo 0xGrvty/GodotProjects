@@ -11,6 +11,8 @@ public partial class Player : Actor {
     public delegate void ShakeCameraEventHandler();
     [Signal]
     public delegate void MoveEventHandler();
+    [Signal]
+    public delegate void CreateAfterimageEventHandler(State state);
 
     // Constants
     private const int NUM_JUMPS = 1;
@@ -21,30 +23,30 @@ public partial class Player : Actor {
     private static float COYOTE_TIME = 3f * Game.ONE_FRAME;
     private static float JUMP_BUFFER_TIME = 6f * Game.ONE_FRAME;
     private static float JUMP_HOLD_TIME = 12f * Game.ONE_FRAME;
-    public static int ATTACK_INPUT_BUFFER = 12; // 24 frame buffer
+    public static int ATTACK_INPUT_BUFFER = 12; // 12 frame buffer
 
-    // private variables
-    private Vector2 velocity = Vector2.Zero;
+    // Export variables
     [Export]
     private float maxSpeed = 100;
     [Export]
     private float maxAccel = 800;
-    private bool canSpecial = true;
-    private float localHoldTime = 0;
-    private bool onGround = true;
     [Export]
     private float jumpHeight = 21f;
     [Export]
     private float jumpTimeToPeak = 0.3f;
     [Export]
     private float jumpTimeToDescent = 0.2f;
+    [Export]
+    private PackedScene afterimageScene;
+
+    // private variables
+    private Vector2 velocity = Vector2.Zero;
+    private float localHoldTime = 0;
+    private bool onGround = true;
     private float jumpVelocity;
     private float jumpGravity;
     private float fallGravity;
-
     private bool isJumping;
-    private int attackCounter = 3;
-    private Timer attackTimer;
     private int numJumps = NUM_JUMPS;
     private float coyoteTime = 0;
     private bool wasGrounded = true;
@@ -52,14 +54,11 @@ public partial class Player : Actor {
     private InputBuffer dirInputBuffer;
     private InputBuffer attackInputBuffer;
     private bool showComboList = false;
-    //private float attackInputBuffer = 0;
-    private Vector2 snapshotVelocity;
-    private int snapshotDirection;
     private AnimationPlayer animationPlayer;
     private Godot.Collections.Dictionary<StringName, State> states;
 
+
     // public variables
-    public int AttackCounter { get => attackCounter; set => attackCounter = value; }
     public float JumpBufferTime { get => jumpBufferTime; set => jumpBufferTime = value; }
     public float CoyoteTime { get => coyoteTime; set => coyoteTime = value; }
 
@@ -67,11 +66,12 @@ public partial class Player : Actor {
     public bool IsJumping { get => isJumping; }
     public int NumJumps { get => numJumps; set => numJumps = value; }
     public bool WasGrounded { get => wasGrounded; set => wasGrounded = value; }
-    public bool CanSpecial { get => canSpecial; set => canSpecial = value; }
     public InputBuffer AttackInputBuffer { get => attackInputBuffer; }
     public AnimationPlayer AP { get => animationPlayer; set => animationPlayer = value; }
+
+
+
     // State machine
-    public IStateMachine currentState;
     public FiniteStateMachine fsm;
     public PlayerRunState playerRunState;
     public PlayerIdleState playerIdleState;
@@ -117,15 +117,21 @@ public partial class Player : Actor {
         jumpVelocity = ((2.0f * jumpHeight) / jumpTimeToPeak) * -1.0f; // In Godot 2D, down is positive, so flip the signs
         jumpGravity = ((-2.0f * jumpHeight) / (jumpTimeToPeak * jumpTimeToPeak)) * -1.0f;
         fallGravity = ((-2.0f * jumpHeight) / (jumpTimeToDescent * jumpTimeToDescent)) * -1.0f;
+
         Facing = Facing.RIGHT;
         wasGrounded = true;
+
         dirInputBuffer = new InputBuffer(9);
         attackInputBuffer = new InputBuffer(ATTACK_INPUT_BUFFER);
+
         states = new Godot.Collections.Dictionary<StringName, State>();
         ConnectAttackSignals();
+        // This attack is able to create afterimages
+        playerChargeAttackState.Connect(nameof(CreateAfterimage), new Callable(this, nameof(InstanceAfterimage)));
 
     }
     public override void _Draw() {
+        // Shows the Node's global position, useful for debugging
         DrawLine(Vector2.Zero, 15f * Vector2.Down, Colors.Yellow);
         DrawLine(Vector2.Zero, 15f * Vector2.Up, Colors.Yellow);
         DrawLine(Vector2.Zero, 15f * Vector2.Right, Colors.Green);
@@ -134,7 +140,6 @@ public partial class Player : Actor {
 
     public override void _Process(double delta) {
         onGround = GM.CheckWallsCollision(this, Vector2.Down);
-        //currentState = currentState.EnterState(this);
         QueueRedraw();
     }
 
@@ -145,7 +150,6 @@ public partial class Player : Actor {
 
                 if (c is IAttackState) {
                     c.Connect(nameof(c.OnAttack), new Callable(this, nameof(OnAttackPressed)));
-                    //c.Connect(nameof(c.OnAttack), new Callable(this, nameof(DoAttack)));
                 }
             }
         }
@@ -211,7 +215,7 @@ public partial class Player : Actor {
     }
 
     public void DoMovement(double delta, int direction) {
-        Jump(delta);
+        //Jump(delta);
 
         velocity.X = Mathf.MoveToward(velocity.X, maxSpeed * direction, maxAccel * (float)delta);
         velocity.Y = Mathf.MoveToward(velocity.Y, GetGravity(), GetGravity() * (float)delta);
@@ -274,6 +278,7 @@ public partial class Player : Actor {
 
 
     // For good practice, call this via signal to add an attack in the input buffer
+    /// TODO: Also, rename this function as it is confusing.
     public void DoAttack() {
         // Maybe we should add the attack input on every frame, that way we can buffer an attack while falling or something.
         attackInputBuffer.AddInput(new StringName());
@@ -281,6 +286,14 @@ public partial class Player : Actor {
             var attackButton = new StringName("Attack");
             attackInputBuffer.AddInput(attackButton);
         }
+
+        if (Input.IsActionJustPressed("Charge")) {
+            var chargeButton = new StringName("Charge");
+            attackInputBuffer.AddInput(chargeButton);
+        }
+
+        // Move the player.  This will only move the player if the Attack in the AnimationPlayer utilizes the AttackShift method via call track.
+        // Otherwise, it assumes a 0-velocity in the X-direction
         DoMovement(GetPhysicsProcessDeltaTime(), Mathf.Sign(velocity.X));
     }
 
@@ -297,6 +310,20 @@ public partial class Player : Actor {
 
     private void OnAttackPressed(State state) {
         velocity.X = 0;
+    }
+
+    private void InstanceAfterimage(State state) {
+        var afterimage = (Node2D)afterimageScene.Instantiate();
+        var world = GetTree().Root.GetNode("Game");
+        world.AddChild(afterimage);
+
+        afterimage.GlobalPosition = GlobalPosition;
+        afterimage.GetNode<Sprite2D>("GhostTexture").Centered = false;
+        afterimage.GetNode<Sprite2D>("GhostTexture").FlipH = Sprite.FlipH;
+        afterimage.GetNode<Sprite2D>("GhostTexture").Texture = Sprite.Texture;
+        afterimage.GetNode<Sprite2D>("GhostTexture").Hframes = Sprite.Hframes;
+        afterimage.GetNode<Sprite2D>("GhostTexture").Vframes = Sprite.Vframes;
+        afterimage.GetNode<Sprite2D>("GhostTexture").Frame = Sprite.Frame;
     }
 
     public Godot.Collections.Array<Variant> GetInputBufferContents() {

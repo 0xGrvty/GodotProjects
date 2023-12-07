@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://w2kgtjvdh8r7"]
+
+[ext_resource type="Shader" path="res://Shaders/Afterimage.gdshader" id="1_ufxkj"]
+
+[resource]
+shader = ExtResource("1_ufxkj")
+shader_parameter/whiten = false
+shader_parameter/mix_weight = 1.0

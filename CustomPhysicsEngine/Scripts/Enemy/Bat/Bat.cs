@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+
+// Unused, not currently maintained.
 public partial class Bat : Enemy {
     private Vector2 velocity = Vector2.Zero;
     //private bool onGround = true;

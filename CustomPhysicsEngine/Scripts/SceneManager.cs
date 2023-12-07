@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 
+// Currently unused and not maintained.
 public partial class SceneManager : Node {
     private static AnimationPlayer animationPlayer;
     private static Player player;

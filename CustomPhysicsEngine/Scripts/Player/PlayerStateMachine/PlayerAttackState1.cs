@@ -19,6 +19,12 @@ public partial class PlayerAttackState1 : State, IAttackState {
 
     public override void EnterState() {
         ap.Play("Attack1");
+        EmitSignal(nameof(OnAttack), this);
+    }
+
+    public override void ExitState() {
+        p.AttackInputBuffer.ClearBuffer();
+        GD.Print(p.AttackInputBuffer.GetBuffer());
     }
 
     public override void PhysicsUpdate(double delta) {
@@ -26,7 +32,7 @@ public partial class PlayerAttackState1 : State, IAttackState {
     }
 
     public void ChangeState() {
-        if (p.GetInputBufferContents().Contains(1)) {
+        if (p.GetInputBufferContents().Contains((int)InputBuffer.BUTTON.ATTACK)) {
             EmitSignal(nameof(StateFinished), this, "Attack2");
         } else {
             EmitSignal(nameof(StateFinished), this, "Idle");

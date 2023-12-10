@@ -51,14 +51,14 @@
 [ext_resource type="Texture2D" uid="uid://2ontj5gfhq2b" path="res://Sprites/adventurer-crouch-02.png" id="21_b5sk8"]
 [ext_resource type="Texture2D" uid="uid://j3ppe86n1vl2" path="res://Assets/Player/Sprite Sheets/Player_Idle.png" id="21_g8qt1"]
 [ext_resource type="Texture2D" uid="uid://hgr7pl6jnyga" path="res://Sprites/adventurer-crouch-03.png" id="22_eimy4"]
-[ext_resource type="Texture2D" uid="uid://cbndnnqmuq06p" path="res://Assets/Player/Sprite Sheets/Player_Attack1.png" id="36_eusva"]
+[ext_resource type="Texture2D" uid="uid://dvufcgaxjqskl" path="res://Assets/Player/Sprite Sheets/Player_Attack1.png" id="36_eusva"]
 [ext_resource type="Texture2D" uid="uid://cwheufn21cn0u" path="res://Assets/Player/Sprite Sheets/Player_Run.png" id="37_hytuj"]
 [ext_resource type="Script" path="res://Scripts/Attack.cs" id="43_joaxu"]
 
 [sub_resource type="Animation" id="Animation_wxp55"]
 resource_name = "Attack1"
-length = 0.625013
-step = 0.125
+length = 0.541671
+step = 0.0416667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -81,7 +81,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [4]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -93,7 +93,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [2]
+"values": [3]
 }
 tracks/3/type = "value"
 tracks/3/imported = false

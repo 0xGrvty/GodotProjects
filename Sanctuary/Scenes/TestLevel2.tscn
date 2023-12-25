@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkbm8xfijlckv"]
+
+[ext_resource type="PackedScene" uid="uid://cfxqkvo8axtmj" path="res://Scenes/Wall.tscn" id="1_0q60u"]
+[ext_resource type="Script" path="res://Scripts/Level.cs" id="1_pdxp0"]
+
+[node name="TestLevel2" type="Node2D"]
+script = ExtResource("1_pdxp0")
+levelGoto = "res://Scenes/TestLevel.tscn"
+
+[node name="Wall19" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(896, 128)
+
+[node name="Wall20" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(896, 0)
+
+[node name="Wall21" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(896, 384)
+
+[node name="Wall22" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(896, 256)
+
+[node name="Wall9" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(896, 512)
+
+[node name="Wall10" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(768, 512)
+
+[node name="Wall11" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(640, 512)
+
+[node name="Wall12" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(512, 512)
+
+[node name="Wall8" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(384, 512)
+
+[node name="Wall6" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(256, 512)
+
+[node name="Wall5" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(128, 512)
+
+[node name="Wall4" parent="." instance=ExtResource("1_0q60u")]
+position = Vector2(0, 512)
+
+[node name="StartingPoint" type="Marker2D" parent="."]
+position = Vector2(103, 394)

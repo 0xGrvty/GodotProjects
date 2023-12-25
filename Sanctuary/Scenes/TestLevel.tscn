@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://3mgjfex328i3"]
+
+[ext_resource type="PackedScene" uid="uid://cfxqkvo8axtmj" path="res://Scenes/Wall.tscn" id="1_5de1y"]
+[ext_resource type="Script" path="res://Scripts/Level.cs" id="1_nqskp"]
+
+[node name="TestLevel" type="Node2D"]
+script = ExtResource("1_nqskp")
+levelGoto = "res://Scenes/TestLevel2.tscn"
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall13" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(768, 0)
+
+[node name="Wall14" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(640, 0)
+
+[node name="Wall15" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(512, 0)
+
+[node name="Wall16" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(384, 0)
+
+[node name="Wall17" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(256, 0)
+
+[node name="Wall18" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(128, 0)
+
+[node name="Wall9" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(896, 512)
+
+[node name="Wall10" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(768, 512)
+
+[node name="Wall11" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(640, 512)
+
+[node name="Wall12" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(512, 512)
+
+[node name="Wall8" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(384, 512)
+
+[node name="Wall7" parent="Walls" instance=ExtResource("1_5de1y")]
+
+[node name="Wall6" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(256, 512)
+
+[node name="Wall5" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(128, 512)
+
+[node name="Wall4" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(0, 512)
+
+[node name="Wall19" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(896, 128)
+
+[node name="Wall20" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(896, 0)
+
+[node name="Wall21" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(896, 384)
+
+[node name="Wall22" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(896, 256)
+
+[node name="Wall3" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(0, 384)
+
+[node name="Wall2" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(0, 256)
+
+[node name="Wall" parent="Walls" instance=ExtResource("1_5de1y")]
+position = Vector2(0, 128)
+
+[node name="StartingPoint" type="Marker2D" parent="."]
+position = Vector2(706, 384)

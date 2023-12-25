@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://bb432b78vqdm1"]
+
+[ext_resource type="Script" path="res://Scripts/Game.cs" id="1_o8vre"]
+[ext_resource type="PackedScene" uid="uid://b1hjol25vw1er" path="res://Scenes/LevelManager.tscn" id="2_amgpb"]
+[ext_resource type="PackedScene" uid="uid://coyfu3qrj5s2o" path="res://Scenes/Player.tscn" id="2_bxfmo"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_o8vre")
+pathToTestLevel = "res://Scenes/TestLevel.tscn"
+
+[node name="LevelManager" parent="." instance=ExtResource("2_amgpb")]
+
+[node name="Player" parent="." instance=ExtResource("2_bxfmo")]

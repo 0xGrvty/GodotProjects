@@ -3,6 +3,16 @@ using Godot.NativeInterop;
 using System;
 
 
+// Since we are overhauling the Player script, we might not use this Actor script.
+// This was only used to implement our own collisions with Project Oasis
+// since we knew all our bounding boxes would be axis-aligned.
+// This game, the bounding boxes may not be aligned and they may take on different
+// convex shapes, so AABB would not work well here.
+// We could implement our own SAT or GJK algorithm, but for the time being
+// I think Godot uses these algorithms for collision detection anyway.
+// In the future, I would like to research these algorithms and attempt
+// to implement them on my own.
+
 // Move only by integers.
 // Why is this favored?
 // Well now we know the exact (x, y) instead of having floating points

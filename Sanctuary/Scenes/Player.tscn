@@ -1,9 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://coyfu3qrj5s2o"]
+[gd_scene load_steps=8 format=3 uid="uid://coyfu3qrj5s2o"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_xt8lo"]
 [ext_resource type="PackedScene" uid="uid://c40alenabtd7d" path="res://Scenes/Hitbox.tscn" id="2_dl7gb"]
+[ext_resource type="Script" path="res://Scripts/FiniteStateMachine/FiniteStateMachine.cs" id="3_frww1"]
+[ext_resource type="Script" path="res://Scripts/Player/StateMachine/PlayerRunState.cs" id="4_ledg6"]
+[ext_resource type="Script" path="res://Scripts/Player/StateMachine/PlayerIdleState.cs" id="5_qoq0c"]
+[ext_resource type="Script" path="res://Scripts/Player/StateMachine/PlayerAttackState.cs" id="6_7ww3o"]
 
-[node name="Player" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h6eid"]
+size = Vector2(32, 32)
+
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_xt8lo")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -28,8 +35,21 @@ width = 32
 height = 32
 color = Color(0.14902, 1, 0, 0.501961)
 
-[node name="StateMachine" type="Node" parent="."]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initState")]
+script = ExtResource("3_frww1")
+initState = NodePath("Idle")
 
-[node name="Run" type="Node" parent="StateMachine"]
+[node name="Run" type="Node" parent="StateMachine" node_paths=PackedStringArray("p")]
+script = ExtResource("4_ledg6")
+p = NodePath("../..")
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("p")]
+script = ExtResource("5_qoq0c")
+p = NodePath("../..")
+
+[node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("p")]
+script = ExtResource("6_7ww3o")
+p = NodePath("../..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_h6eid")

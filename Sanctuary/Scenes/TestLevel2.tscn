@@ -13,6 +13,9 @@ position = Vector2(896, 128)
 [node name="Wall20" parent="." instance=ExtResource("1_0q60u")]
 position = Vector2(896, 0)
 
+[node name="Wall20" parent="Wall20" instance=ExtResource("1_0q60u")]
+position = Vector2(-512, 93)
+
 [node name="Wall21" parent="." instance=ExtResource("1_0q60u")]
 position = Vector2(896, 384)
 

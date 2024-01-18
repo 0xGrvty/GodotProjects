@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbfkn6ceka1gv"]
+
+[ext_resource type="Script" path="res://Projectile.cs" id="1_3v5ne"]
+[ext_resource type="Texture2D" uid="uid://ca468idr20bmf" path="res://Assets/Hammer.png" id="2_cc8va"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_v2cbt"]
+radius = 5.0
+height = 20.0
+
+[node name="Projectile" type="Area2D"]
+script = ExtResource("1_3v5ne")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(4.76837e-07, 4.76837e-07)
+scale = Vector2(1.94444, 1.94444)
+texture = ExtResource("2_cc8va")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_v2cbt")

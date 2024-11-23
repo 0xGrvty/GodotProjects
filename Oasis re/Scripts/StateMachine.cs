@@ -2,7 +2,8 @@ using Godot;
 using Godot.Collections;
 using System.Runtime;
 public partial class StateMachine : Node {
-
+  [Export]
+  public Node smOwner;
   [Export]
   private State initState;
   [Export]
@@ -45,9 +46,12 @@ public partial class StateMachine : Node {
   }
 
   private void OnStateFinished(State state, StringName newStateName) {
-    if (state != currentState) { return; }
+    if (state != currentState)  return; 
     var newState = states?[newStateName.ToString().ToLower()];
-    if (newState == null) { return; }
+    if (newState == null) {
+      GD.Print("State does not exist: " + state);
+      return;
+    }
 
     // Debugging prints
     var owner = GetParent()?.Name;

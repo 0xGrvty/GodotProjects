@@ -1,25 +1,24 @@
 using Godot;
 using System;
-using System.Runtime.CompilerServices;
 
-public partial class BIdle : State {
+public partial class BSlam : State {
   [Export]
   private Boss b;
 
   public override void _Ready() {
   }
   public override void EnterState() {
-    // Play idle animation
+    // Play slam animation
   }
 
   public override void ExitState() {
   }
 
   public override void Update(double delta) {
-    
+
   }
 
   public override void PhysicsUpdate(double delta) {
-    if (b.IsPlayerNear) EmitSignal(new StringName(nameof(StateFinished)), "Slam");
+    
   }
 }

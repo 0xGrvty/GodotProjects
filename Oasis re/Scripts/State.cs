@@ -2,7 +2,6 @@ using Godot;
 using System;
 
 public abstract partial class State : Node {
-
   [Signal]
   public delegate void StateFinishedEventHandler(State state, StringName newState);
 

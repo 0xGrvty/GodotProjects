@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public partial class BRoam : State {
+  [Export]
+  private Boss b;
   public override void EnterState() {
   }
 
@@ -13,6 +15,6 @@ public partial class BRoam : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    
+    if (!b.IsPlayerNear) EmitSignal(nameof(StateFinished), "Idle");
   }
 }

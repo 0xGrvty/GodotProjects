@@ -20,6 +20,6 @@ public partial class BIdle : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    if (b.IsPlayerNear) EmitSignal(new StringName(nameof(StateFinished)), "Slam");
+    if (b.IsPlayerNear) EmitSignal(new StringName(nameof(StateFinished)), this, "Slam");
   }
 }

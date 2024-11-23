@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://cy2fl0odv48s8"]
+[gd_scene load_steps=9 format=3 uid="uid://cy2fl0odv48s8"]
 
 [ext_resource type="Script" path="res://Scripts/Boss/Boss.cs" id="1_fyygb"]
-[ext_resource type="Texture2D" uid="uid://brusci5y0e6f6" path="res://icon.svg" id="1_hysnc"]
+[ext_resource type="Texture2D" uid="uid://ccqnbp22lhu2m" path="res://icon.svg" id="1_hysnc"]
 [ext_resource type="Script" path="res://Scripts/StateMachine.cs" id="3_etljl"]
 [ext_resource type="Script" path="res://Scripts/Boss/States/BIdle.cs" id="4_g83gv"]
 [ext_resource type="Script" path="res://Scripts/Boss/States/BRoam.cs" id="5_8cbh0"]
+[ext_resource type="Script" path="res://Scripts/Boss/States/BSlam.cs" id="6_3ilp4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sani8"]
 size = Vector2(128, 128)
@@ -13,7 +14,9 @@ size = Vector2(128, 128)
 radius = 400.0
 
 [node name="Boss" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_fyygb")
+slamGravity = 1200.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 0, 0.384314, 1)
@@ -34,7 +37,9 @@ b = NodePath("../..")
 [node name="Roam" type="Node" parent="StateMachine"]
 script = ExtResource("5_8cbh0")
 
-[node name="Slam" type="Node" parent="StateMachine"]
+[node name="Slam" type="Node" parent="StateMachine" node_paths=PackedStringArray("b")]
+script = ExtResource("6_3ilp4")
+b = NodePath("../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 

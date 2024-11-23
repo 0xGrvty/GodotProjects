@@ -140,6 +140,6 @@ public partial class Player : CharacterBody2D {
   }
 
   public float GetGravity() {
-    return Velocity.Y < 0.0 ? jumpGravity : fallGravity;
+    return Velocity.Y < 0.0f ? jumpGravity : fallGravity;
   }
 }

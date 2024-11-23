@@ -8,6 +8,9 @@ public partial class Boss : CharacterBody2D {
   private float seekRaidus = 400;
   [Export]
   private AnimationPlayer ap;
+
+  [Export]
+  private float slamGravity = 50.0f;
   
   private Sprite2D sprite;
   private CollisionShape2D hitbox;
@@ -33,8 +36,6 @@ public partial class Boss : CharacterBody2D {
 
     currentState = sm.GetState();
 
-
-
   }
 
   public override void _Draw() {
@@ -58,5 +59,9 @@ public partial class Boss : CharacterBody2D {
 
   private void OnArea2dBodyExited(Node2D body) {
     if (body is Player) isPlayerNear = false;
+  }
+
+  public float GetSlamGravity() {
+    return slamGravity;
   }
 }

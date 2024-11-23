@@ -3,8 +3,6 @@ using Godot.Collections;
 using System.Runtime;
 public partial class StateMachine : Node {
   [Export]
-  public Node smOwner;
-  [Export]
   private State initState;
   [Export]
   private State currentState;

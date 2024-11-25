@@ -9,6 +9,8 @@ public partial class StateMachine : Node {
 
   private Godot.Collections.Dictionary<StringName, State> states;
 
+  private bool debug = false;
+
   public override void _Ready() {
     states = new Godot.Collections.Dictionary<StringName, State>();
     foreach (var child in GetChildren()) {
@@ -55,7 +57,7 @@ public partial class StateMachine : Node {
     var owner = GetParent()?.Name;
     var debugEnt = $"{owner} ENTERING: " + newState.Name;
     var debugExit = $"{owner} EXITING: " + currentState.Name;
-    GD.Print(debugEnt + "\n" + debugExit);
+    if (debug) GD.Print(debugEnt + "\n" + debugExit);
 
     // Exit the current state if it exists before entering the new state
     currentState?.ExitState();

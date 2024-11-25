@@ -1,7 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://dkmlqj2vjw77i"]
+[gd_scene load_steps=23 format=3 uid="uid://dkmlqj2vjw77i"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Player.cs" id="1_u1pyv"]
-[ext_resource type="Texture2D" uid="uid://bygntjd0jaaxg" path="res://Assets/Player/PlayerIdle/pIdle_1080.png" id="2_xidgt"]
+[ext_resource type="Texture2D" uid="uid://murm8m0mojel" path="res://Assets/Player/PlayerIdle/pIdle_1080.png" id="2_xidgt"]
 [ext_resource type="Script" path="res://Scripts/StateMachine.cs" id="3_md5f1"]
 [ext_resource type="Script" path="res://Scripts/Player/States/PIdle.cs" id="4_ndtya"]
 [ext_resource type="Script" path="res://Scripts/Player/States/PRun.cs" id="5_dghm5"]
@@ -177,6 +177,26 @@ _data = {
 "Run": SubResource("Animation_ss3hu")
 }
 
+[sub_resource type="Animation" id="Animation_rorfa"]
+resource_name = "Run"
+
+[sub_resource type="Animation" id="Animation_lhdcl"]
+resource_name = "Idle"
+
+[sub_resource type="Animation" id="Animation_gh45u"]
+resource_name = "Jump"
+
+[sub_resource type="Animation" id="Animation_mrvjt"]
+resource_name = "Fall"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n5kte"]
+_data = {
+"Fall": SubResource("Animation_mrvjt"),
+"Idle": SubResource("Animation_lhdcl"),
+"Jump": SubResource("Animation_gh45u"),
+"Run": SubResource("Animation_rorfa")
+}
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o5ue2"]
 size = Vector2(64, 162)
 
@@ -191,9 +211,16 @@ jumpHeight = 135.0
 jumpTimeToPeak = 0.3
 attack = NodePath("Attack")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="Temp" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_x4036")
+}
+
+[node name="Top" type="AnimationPlayer" parent="."]
+
+[node name="Bottom" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_n5kte")
 }
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -210,27 +237,27 @@ currentState = NodePath("Idle")
 [node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("p", "ap")]
 script = ExtResource("4_ndtya")
 p = NodePath("../..")
-ap = NodePath("../../AnimationPlayer")
+ap = NodePath("../../Temp")
 
 [node name="Run" type="Node" parent="StateMachine" node_paths=PackedStringArray("p", "ap")]
 script = ExtResource("5_dghm5")
 p = NodePath("../..")
-ap = NodePath("../../AnimationPlayer")
+ap = NodePath("../../Temp")
 
 [node name="Jump" type="Node" parent="StateMachine" node_paths=PackedStringArray("p", "ap")]
 script = ExtResource("6_n7p61")
 p = NodePath("../..")
-ap = NodePath("../../AnimationPlayer")
+ap = NodePath("../../Temp")
 
 [node name="Fall" type="Node" parent="StateMachine" node_paths=PackedStringArray("p", "ap")]
 script = ExtResource("7_p1qbs")
 p = NodePath("../..")
-ap = NodePath("../../AnimationPlayer")
+ap = NodePath("../../Temp")
 
 [node name="Attack" type="Node" parent="StateMachine" node_paths=PackedStringArray("p", "ap", "attack")]
 script = ExtResource("8_my8lq")
 p = NodePath("../..")
-ap = NodePath("../../AnimationPlayer")
+ap = NodePath("../../Temp")
 attack = NodePath("../../Attack")
 
 [node name="Attack" type="Area2D" parent="."]

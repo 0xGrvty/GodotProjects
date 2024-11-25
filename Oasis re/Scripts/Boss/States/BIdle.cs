@@ -20,6 +20,10 @@ public partial class BIdle : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    if (b.IsPlayerNear) EmitSignal(new StringName(nameof(StateFinished)), this, "Slam");
+    if (b.IsPlayerNear) {
+      var rand = GD.Randf();
+      if (rand <= 0.5f) EmitSignal(SignalName.StateFinished, this, "Roam");
+      else EmitSignal(SignalName.StateFinished, this, "SlamPrep");
+    }
   }
 }

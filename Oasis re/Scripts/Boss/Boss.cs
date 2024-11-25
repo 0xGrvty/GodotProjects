@@ -2,15 +2,20 @@ using Godot;
 using System;
 using System.Runtime.CompilerServices;
 
-public partial class Boss : CharacterBody2D {
+public partial class Boss : Area2D {
   // Seek radius to find the player
   [Export]
-  private float seekRaidus = 400;
+  private float seekRaidus = 400.0f;
   [Export]
   private AnimationPlayer ap;
 
   [Export]
   private float slamGravity = 50.0f;
+
+  [Export]
+  private float slamPrepSpeed = 50.0f;
+  [Export]
+  private float moveSpeed = 50.0f;
   
   private Sprite2D sprite;
   private CollisionShape2D hitbox;
@@ -20,10 +25,15 @@ public partial class Boss : CharacterBody2D {
   private State currentState;
   private bool isPlayerNear = false;
   private Vector2 targetPos;
+  private Vector2 velocity;
 
   public bool IsPlayerNear { get => isPlayerNear; }
   public AnimationPlayer AP { get => ap; }
   public Vector2 TargetPos { get => targetPos; }
+  public float SlamPrepSpeed { get => slamPrepSpeed; }
+  public float SlamGravity { get => slamGravity; }
+  public Vector2 Velocity { get => velocity; set => velocity = value; }
+  public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
   
   public override void _Ready() {
     sm = (StateMachine)GetNode<Node>("StateMachine");
@@ -59,9 +69,5 @@ public partial class Boss : CharacterBody2D {
 
   private void OnArea2dBodyExited(Node2D body) {
     if (body is Player) isPlayerNear = false;
-  }
-
-  public float GetSlamGravity() {
-    return slamGravity;
   }
 }

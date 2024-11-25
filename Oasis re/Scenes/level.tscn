@@ -6,6 +6,9 @@
 
 [node name="Level" type="Node2D"]
 
+[node name="Boss" parent="." instance=ExtResource("3_kuow3")]
+position = Vector2(896, 880)
+
 [node name="Player" parent="." instance=ExtResource("2_ib4kw")]
 position = Vector2(320, 736)
 
@@ -140,6 +143,3 @@ position = Vector2(1600, 1216)
 
 [node name="Wall41" parent="Walls" instance=ExtResource("1_4aehg")]
 position = Vector2(1600, 1136)
-
-[node name="Boss" parent="." instance=ExtResource("3_kuow3")]
-position = Vector2(896, 880)

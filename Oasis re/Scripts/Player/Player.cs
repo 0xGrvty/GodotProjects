@@ -14,6 +14,7 @@ public partial class Player : CharacterBody2D {
   public PAttack pAttackState;
   private State currentState;
 
+
   // Export variables
   [Export]
   private float maxSpeed = 100;
@@ -34,6 +35,8 @@ public partial class Player : CharacterBody2D {
   private float jumpGravity;
   private float fallGravity;
   private bool isJumping = false;
+  private AnimationPlayer topAP;
+  private AnimationPlayer botAP;
 
   private Vector2 directionVector;
   private Direction dir;
@@ -55,6 +58,8 @@ public partial class Player : CharacterBody2D {
   public Direction Facing { get => facing; }
   public bool AttackPressed { get => attackPressed; set => attackPressed = value; }
   public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
+  public AnimationPlayer TopAP { get => topAP; }
+  public AnimationPlayer BotAP { get => botAP; }
 
   public override void _Ready() {
     sm = (StateMachine)GetNode<Node>("StateMachine");
@@ -68,6 +73,9 @@ public partial class Player : CharacterBody2D {
     attack = GetNode<Area2D>("Attack");
     
     sprite = GetNode<Sprite2D>("Sprite");
+
+    topAP = GetNode<AnimationPlayer>("Top");
+    botAP = GetNode<AnimationPlayer>("Bottom");
 
     // Initializations
     // Building a Better Jump GDC talk

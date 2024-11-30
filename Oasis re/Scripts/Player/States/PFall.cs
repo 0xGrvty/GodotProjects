@@ -19,7 +19,7 @@ public partial class PFall : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    p.Move();
+    p.Move(delta);
     if (p.IsOnFloor()) {
       EmitSignal(new StringName(nameof(StateFinished)), this, "Idle");
     }

@@ -41,7 +41,23 @@ public partial class PAttack : State {
 
   }
   private void Active() {
-    attack.Monitoring = true;
+    //attack.Monitoring = true;
+
+    var pos = p.GlobalPosition + new Vector2(0.0f, -20.0f);
+    var to = pos + new Vector2((float)p.Facing * 300.0f, 0);
+    var spaceState = p.GetWorld2D().DirectSpaceState;
+    var query = PhysicsRayQueryParameters2D.Create(pos, to);
+    var result = spaceState.IntersectRay(query);
+
+    GD.Print(result);
+    GD.Print(p.GlobalPosition);
+
+    var collider = (Node2D)result?["collider"];
+
+    var tween = GetTree().CreateTween();
+    tween.TweenProperty(collider, "modulate", Colors.Red, 0.25f);
+    tween.TweenProperty(collider, "modulate", Colors.White, 0.25f);
+    
   }
   private void Recovery() {
     

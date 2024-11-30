@@ -23,7 +23,7 @@ public partial class PRun : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    p.Move();
+    p.Move(delta);
 
     if (p.Dir == Direction.NO_DIR) {
       EmitSignal(new StringName(nameof(StateFinished)), this, "Idle");

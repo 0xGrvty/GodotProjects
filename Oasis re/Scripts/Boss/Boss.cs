@@ -9,13 +9,16 @@ public partial class Boss : Area2D {
   [Export]
   private AnimationPlayer ap;
 
+  // Default value: 800
   [Export]
-  private float slamGravity = 50.0f;
+  private float slamGravity = 800.0f;
 
+  // Default value: 800
   [Export]
-  private float slamPrepSpeed = 50.0f;
+  private float slamPrepSpeed = 800.0f;
+  // Default value: 400
   [Export]
-  private float moveSpeed = 50.0f;
+  private float moveSpeed = 400.0f;
   
   private Sprite2D sprite;
   private CollisionShape2D hitbox;

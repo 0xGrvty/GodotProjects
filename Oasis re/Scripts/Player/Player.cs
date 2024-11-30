@@ -115,9 +115,7 @@ public partial class Player : CharacterBody2D {
     }
   }
 
-  public void Move() {
-    var delta = GetPhysicsProcessDeltaTime();
-
+  public void Move(double delta) {
     Velocity = new Vector2(Mathf.MoveToward(Velocity.X, maxSpeed * (int)dir, maxAccel * (float)delta), Mathf.MoveToward(Velocity.Y, GetGravity(), GetGravity() * (float)delta));
     MoveAndSlide();
   }

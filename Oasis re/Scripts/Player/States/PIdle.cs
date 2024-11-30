@@ -22,15 +22,13 @@ public partial class PIdle : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    p.Move();
-    if (p.Dir != Direction.NO_DIR && p.IsOnFloor()) {
-      EmitSignal(new StringName(nameof(StateFinished)), this, "Run");
-    }
+    p.Move(delta);
+    if (p.Dir != Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, "Run");
 
-    if (p.IsJumping) {
-      EmitSignal(new StringName(nameof(StateFinished)), this, "Jump");
-    }
+    if (p.IsJumping) EmitSignal(SignalName.StateFinished, this, "Jump");
 
-    if (p.IsAttacking) EmitSignal(new StringName(nameof(StateFinished)), this, "Attack");
+    if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, "Attack");
+
+    if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, "Fall");
   }
 }

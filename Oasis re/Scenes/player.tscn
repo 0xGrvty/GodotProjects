@@ -1,7 +1,7 @@
 [gd_scene load_steps=23 format=3 uid="uid://dkmlqj2vjw77i"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Player.cs" id="1_u1pyv"]
-[ext_resource type="Texture2D" uid="uid://murm8m0mojel" path="res://Assets/Player/PlayerIdle/pIdle_1080.png" id="2_xidgt"]
+[ext_resource type="Texture2D" uid="uid://bygntjd0jaaxg" path="res://Assets/Player/PlayerIdle/pIdle_1080.png" id="2_xidgt"]
 [ext_resource type="Script" path="res://Scripts/StateMachine.cs" id="3_md5f1"]
 [ext_resource type="Script" path="res://Scripts/Player/States/PIdle.cs" id="4_ndtya"]
 [ext_resource type="Script" path="res://Scripts/Player/States/PRun.cs" id="5_dghm5"]
@@ -177,8 +177,8 @@ _data = {
 "Run": SubResource("Animation_ss3hu")
 }
 
-[sub_resource type="Animation" id="Animation_rorfa"]
-resource_name = "Run"
+[sub_resource type="Animation" id="Animation_mrvjt"]
+resource_name = "Fall"
 
 [sub_resource type="Animation" id="Animation_lhdcl"]
 resource_name = "Idle"
@@ -186,8 +186,8 @@ resource_name = "Idle"
 [sub_resource type="Animation" id="Animation_gh45u"]
 resource_name = "Jump"
 
-[sub_resource type="Animation" id="Animation_mrvjt"]
-resource_name = "Fall"
+[sub_resource type="Animation" id="Animation_rorfa"]
+resource_name = "Run"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_n5kte"]
 _data = {

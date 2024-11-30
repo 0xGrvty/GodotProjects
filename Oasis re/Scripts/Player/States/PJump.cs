@@ -19,9 +19,13 @@ public partial class PJump : State {
     p.PollInputs();
   }
 
+    public override void HandleInput(InputEvent e) {
+    if (e.IsActionPressed("Attack")) p.IsAttacking = true;
+  }
+
   public override void PhysicsUpdate(double delta) {
     p.Jump();
-    p.Move();
+    p.Move(delta);
 
     if (p.Velocity.Y > 0 && !p.IsOnFloor()) {
       EmitSignal(new StringName(nameof(StateFinished)), this, "Fall");

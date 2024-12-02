@@ -12,12 +12,6 @@ public partial class PRun : State {
 
   public override void ExitState() {
   }
-
-  public override void HandleInput(InputEvent e) {
-    if (e.IsActionPressed("Jump")) p.IsJumping = true;
-    else if (e.IsActionPressed("Attack")) p.IsAttacking = true;
-  }
-
   public override void Update(double delta) {
     p.PollInputs();
   }
@@ -25,14 +19,9 @@ public partial class PRun : State {
   public override void PhysicsUpdate(double delta) {
     p.Move(delta);
 
-    if (p.Dir == Direction.NO_DIR) {
-      EmitSignal(new StringName(nameof(StateFinished)), this, "Idle");
-    }
-
-    if (p.IsJumping) {
-      EmitSignal(new StringName(nameof(StateFinished)), this, "Jump");
-    }
-
-    if (p.IsAttacking) EmitSignal(new StringName(nameof(StateFinished)), this, "Attack");
+    if (p.Dir == Direction.NO_DIR) EmitSignal(SignalName.StateFinished, this, p.pIdle.Name);
+    else if (p.IsJumping) EmitSignal(SignalName.StateFinished, this, p.pJump.Name);
+    else if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, p.pAttack.Name);
+    else if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
   }
 }

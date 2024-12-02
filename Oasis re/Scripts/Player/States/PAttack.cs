@@ -20,12 +20,12 @@ public partial class PAttack : State {
   public override void EnterState() {
     ap.Play("Attack");
     p.IsAttacking = false;
-    p.Velocity = Vector2.Zero;
     
   }
 
   public override void ExitState() {
     attack.Monitoring = false;
+    
     hitlist.Clear();
   }
 
@@ -34,7 +34,8 @@ public partial class PAttack : State {
   }
 
   public override void PhysicsUpdate(double delta) {
-    
+    if (p.IsHoldingJump) p.Jump(delta);
+    p.Move(delta);
   }
 
   private void Startup() {
@@ -46,7 +47,10 @@ public partial class PAttack : State {
     var pos = p.GlobalPosition + new Vector2(0.0f, -20.0f);
     var to = pos + new Vector2((float)p.Facing * 300.0f, 0);
     var spaceState = p.GetWorld2D().DirectSpaceState;
-    var query = PhysicsRayQueryParameters2D.Create(pos, to);
+    // For now, excluding the attack area2D.  We aren't going to use this as the attack is changing from a melee hitbox to a ranged raycast
+    var query = PhysicsRayQueryParameters2D.Create(pos, to, p.CollisionMask);
+    query.Exclude = new Godot.Collections.Array<Rid>{ attack.GetRid() };
+    query.CollideWithAreas = true;
     var result = spaceState.IntersectRay(query);
 
     GD.Print(result);
@@ -64,7 +68,10 @@ public partial class PAttack : State {
   }
 
   private void End() {
-    EmitSignal(new StringName(nameof(StateFinished)), this, "Idle");
+    if (p.Dir == Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pIdle.Name);
+    else if (p.Dir != Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pRun.Name);
+    else if (p.IsHoldingJump && Mathf.Sign(p.Velocity.Y) < 0.0f) EmitSignal(SignalName.StateFinished, this, p.pJump.Name);
+    else if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
   }
 
   private void OnAttackBodyEntered(Node2D body) {

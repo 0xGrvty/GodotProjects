@@ -22,13 +22,18 @@ public partial class Boss : Area2D {
   
   private Sprite2D sprite;
   private CollisionShape2D hitbox;
-  private BIdle bIdleState;
-  private BRoam bRoamState;
+
+  // State Machine
+  public BIdle bIdle;
+  public BRoam bRoam;
+  public BSlam bSlam;
+  public BSlamPrep bSlamPrep;
   private StateMachine sm;
-  private State currentState;
-  private bool isPlayerNear = false;
-  private Vector2 targetPos;
-  private Vector2 velocity;
+
+
+  public bool isPlayerNear = false;
+  public Vector2 targetPos;
+  public Vector2 velocity;
 
   public bool IsPlayerNear { get => isPlayerNear; }
   public AnimationPlayer AP { get => ap; }
@@ -40,14 +45,14 @@ public partial class Boss : Area2D {
   
   public override void _Ready() {
     sm = (StateMachine)GetNode<Node>("StateMachine");
-    bIdleState = (BIdle)GetNode<Node>("StateMachine/Idle");
-    bRoamState = (BRoam)GetNode<Node>("StateMachine/Roam");
+    bIdle = (BIdle)GetNode<Node>("StateMachine/Idle");
+    bRoam = (BRoam)GetNode<Node>("StateMachine/Roam");
+    bSlam = (BSlam)GetNode<Node>("StateMachine/Slam");
+    bSlamPrep = (BSlamPrep)GetNode<Node>("StateMachine/SlamPrep");
 
     sprite = GetNode<Sprite2D>("Sprite2D");
     hitbox = GetNode<CollisionShape2D>("CollisionShape2D");
     ap = GetNode<AnimationPlayer>("AnimationPlayer");
-
-    currentState = sm.GetState();
 
   }
 

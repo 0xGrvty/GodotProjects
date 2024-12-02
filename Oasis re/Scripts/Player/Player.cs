@@ -8,11 +8,11 @@ public partial class Player : CharacterBody2D {
 
   // State Machine
   public StateMachine sm;
-  public PIdle pIdleState;
-  public PRun pRunState;
-  public PJump pJumpState;
-  public PAttack pAttackState;
-  private State currentState;
+  public PIdle pIdle;
+  public PRun pRun;
+  public PJump pJump;
+  public PAttack pAttack;
+  public PFall pFall;
 
 
   // Export variables
@@ -35,6 +35,7 @@ public partial class Player : CharacterBody2D {
   private float jumpGravity;
   private float fallGravity;
   private bool isJumping = false;
+  private bool isHoldingJump = false;
   private AnimationPlayer topAP;
   private AnimationPlayer botAP;
 
@@ -52,6 +53,7 @@ public partial class Player : CharacterBody2D {
 
   // Public variables
   public bool IsJumping { get => isJumping; set => isJumping = value; }
+  public bool IsHoldingJump { get => isHoldingJump; set => isHoldingJump = value; }
   public bool JumpPressed { get => jumpPressed; set => jumpPressed = value; }
   public float JumpVelocity { get => jumpVelocity; }
   public Direction Dir { get => dir; }
@@ -61,12 +63,24 @@ public partial class Player : CharacterBody2D {
   public AnimationPlayer TopAP { get => topAP; }
   public AnimationPlayer BotAP { get => botAP; }
 
+    // If you need to check if an event happened, i.e. if jump was pressed, then handle it here!
+  // However, if you need to poll an input over a certain amount of time, then handle it in _PhysicsProcess!
+  // This was the explanation I needed back then.  I don't know why everything I Googled was so poorly explained.
+  // It's the difference of polling vs checking the event once.  Holy crap.
+  public override void _UnhandledInput(InputEvent @event) {
+    var e = @event;
+
+    if (e.IsActionPressed("Jump")) isJumping = true;
+    else if (e.IsActionPressed("Attack")) isAttacking = true;
+  }
+
   public override void _Ready() {
     sm = (StateMachine)GetNode<Node>("StateMachine");
-    pIdleState = (PIdle)GetNode<Node>("StateMachine/Idle");
-    pRunState = (PRun)GetNode<Node>("StateMachine/Run");
-    pJumpState = (PJump)GetNode<Node>("StateMachine/Jump");
-    pAttackState = (PAttack)GetNode<Node>("StateMachine/Attack");
+    pIdle = (PIdle)GetNode<Node>("StateMachine/Idle");
+    pRun = (PRun)GetNode<Node>("StateMachine/Run");
+    pJump = (PJump)GetNode<Node>("StateMachine/Jump");
+    pAttack = (PAttack)GetNode<Node>("StateMachine/Attack");
+    pFall = (PFall)GetNode<Node>("StateMachine/Fall");
 
     states = new Godot.Collections.Dictionary<StringName, State>();
 
@@ -83,7 +97,6 @@ public partial class Player : CharacterBody2D {
     jumpGravity = ((-2.0f * jumpHeight) / (jumpTimeToPeak * jumpTimeToPeak)) * -1.0f;
     fallGravity = ((-2.0f * jumpHeight) / (jumpTimeToDescent * jumpTimeToDescent)) * -1.0f;
 
-    currentState = sm.GetState();
   }
 
   public override void _Draw() {
@@ -92,6 +105,8 @@ public partial class Player : CharacterBody2D {
     DrawLine(Vector2.Zero, 35f * Vector2.Up, Colors.Blue);
     DrawLine(Vector2.Zero, 35f * Vector2.Right, Colors.Green);
     DrawLine(Vector2.Zero, 35f * Vector2.Left, Colors.Red);
+
+    if (sm.GetState() is PAttack) DrawLine(new Vector2(0, -20), new Vector2(300, -20), Colors.Cyan);
   }
 
   public override void _Process(double delta) {
@@ -99,8 +114,7 @@ public partial class Player : CharacterBody2D {
   }
 
   public void PollInputs() {
-    var theScale = attack.Position;
-
+    isHoldingJump = Input.IsActionPressed("Jump");
 
     directionVector = new Vector2(Math.Sign(Input.GetActionStrength("Right") - Input.GetActionStrength("Left")), Math.Sign(Input.GetActionStrength("Down") - Input.GetActionStrength("Up")));
     dir = (Direction)Math.Sign(Input.GetActionStrength("Right") - Input.GetActionStrength("Left"));
@@ -124,9 +138,7 @@ public partial class Player : CharacterBody2D {
     attack.Monitoring = true;
   }
 
-  public void Jump() {
-    var delta = GetPhysicsProcessDeltaTime();
-
+  public void Jump(double delta) {
     // If they initially jumped while on the floor
     if (IsOnFloor()) {
 

@@ -12,26 +12,20 @@ public partial class PJump : State {
   }
 
   public override void ExitState() {
-
+    
   }
 
   public override void Update(double delta) {
     p.PollInputs();
   }
 
-    public override void HandleInput(InputEvent e) {
-    if (e.IsActionPressed("Attack")) p.IsAttacking = true;
-  }
-
   public override void PhysicsUpdate(double delta) {
-    p.Jump();
+    p.Jump(delta);
     p.Move(delta);
 
-    if (p.Velocity.Y > 0 && !p.IsOnFloor()) {
-      EmitSignal(new StringName(nameof(StateFinished)), this, "Fall");
-    }
-    if (p.IsJumping) {
-      EmitSignal(new StringName(nameof(StateFinished)), this, "Jump");
-    }
+    if (p.Velocity.Y > 0 && !p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
+    else if (p.IsJumping) EmitSignal(SignalName.StateFinished, this, p.pJump.Name);
+    else if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, p.pAttack.Name);
+    
   }
 }

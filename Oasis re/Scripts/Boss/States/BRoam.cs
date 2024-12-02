@@ -26,6 +26,6 @@ public partial class BRoam : State {
   }
 
   private void OnRoamFinished() {
-    EmitSignal(SignalName.StateFinished, this, "Idle");
+    EmitSignal(SignalName.StateFinished, this, b.bIdle.Name);
   }
 }

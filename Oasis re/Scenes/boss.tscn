@@ -32,19 +32,19 @@ currentState = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("b")]
 script = ExtResource("4_g83gv")
-b = NodePath("")
+b = NodePath("../..")
 
 [node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("b")]
 script = ExtResource("5_8cbh0")
-b = NodePath("")
+b = NodePath("../..")
 
 [node name="Slam" type="Node" parent="StateMachine" node_paths=PackedStringArray("b")]
 script = ExtResource("6_3ilp4")
-b = NodePath("")
+b = NodePath("../..")
 
 [node name="SlamPrep" type="Node" parent="StateMachine" node_paths=PackedStringArray("b")]
 script = ExtResource("7_6u8sq")
-b = NodePath("")
+b = NodePath("../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 

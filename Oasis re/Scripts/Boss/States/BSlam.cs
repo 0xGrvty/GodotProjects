@@ -38,6 +38,6 @@ public partial class BSlam : State {
   }
 
   private void RequestStateFinished() {
-    EmitSignal(SignalName.StateFinished, this, "Idle");
+    EmitSignal(SignalName.StateFinished, this, b.bIdle.Name);
   }
 }

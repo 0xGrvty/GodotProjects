@@ -16,7 +16,7 @@ public partial class StateMachine : Node {
     foreach (var child in GetChildren()) {
       if (child is State c) {
         states[c.Name.ToString().ToLower()] = c;
-        c.Connect(nameof(c.StateFinished), new Callable(this, nameof(OnStateFinished)));
+        c.Connect(State.SignalName.StateFinished, new Callable(this, MethodName.OnStateFinished));
       }
     }
 
@@ -26,14 +26,6 @@ public partial class StateMachine : Node {
       currentState = initState;
     }
 
-  }
-
-  // If you need to check if an event happened, i.e. if jump was pressed, then handle it here!
-  // However, if you need to poll an input over a certain amount of time, then handle it in _PhysicsProcess!
-  // This was the explanation I needed back then.  I don't know why everything I Googled was so poorly explained.
-  // It's the difference of polling vs checking the event once.  Holy crap.
-  public override void _UnhandledInput(InputEvent @event) {
-    currentState?.HandleInput(@event);
   }
 
   // Do the current state's Update function if it exists

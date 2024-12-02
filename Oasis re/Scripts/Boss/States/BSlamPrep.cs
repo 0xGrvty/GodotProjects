@@ -31,6 +31,6 @@ public partial class BSlamPrep : State {
   }
 
   private void OnSlamPrepFinished() {
-    EmitSignal(SignalName.StateFinished, this, "Slam");
+    EmitSignal(SignalName.StateFinished, this, b.bSlam.Name);
   }
 }

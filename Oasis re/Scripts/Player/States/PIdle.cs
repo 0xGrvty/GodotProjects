@@ -12,23 +12,17 @@ public partial class PIdle : State {
   public override void ExitState() {
   }
 
-  public override void HandleInput(InputEvent e) {
-    if (e.IsActionPressed("Jump")) p.IsJumping = true;
-    else if (e.IsActionPressed("Attack")) p.IsAttacking = true;
-  }
-
   public override void Update(double delta) {
     p.PollInputs();
   }
 
   public override void PhysicsUpdate(double delta) {
     p.Move(delta);
-    if (p.Dir != Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, "Run");
 
-    if (p.IsJumping) EmitSignal(SignalName.StateFinished, this, "Jump");
+    if (p.Dir != Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pRun.Name);
+    else if (p.IsJumping) EmitSignal(SignalName.StateFinished, this, p.pJump.Name);
+    else if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, p.pAttack.Name);
+    else if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
 
-    if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, "Attack");
-
-    if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, "Fall");
   }
 }

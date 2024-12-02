@@ -261,6 +261,7 @@ ap = NodePath("../../Temp")
 attack = NodePath("../../Attack")
 
 [node name="Attack" type="Area2D" parent="."]
+visible = false
 position = Vector2(36, 0)
 collision_layer = 2
 monitoring = false

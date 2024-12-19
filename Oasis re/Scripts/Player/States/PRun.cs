@@ -7,7 +7,11 @@ public partial class PRun : State {
   [Export]
   private AnimationPlayer ap;
   public override void EnterState() {
-    ap.Play("Run");
+    // ap.Play("Run");
+
+    p.TestAnimsArms.Play("Run");
+    p.TestAnimsTorso.Play("Run");
+    p.TestAnimsLegs.Play("Run");
   }
 
   public override void ExitState() {

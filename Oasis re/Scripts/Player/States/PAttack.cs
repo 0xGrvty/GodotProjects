@@ -18,24 +18,54 @@ public partial class PAttack : State {
   }
 
   public override void EnterState() {
-    ap.Play("Attack");
-    p.IsAttacking = false;
+    // if(p.Dir != Direction.NO_DIR) p.BotAP.Play("Idle");
+    // p.TopAP.Play("Attack");
+    // ap.Play("Attack");
+
+    p.TestAnimsArms.Play("Attack");
+    p.TestAnimsTorso.Play("Attack");
+    
     
   }
 
   public override void ExitState() {
     attack.Monitoring = false;
-    
+    p.IsAttacking = false;
     hitlist.Clear();
   }
 
+  // We need to poll the inputs just in case the player is still moving while attacking or is holding jump.
   public override void Update(double delta) {
     p.PollInputs();
+    if (p.IsOnFloor() && p.Dir == Direction.NO_DIR) {
+      //p.TestAnimsTorso.Play("Attack");
+      p.TestAnimsLegs.Play("Attack");
+    }
+    else if (p.IsOnFloor() && p.Dir != Direction.NO_DIR){
+      //p.TestAnimsTorso.Play("Run");
+      p.TestAnimsLegs.Play("Run");
+    } 
+    else if (p.IsHoldingJump) {
+      //p.TestAnimsTorso.Play("Jump");
+      p.TestAnimsLegs.Play("Jump");
+    }
+    else if (!p.IsOnFloor()) {
+      //p.TestAnimsTorso.Play("Fall");
+      p.TestAnimsLegs.Play("Fall");
+    }
   }
 
   public override void PhysicsUpdate(double delta) {
     if (p.IsHoldingJump) p.Jump(delta);
     p.Move(delta);
+
+    if (p.TestAnimsArms.Frame == p.TestAnimsArms.SpriteFrames.GetFrameCount("Attack") - 1) {
+      if (p.Dir == Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pIdle.Name);
+      else if (p.Dir != Direction.NO_DIR && p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pRun.Name);
+      else if (p.IsHoldingJump && Mathf.Sign(p.Velocity.Y) < 0.0f) EmitSignal(SignalName.StateFinished, this, p.pJump.Name);
+      else if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
+    }
+    
   }
 
   private void Startup() {

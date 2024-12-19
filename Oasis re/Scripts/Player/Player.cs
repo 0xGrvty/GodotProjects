@@ -4,7 +4,8 @@ using Godot.Collections;
 
 public partial class Player : CharacterBody2D {
   // Constants
-  private const float JUMP_HOLD_TIME = 0.1f;
+  [Export]
+  private float JUMP_HOLD_TIME = 0.2f;
 
   // State Machine
   public StateMachine sm;
@@ -17,15 +18,15 @@ public partial class Player : CharacterBody2D {
 
   // Export variables
   [Export]
-  private float maxSpeed = 100;
+  private float maxSpeed = 700;
   [Export]
-  private float maxAccel = 800;
+  private float maxAccel = 7000;
   [Export]
-  private float jumpHeight = 18f;
+  private float jumpHeight = 100f;
   [Export]
-  private float jumpTimeToPeak = 0.25f;
+  private float jumpTimeToPeak = 0.3f;
   [Export]
-  private float jumpTimeToDescent = 0.15f;
+  private float jumpTimeToDescent = 0.25f;
   [Export]
   private Area2D attack;
 
@@ -38,6 +39,9 @@ public partial class Player : CharacterBody2D {
   private bool isHoldingJump = false;
   private AnimationPlayer topAP;
   private AnimationPlayer botAP;
+  private AnimatedSprite2D testAnimsArms;
+  private AnimatedSprite2D testAnimsTorso;
+  private AnimatedSprite2D testAnimsLegs;
 
   private Vector2 directionVector;
   private Direction dir;
@@ -62,6 +66,9 @@ public partial class Player : CharacterBody2D {
   public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
   public AnimationPlayer TopAP { get => topAP; }
   public AnimationPlayer BotAP { get => botAP; }
+  public AnimatedSprite2D TestAnimsArms { get => testAnimsArms; }
+  public AnimatedSprite2D TestAnimsTorso { get => testAnimsTorso; }
+  public AnimatedSprite2D TestAnimsLegs { get => testAnimsLegs; }
 
     // If you need to check if an event happened, i.e. if jump was pressed, then handle it here!
   // However, if you need to poll an input over a certain amount of time, then handle it in _PhysicsProcess!
@@ -91,6 +98,12 @@ public partial class Player : CharacterBody2D {
     topAP = GetNode<AnimationPlayer>("Top");
     botAP = GetNode<AnimationPlayer>("Bottom");
 
+    testAnimsTorso = GetNode<AnimatedSprite2D>("TestAnimsTorso");
+    testAnimsArms = GetNode<AnimatedSprite2D>("TestAnimsArms");
+    testAnimsLegs = GetNode<AnimatedSprite2D>("TestAnimsLegs");
+
+    
+
     // Initializations
     // Building a Better Jump GDC talk
     jumpVelocity = ((2.0f * jumpHeight) / jumpTimeToPeak) * -1.0f; // In Godot 2D, down is positive, so flip the signs
@@ -111,6 +124,7 @@ public partial class Player : CharacterBody2D {
 
   public override void _Process(double delta) {
     QueueRedraw();
+    
   }
 
   public void PollInputs() {
@@ -131,6 +145,7 @@ public partial class Player : CharacterBody2D {
 
   public void Move(double delta) {
     Velocity = new Vector2(Mathf.MoveToward(Velocity.X, maxSpeed * (int)dir, maxAccel * (float)delta), Mathf.MoveToward(Velocity.Y, GetGravity(), GetGravity() * (float)delta));
+    
     MoveAndSlide();
   }
 
@@ -144,17 +159,20 @@ public partial class Player : CharacterBody2D {
 
       Velocity = new Vector2(Velocity.X, jumpVelocity);
       localHoldTime = JUMP_HOLD_TIME;
-
-      // Else, they are in the air already and holding the jump key
-    } else if (localHoldTime > 0) {
-
-      // Poll the jump key to see if the player is holding it
-      if (Input.IsActionPressed("Jump")) Velocity = new Vector2(Velocity.X, jumpVelocity);
-      else localHoldTime = 0;
-
-      localHoldTime -= (float)delta;
     }
+    
+    else if (localHoldTime > 0) {
+      localHoldTime -= (float)delta;
+      // Poll the jump key to see if the player is holding it.  Max jump height if the player holds it down all the way
+      if (isHoldingJump) Velocity = new Vector2(Velocity.X, jumpVelocity);
 
+      // Else they've released the key before the maximum hold time, cut the jump velocity
+      else {
+        Velocity = new Vector2(Velocity.X, 0.25f * jumpVelocity);
+        localHoldTime = 0;
+      }
+
+    }
   }
 
   public float GetGravity() {

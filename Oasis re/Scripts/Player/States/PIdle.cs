@@ -6,7 +6,12 @@ public partial class PIdle : State {
   [Export]
   private AnimationPlayer ap;
   public override void EnterState() {
-    ap.Play("Idle");
+    // ap.Play("Idle");
+    // p.TopAP.Play("Idle");
+    // p.BotAP.Play("Idle");
+    p.TestAnimsArms.Play("Idle");
+    p.TestAnimsTorso.Play("Idle");
+    p.TestAnimsLegs.Play("Idle");
   }
 
   public override void ExitState() {

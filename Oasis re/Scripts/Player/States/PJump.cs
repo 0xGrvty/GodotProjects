@@ -7,12 +7,17 @@ public partial class PJump : State {
   [Export]
   private AnimationPlayer ap;
   public override void EnterState() {
-    ap.Play("Jump");
+    // ap.Play("Jump");
+
+    p.TestAnimsTorso.Play("Jump");
+    p.TestAnimsArms.Play("Jump");
+    p.TestAnimsLegs.Play("Jump");
+    
     p.IsJumping = false;
   }
 
   public override void ExitState() {
-    
+
   }
 
   public override void Update(double delta) {
@@ -22,10 +27,10 @@ public partial class PJump : State {
   public override void PhysicsUpdate(double delta) {
     p.Jump(delta);
     p.Move(delta);
-
+    
     if (p.Velocity.Y > 0 && !p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
     else if (p.IsJumping) EmitSignal(SignalName.StateFinished, this, p.pJump.Name);
     else if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, p.pAttack.Name);
-    
+
   }
 }

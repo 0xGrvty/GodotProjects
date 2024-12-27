@@ -9,9 +9,13 @@ public partial class PIdle : State {
     // ap.Play("Idle");
     // p.TopAP.Play("Idle");
     // p.BotAP.Play("Idle");
-    p.TestAnimsArms.Play("Idle");
-    p.TestAnimsTorso.Play("Idle");
-    p.TestAnimsLegs.Play("Idle");
+    // GD.Print(p.TestAnimsArms);
+    // p.TestAnimsArms.Play("Idle");
+    // p.TestAnimsTorso.Play("Idle");
+    // p.TestAnimsLegs.Play("Idle");
+    p.ArmsAP.Play("Idle");
+    p.TorsoAP.Play("Idle");
+    p.LegsAP.Play("Idle");
   }
 
   public override void ExitState() {

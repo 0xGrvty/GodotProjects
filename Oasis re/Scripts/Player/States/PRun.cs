@@ -9,9 +9,12 @@ public partial class PRun : State {
   public override void EnterState() {
     // ap.Play("Run");
 
-    p.TestAnimsArms.Play("Run");
-    p.TestAnimsTorso.Play("Run");
-    p.TestAnimsLegs.Play("Run");
+    // p.TestAnimsArms.Play("Run");
+    // p.TestAnimsTorso.Play("Run");
+    // p.TestAnimsLegs.Play("Run");
+    p.ArmsAP.Play("Run");
+    p.TorsoAP.Play("Run");
+    p.LegsAP.Play("Run");
   }
 
   public override void ExitState() {

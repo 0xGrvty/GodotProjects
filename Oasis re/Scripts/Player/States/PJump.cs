@@ -12,6 +12,10 @@ public partial class PJump : State {
     p.TestAnimsTorso.Play("Jump");
     p.TestAnimsArms.Play("Jump");
     p.TestAnimsLegs.Play("Jump");
+
+    p.ArmsAP.Play("Jump");
+    p.TorsoAP.Play("Jump");
+    p.LegsAP.Play("Jump");
     
     p.IsJumping = false;
   }

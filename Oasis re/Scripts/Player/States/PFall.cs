@@ -8,9 +8,12 @@ public partial class PFall : State {
   private AnimationPlayer ap;
   public override void EnterState() {
     // ap.Play("Fall");
-    p.TestAnimsArms.Play("Fall");
-    p.TestAnimsTorso.Play("Fall");
-    p.TestAnimsLegs.Play("Fall");
+    // p.TestAnimsArms.Play("Fall");
+    // p.TestAnimsTorso.Play("Fall");
+    // p.TestAnimsLegs.Play("Fall");
+    p.ArmsAP.Play("Fall");
+    p.TorsoAP.Play("Fall");
+    p.LegsAP.Play("Fall");
   }
 
   public override void ExitState() {

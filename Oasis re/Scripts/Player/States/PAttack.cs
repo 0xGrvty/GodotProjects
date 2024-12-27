@@ -22,9 +22,9 @@ public partial class PAttack : State {
     // p.TopAP.Play("Attack");
     // ap.Play("Attack");
 
-    p.TestAnimsArms.Play("Attack");
-    p.TestAnimsTorso.Play("Attack");
-    
+    // p.TestAnimsArms.Play("Attack");
+    // p.TestAnimsTorso.Play("Attack");
+    p.ArmsAP.Play("Attack");
     
   }
 
@@ -39,19 +39,27 @@ public partial class PAttack : State {
     p.PollInputs();
     if (p.IsOnFloor() && p.Dir == Direction.NO_DIR) {
       //p.TestAnimsTorso.Play("Attack");
-      p.TestAnimsLegs.Play("Attack");
+      //p.TestAnimsLegs.Play("Attack");
+      p.TorsoAP.Play("Attack");
+      p.LegsAP.Play("Attack");
     }
     else if (p.IsOnFloor() && p.Dir != Direction.NO_DIR){
       //p.TestAnimsTorso.Play("Run");
-      p.TestAnimsLegs.Play("Run");
+      //p.TestAnimsLegs.Play("Run");
+      p.TorsoAP.Play("Run");
+      p.LegsAP.Play("Run");
     } 
     else if (p.IsHoldingJump) {
       //p.TestAnimsTorso.Play("Jump");
-      p.TestAnimsLegs.Play("Jump");
+      //p.TestAnimsLegs.Play("Jump");
+      p.TorsoAP.Play("Jump");
+      p.LegsAP.Play("Jump");
     }
     else if (!p.IsOnFloor()) {
       //p.TestAnimsTorso.Play("Fall");
-      p.TestAnimsLegs.Play("Fall");
+      //p.TestAnimsLegs.Play("Fall");
+      p.TorsoAP.Play("Fall");
+      p.LegsAP.Play("Fall");
     }
   }
 

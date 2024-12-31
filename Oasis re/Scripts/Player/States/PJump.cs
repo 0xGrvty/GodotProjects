@@ -7,21 +7,15 @@ public partial class PJump : State {
   [Export]
   private AnimationPlayer ap;
   public override void EnterState() {
-    // ap.Play("Jump");
-
-    p.TestAnimsTorso.Play("Jump");
-    p.TestAnimsArms.Play("Jump");
-    p.TestAnimsLegs.Play("Jump");
-
-    p.ArmsAP.Play("Jump");
-    p.TorsoAP.Play("Jump");
-    p.LegsAP.Play("Jump");
+    p.BgAP.Play("Jump");
+    if (p.Velocity == Vector2.Zero && p.Dir == Direction.NO_DIR) p.FgAP.Play("JumpNeutral");
+    else p.FgAP.Play("Jump");
     
     p.IsJumping = false;
   }
 
   public override void ExitState() {
-
+    p.prevState = this;
   }
 
   public override void Update(double delta) {

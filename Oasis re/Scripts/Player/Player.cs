@@ -38,8 +38,8 @@ public partial class Player : CharacterBody2D {
   private bool isJumping = false;
   private bool isHoldingJump = false;
   private AnimationPlayer armsAP;
-  private AnimationPlayer torsoAP;
-  private AnimationPlayer legsAP;
+  private AnimationPlayer bgAP;
+  private AnimationPlayer fgAP;
   private AnimatedSprite2D testAnimsArms;
   private AnimatedSprite2D testAnimsTorso;
   private AnimatedSprite2D testAnimsLegs;
@@ -65,14 +65,9 @@ public partial class Player : CharacterBody2D {
   public Direction Facing { get => facing; }
   public bool AttackPressed { get => attackPressed; set => attackPressed = value; }
   public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
-  public AnimationPlayer TopAP { get => armsAP; }
-  public AnimationPlayer BotAP { get => torsoAP; }
-  public AnimatedSprite2D TestAnimsArms { get => testAnimsArms; }
-  public AnimatedSprite2D TestAnimsTorso { get => testAnimsTorso; }
-  public AnimatedSprite2D TestAnimsLegs { get => testAnimsLegs; }
-  public AnimationPlayer ArmsAP { get => armsAP; }
-  public AnimationPlayer TorsoAP { get => torsoAP; }
-  public AnimationPlayer LegsAP { get => legsAP; }
+  public AnimationPlayer BgAP { get => bgAP; }
+  public AnimationPlayer FgAP { get => fgAP; }
+  public State prevState;
 
     // If you need to check if an event happened, i.e. if jump was pressed, then handle it here!
   // However, if you need to poll an input over a certain amount of time, then handle it in _PhysicsProcess!
@@ -98,14 +93,8 @@ public partial class Player : CharacterBody2D {
     attack = GetNode<Area2D>("Attack");
     
     sprite = GetNode<Sprite2D>("Sprite");
-
-    armsAP = GetNode<AnimationPlayer>("Arms");
-    torsoAP = GetNode<AnimationPlayer>("Torso");
-    legsAP = GetNode<AnimationPlayer>("Legs");
-
-    testAnimsTorso = GetNode<AnimatedSprite2D>("TestAnimsTorso");
-    testAnimsArms = GetNode<AnimatedSprite2D>("TestAnimsArms");
-    testAnimsLegs = GetNode<AnimatedSprite2D>("TestAnimsLegs");
+    bgAP = GetNode<AnimationPlayer>("BgAP");
+    fgAP = GetNode<AnimationPlayer>("FgAP");
 
     
 

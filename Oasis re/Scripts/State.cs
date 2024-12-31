@@ -5,6 +5,7 @@ public abstract partial class State : Node {
   [Signal]
   public delegate void StateFinishedEventHandler(State state, StringName newState);
 
+  private Godot.Collections.Dictionary passedArgs;
 
   // Each state could do something different, so make these functions overridable
   public virtual void EnterState() {

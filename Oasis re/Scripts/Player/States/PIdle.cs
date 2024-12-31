@@ -6,19 +6,13 @@ public partial class PIdle : State {
   [Export]
   private AnimationPlayer ap;
   public override void EnterState() {
-    // ap.Play("Idle");
-    // p.TopAP.Play("Idle");
-    // p.BotAP.Play("Idle");
-    // GD.Print(p.TestAnimsArms);
-    // p.TestAnimsArms.Play("Idle");
-    // p.TestAnimsTorso.Play("Idle");
-    // p.TestAnimsLegs.Play("Idle");
-    p.ArmsAP.Play("Idle");
-    p.TorsoAP.Play("Idle");
-    p.LegsAP.Play("Idle");
+    p.BgAP.Play("Idle");
+    if ((p.prevState is PRun || p.prevState is PAttack) && Mathf.Abs(p.Velocity.X) < 500) p.FgAP.Play("Idle");
+    else p.FgAP.Play("Land");
   }
 
   public override void ExitState() {
+    p.prevState = this;
   }
 
   public override void Update(double delta) {
@@ -33,5 +27,9 @@ public partial class PIdle : State {
     else if (p.IsAttacking) EmitSignal(SignalName.StateFinished, this, p.pAttack.Name);
     else if (!p.IsOnFloor()) EmitSignal(SignalName.StateFinished, this, p.pFall.Name);
 
+  }
+
+  public void AfterLand() {
+    p.FgAP.Play("Idle");
   }
 }

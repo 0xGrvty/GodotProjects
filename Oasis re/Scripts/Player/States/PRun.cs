@@ -7,17 +7,15 @@ public partial class PRun : State {
   [Export]
   private AnimationPlayer ap;
   public override void EnterState() {
-    // ap.Play("Run");
-
-    // p.TestAnimsArms.Play("Run");
-    // p.TestAnimsTorso.Play("Run");
-    // p.TestAnimsLegs.Play("Run");
-    p.ArmsAP.Play("Run");
-    p.TorsoAP.Play("Run");
-    p.LegsAP.Play("Run");
+    p.FgAP.Play("Run");
+    
+    p.BgAP.Play("Run");
+    p.BgAP.Seek(p.FgAP.CurrentAnimationPosition, true);
+    
   }
 
   public override void ExitState() {
+    p.prevState = this;
   }
   public override void Update(double delta) {
     p.PollInputs();
